@@ -65,24 +65,19 @@ const Hero = () => {
   const four = (
     <>
       <p>
-        Sou um desenvolvedor especializado em construir experiências digitais que 
-        resolvem problemas reais. Atualmente, estou focado em desenvolver produtos 
-        escaláveis usando Next.js, TypeScript e IA como parceira de desenvolvimento, 
-        enquanto trabalho no{' '}
-      <a href="#" target="_blank" rel="noreferrer">
-        CINELOG
-      </a>
-  .
-</p>
+        Sou um desenvolvedor especializado em construir experiências digitais que resolvem problemas
+        reais. Atualmente, estou focado em desenvolver produtos escaláveis usando Next.js,
+        TypeScript e IA como parceira de desenvolvimento, enquanto trabalho no{' '}
+        <a href="https://github.com/MatheusMartinho/cinelog" target="_blank" rel="noreferrer">
+          CINELOG
+        </a>
+        .
+      </p>
     </>
   );
   const five = (
-    <a
-      className="email-link"
-      href="https://www.newline.co/courses/build-a-spotify-connected-app"
-      target="_blank"
-      rel="noreferrer">
-      Check out my course!
+    <a className="email-link" href="mailto:matheusmouramartinho@gmail.com">
+      Entre em contato!
     </a>
   );
 
