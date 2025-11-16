@@ -3,6 +3,7 @@ import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import styled from 'styled-components';
 import { navDelay, loaderDelay } from '@utils';
 import { usePrefersReducedMotion } from '@hooks';
+import EncryptedText from '@components/ui/encrypted-text';
 
 const StyledHeroSection = styled.section`
   ${({ theme }) => theme.mixins.flexCenter};
@@ -35,6 +36,18 @@ const StyledHeroSection = styled.section`
     line-height: 0.9;
   }
 
+  .hero-name {
+    display: inline-block;
+  }
+
+  .hero-name__encrypted {
+    color: var(--slate);
+  }
+
+  .hero-name__revealed {
+    color: var(--lightest-slate);
+  }
+
   p {
     margin: 20px 0 0;
     max-width: 540px;
@@ -60,7 +73,17 @@ const Hero = () => {
   }, []);
 
   const one = <h1>Oi, meu nome é</h1>;
-  const two = <h2 className="big-heading">Matheus Moura Martinho.</h2>;
+  const two = (
+    <h2 className="big-heading hero-name">
+      <EncryptedText
+        text="Matheus Moura Martinho."
+        encryptedClassName="hero-name__encrypted"
+        revealedClassName="hero-name__revealed"
+        revealDelayMs={50}
+        disabled={prefersReducedMotion}
+      />
+    </h2>
+  );
   const three = <h3 className="big-heading">e eu construo experiências digitais.</h3>;
   const four = (
     <>
