@@ -1,13 +1,12 @@
 ---
-date: '2017-12-21'
-title: 'UI Engineer Co-op'
-company: 'Apple'
-location: 'Cupertino, CA'
-range: 'July - December 2017'
-url: 'https://www.apple.com/music/'
+date: '2023-08-01'
+title: 'Web Development Student'
+company: 'Full-Stack Bootcamp'
+location: 'Vancouver, Canada'
+range: '2022 – 2023'
+url: 'https://brainstation.io/'
 ---
 
-- Developed and styled interactive web applications for Apple Music using Ember and SCSS
-- Built and shipped the Apple Music Extension for Facebook Messenger leveraging third-party and internal API integrations
-- Architected and implemented the user interface of Apple Music's embeddable web player widget for in-browser user authorization and full song playback
-- Contributed extensively to the creation of MusicKit JS, a public-facing JavaScript SDK for embedding Apple Music players into web applications
+- Intensive bootcamp focado em desenvolvimento full-stack moderno e tecnologias web atuais
+- Ganhei experiência internacional vivendo e codando no ecossistema tech de Vancouver
+- Transicionei da teoria de CS para construir aplicações reais do zero, com foco em frontend + backend integrados

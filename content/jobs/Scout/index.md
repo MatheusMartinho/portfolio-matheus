@@ -1,11 +1,12 @@
 ---
-date: '2017-04-01'
-title: 'Developer'
-company: 'Scout Studio'
-location: 'Northeastern University'
-range: 'Spring 2016 & 2017'
-url: 'https://web.northeastern.edu/scout/'
+date: '2022-01-01'
+title: 'Full-Stack Developer'
+company: 'Independent / Remote'
+location: 'São Paulo, Brazil'
+range: '2025 – Present'
+url: 'https://github.com/MatheusMartinho'
 ---
 
-- Collaborated with other student designers and engineers on pro-bono projects to create new brands, design systems, and websites for organizations in the community
-- Built and delivered technical solutions according to stakeholder business requirements
+- Construindo aplicações em produção com Next.js, React Native, Supabase e pipelines modernos
+- Especialista em fluxos de desenvolvimento acelerado com IA para iterar rápido e entregar valor
+- Criando o CINELOG e outros produtos full-stack para resolver problemas reais de usuários brasileiros
