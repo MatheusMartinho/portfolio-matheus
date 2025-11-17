@@ -1,15 +1,15 @@
 ---
 date: '2'
-title: 'GitHub Finder'
-cover: './findgithub.png'
-github: 'https://github.com/MatheusMartinho/github-finder'
-external: 'https://github-finder.vercel.app/'
+title: 'MuscleMate'
+cover: './muscleMateC.png'
+github: 'https://github.com/MatheusMartinho/musclemate'
+external: 'https://studio--musclemate-ulkfm.us-central1.hosted.app/'
 tech:
-  - JavaScript
-  - React
-  - CSS3
-  - GitHub API
-  - HTML5
+  - React Native
+  - TypeScript
+  - Firebase
+  - Recharts
+  - Google Cloud
 ---
 
-Aplicação para buscar e visualizar perfis do GitHub com interface moderna e gradientes vibrantes. Exibe informações detalhadas do usuário, estatísticas e lista de repositórios públicos — tudo consumindo a API oficial do GitHub.
+Aplicação mobile e web para acompanhamento completo de treinos e evolução física. Dashboard com métricas em tempo real, gráficos de progressão de peso e volume, recordes pessoais e histórico detalhado. Gamificação com conquistas para manter a motivação alta.

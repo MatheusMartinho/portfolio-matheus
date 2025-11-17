@@ -4,7 +4,6 @@ title: 'CINELOG'
 cover: './cinelog.PNG'
 mockup: 'iphone'
 github: 'https://github.com/MatheusMartinho/cinelog'
-external: 'https://cinelog.app'
 tech:
   - React Native
   - Expo

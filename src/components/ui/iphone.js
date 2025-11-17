@@ -5,11 +5,11 @@ import { GatsbyImage } from 'gatsby-plugin-image';
 
 const StyledWrapper = styled.div`
   width: 100%;
-  max-width: 280px;
+  max-width: 240px;
   margin: 0 auto;
 
   @media (max-width: 1080px) {
-    max-width: 240px;
+    max-width: 210px;
   }
 `;
 
