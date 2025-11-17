@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import styled from 'styled-components';
+import { StaticImage } from 'gatsby-plugin-image';
 import { srConfig, email } from '@config';
 import sr from '@utils/sr';
 import { usePrefersReducedMotion } from '@hooks';
@@ -39,6 +40,27 @@ const StyledContactSection = styled.section`
     ${({ theme }) => theme.mixins.bigButton};
     margin-top: 50px;
   }
+
+  .contact-card {
+    margin: 20px auto 16px;
+    width: min(100%, 420px);
+    display: block;
+    border-radius: 8px;
+    filter: drop-shadow(0 15px 26px rgba(2, 12, 27, 0.26))
+      drop-shadow(0 6px 14px rgba(2, 12, 27, 0.2));
+    background: transparent;
+
+    img {
+      width: 100%;
+      border-radius: 8px;
+      box-shadow: none;
+      display: block;
+    }
+  }
+
+  .contact-text {
+    margin-top: 12px;
+  }
 `;
 
 const Contact = () => {
@@ -59,11 +81,18 @@ const Contact = () => {
 
       <h2 className="title">Entre em Contato</h2>
 
-      <p>
-        Atualmente estou aberto a novas oportunidades, minha inbox está 
-        sempre aberta. Seja se você tem uma pergunta ou só quer dar um alô, vou fazer o 
-        meu melhor pra te responder!
+      <p className="contact-text">
+        Atualmente estou aberto a novas oportunidades, minha inbox está sempre aberta. Seja se você
+        tem uma pergunta ou só quer dar um alô, vou fazer o meu melhor pra te responder!
       </p>
+
+      <StaticImage
+        className="contact-card"
+        src="../../images/cartao-png.png"
+        alt="Cartão de contato"
+        placeholder="blurred"
+        formats={['AUTO', 'WEBP', 'AVIF']}
+      />
 
       <a className="email-link" href={`mailto:${email}`}>
         Diga Olá
