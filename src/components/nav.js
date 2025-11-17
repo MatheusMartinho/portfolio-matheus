@@ -7,7 +7,7 @@ import { navLinks } from '@config';
 import { loaderDelay } from '@utils';
 import { useScrollDirection, usePrefersReducedMotion } from '@hooks';
 import { Menu } from '@components';
-import ProfileLogo from '@images/logo-profile.png';
+import ProfileLogo from '@images/logo-site1024.png';
 
 const StyledHeader = styled.header`
   ${({ theme }) => theme.mixins.flexBetween};
