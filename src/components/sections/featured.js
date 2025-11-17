@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import sr from '@utils/sr';
 import { srConfig } from '@config';
 import { Icon } from '@components/icons';
+import Iphone from '@components/ui/iphone';
 import { usePrefersReducedMotion } from '@hooks';
 
 const StyledProjectsGrid = styled.ul`
@@ -301,6 +302,45 @@ const StyledProject = styled.li`
       }
     }
   }
+
+  .project-image--iphone {
+    ${({ theme }) => theme.mixins.resetList};
+    box-shadow: none !important;
+    background: transparent;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: default;
+    user-select: none;
+    grid-column: 6 / -1;
+    grid-row: 1 / -1;
+
+    @media (max-width: 768px) {
+      grid-column: 1 / -1;
+    }
+
+    .iphone-screen {
+      position: relative;
+
+      &:after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background-color: var(--green);
+        mix-blend-mode: screen;
+        opacity: 0.75;
+        transition: var(--transition);
+        pointer-events: none;
+      }
+    }
+
+    &:hover,
+    &:focus-within {
+      .iphone-screen:after {
+        opacity: 0;
+      }
+    }
+  }
 `;
 
 const Featured = () => {
@@ -319,10 +359,10 @@ const Featured = () => {
                   gatsbyImageData(width: 700, placeholder: BLURRED, formats: [AUTO, WEBP, AVIF])
                 }
               }
+              mockup
               tech
               github
               external
-              cta
             }
             html
           }
@@ -355,8 +395,9 @@ const Featured = () => {
         {featuredProjects &&
           featuredProjects.map(({ node }, i) => {
             const { frontmatter, html } = node;
-            const { external, title, tech, github, cover, cta } = frontmatter;
+            const { external, title, tech, github, cover, mockup } = frontmatter;
             const image = getImage(cover);
+            const shouldUseIphoneMockup = mockup === 'iphone';
 
             return (
               <StyledProject key={i} ref={el => (revealProjects.current[i] = el)}>
@@ -382,17 +423,12 @@ const Featured = () => {
                     )}
 
                     <div className="project-links">
-                      {cta && (
-                        <a href={cta} aria-label="Course Link" className="cta">
-                          Learn More
-                        </a>
-                      )}
                       {github && (
                         <a href={github} aria-label="GitHub Link">
                           <Icon name="GitHub" />
                         </a>
                       )}
-                      {external && !cta && (
+                      {external && (
                         <a href={external} aria-label="External Link" className="external">
                           <Icon name="External" />
                         </a>
@@ -401,11 +437,17 @@ const Featured = () => {
                   </div>
                 </div>
 
-                <div className="project-image">
-                  <a href={external ? external : github ? github : '#'}>
-                    <GatsbyImage image={image} alt={title} className="img" />
-                  </a>
-                </div>
+                {shouldUseIphoneMockup ? (
+                  <div className="project-image project-image--iphone">
+                    <Iphone image={image} alt={title} />
+                  </div>
+                ) : (
+                  <div className="project-image">
+                    <a href={external ? external : github ? github : '#'}>
+                      <GatsbyImage image={image} alt={title} className="img" />
+                    </a>
+                  </div>
+                )}
               </StyledProject>
             );
           })}

@@ -1,15 +1,15 @@
 ---
 date: '2'
-title: 'Spotify Profile'
-cover: './demo.png'
-github: 'https://github.com/bchiang7/spotify-profile'
-external: 'https://spotify-profile.herokuapp.com/'
+title: 'GitHub Finder'
+cover: './findgithub.png'
+github: 'https://github.com/MatheusMartinho/github-finder'
+external: 'https://github-finder.vercel.app/'
 tech:
+  - JavaScript
   - React
-  - Styled Components
-  - Express
-  - Spotify API
-  - Heroku
+  - CSS3
+  - GitHub API
+  - HTML5
 ---
 
-A web app for visualizing personalized Spotify data. View your top artists, top tracks, recently played tracks, and detailed audio information about each track. Create and save new playlists of recommended tracks based on your existing playlists and more.
+Aplicação para buscar e visualizar perfis do GitHub com interface moderna e gradientes vibrantes. Exibe informações detalhadas do usuário, estatísticas e lista de repositórios públicos — tudo consumindo a API oficial do GitHub.
