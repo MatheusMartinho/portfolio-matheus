@@ -62,6 +62,21 @@ const StyledNav = styled.nav`
   counter-reset: item 0;
   z-index: 12;
 
+  @keyframes logoWiggle {
+    0% {
+      transform: translateY(0) rotate(0deg) scale(1);
+    }
+    40% {
+      transform: translateY(-4px) rotate(-3deg) scale(1.05);
+    }
+    70% {
+      transform: translateY(-2px) rotate(2deg) scale(1.03);
+    }
+    100% {
+      transform: translateY(0) rotate(0deg) scale(1);
+    }
+  }
+
   .logo {
     ${({ theme }) => theme.mixins.flexCenter};
 
@@ -84,6 +99,13 @@ const StyledNav = styled.nav`
         display: block;
         @media (prefers-reduced-motion: no-preference) {
           transition: var(--transition);
+        }
+      }
+
+      @media (prefers-reduced-motion: no-preference) {
+        &:hover img,
+        &:focus img {
+          animation: logoWiggle 650ms ease forwards;
         }
       }
     }
