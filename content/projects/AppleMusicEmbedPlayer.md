@@ -1,14 +1,16 @@
 ---
-date: '2017-12-01'
-title: 'Apple Music Embeddable Web Player Widget'
-github: ''
-external: 'https://tools.applemusic.com/en-us'
+date: ''
+title: 'ConectaBR'
+github: 'https://github.com/MatheusMartinho/ConectaBR'
+external: 'https://github.com/MatheusMartinho/ConectaBR'
 tech:
-  - MusicKit.js
-  - JS
-  - SCSS
-company: 'Apple'
+  - TypeScript
+  - JavaScript
+  - Prisma
+  - Node.js
+  - CSS
+company: ''
 showInProjects: true
 ---
 
-Embeddable web player widget for Apple Music that lets users log in and listen to full song playback in the browser leveraging [MusicKit.js](https://developer.apple.com/documentation/musickitjs). Read more about this project on [9to5Mac](https://9to5mac.com/2018/06/03/apple-music-embeddable-web-player-listen-browser/).
+Plataforma, Front-end somente, para conectar profissionais e serviços brasileiros. Construída com TypeScript, arquitetura moderna separando componentes, servidor e tipos para escalabilidade

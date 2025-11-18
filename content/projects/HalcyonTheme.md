@@ -1,15 +1,14 @@
 ---
-date: '2017-12-27'
-title: 'Halcyon Theme'
-github: 'https://github.com/bchiang7/halcyon-site'
-external: 'https://halcyon-theme.netlify.com/'
+date: ''
+title: 'Flappy-Bird'
+github: 'https://github.com/MatheusMartinho/Flappy-Bird?tab=readme-ov-file'
+external: 'https://matheusmartinho.github.io/Flappy-Bird/'
 tech:
-  - VS Code
-  - Sublime Text
-  - Atom
-  - iTerm2
-  - Hyper
-showInProjects: false
+  - JavaScript
+  - CSS
+  - HTML
+  - DOM Manipulation
+showInProjects: true
 ---
 
-A minimal, dark blue theme for VS Code, Sublime Text, Atom, iTerm, and more. Available on [Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=brittanychiang.halcyon-vscode), [Package Control](https://packagecontrol.io/packages/Halcyon%20Theme), [Atom Package Manager](https://atom.io/themes/halcyon-syntax), and [npm](https://www.npmjs.com/package/hyper-halcyon-theme).
+Clone do clássico Flappy Bird implementado com JavaScript vanilla e manipulação de DOM. Projeto de estudo para praticar lógica de game loop, detecção de colisão e eventos de teclado.

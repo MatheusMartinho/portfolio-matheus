@@ -1,15 +1,15 @@
 ---
 date: '2016-04-01'
-title: 'CourseSource'
-github: 'https://github.com/bchiang7/WebDevSpring2016/tree/master/public/project'
-external: ''
+title: 'D2W'
+github: 'https://github.com/MatheusMartinho/d2wNew'
+external: 'https://github.com/MatheusMartinho/d2wNew'
 tech:
-  - Angular
-  - Node
-  - Express
-  - MongoDB
-company: 'Northeastern'
-showInProjects: false
+  - TypeScript
+  - Tailwind CSS
+  - Vite
+  - PostCSS
+company: 'D2W'
+showInProjects: true
 ---
 
-Web application built on the MEAN (MongoDB, Express, Angular, Node) stack with the intention of providing Northeastern students a better experience browsing the courses offered at Northeastern.
+Website institucional para empresa de racks e infraestrutura de servidores. Frontend moderno construído com TypeScript, Vite e Tailwind CSS com foco em performance e design responsivo.

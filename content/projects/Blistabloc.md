@@ -1,14 +1,15 @@
 ---
-date: '2018-05-01'
-title: 'blistabloc'
-github: ''
-external: 'https://blistabloc.com/'
+date: ''
+title: 'Justiniano-I'
+github: 'https://github.com/MatheusMartinho/Justiniano-l'
+external: 'https://github.com/MatheusMartinho/Justiniano-l'
 tech:
-  - WordPress
-  - Timber
-  - WooCommerce
-company: 'Scout'
-showInProjects: false
+  - TypeScript
+  - Python
+  - CSS
+  - Glassmorphism
+company: ''
+showInProjects: true
 ---
 
-Custom WordPress theme and e-commerce site built with Timber and WooCommerce for blistabloc, a start-up selling the only reactive shoe insert that prevents blisters from forming.
+Protótipo de interface para sistema de pesquisa jurisprudencial. Frontend desenvolvido com TypeScript e design glassmorphism, criado como MVP durante bootcamp (backend não implementado)

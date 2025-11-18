@@ -1,12 +1,14 @@
 ---
-date: '2016-01-01'
-title: 'Fontipsums'
-github: 'https://github.com/bchiang7/fontipsums/'
-external: 'http://bchiang7.github.io/fontipsums/'
+date: ''
+title: 'Todo-List'
+github: 'https://github.com/MatheusMartinho/Todo-List'
+external: 'https://matheusmartinho.github.io/Todo-List/'
 tech:
+  - JavaScript
+  - CSS
   - HTML
-  - SCSS
+
 showInProjects: true
 ---
 
-Simple website to display some of my favorite font pairings combined with some fun lorem ipsum variations found on the web.
+Lista de tarefas simples construída com JavaScript vanilla para praticar fundamentos de DOM manipulation, eventos e localStorage. Projeto de estudo focado em lógica e interatividade.

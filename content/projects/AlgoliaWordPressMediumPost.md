@@ -1,14 +1,15 @@
 ---
-date: '2020-03-27'
-title: 'Integrating Algolia Search with WordPress Multisite'
-github: ''
-external: 'https://medium.com/stories-from-upstatement/integrating-algolia-search-with-wordpress-multisite-e2dea3ed449c'
+date: ''
+title: 'Portfólio V2'
+github: 'https://github.com/MatheusMartinho/PhotographyWeb'
+external: 'photography-web-nine.vercel.app'
 tech:
-  - Algolia
-  - WordPress
-  - PHP
-company: 'Upstatement'
+  - Angular
+  - Typescript
+  - SCSS
+  - HTML
+company: ''
 showInProjects: true
 ---
 
-Building a custom multisite compatible WordPress plugin to build global search with Algolia
+Portfólio antigo pessoal combinando desenvolvimento e fotografia. Exibe projetos de código e galeria fotográfica de vida selvagem do Canadá, com design responsivo e animações suaves.

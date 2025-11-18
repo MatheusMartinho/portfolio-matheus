@@ -1,13 +1,15 @@
 ---
-date: '2018-10-01'
-title: 'Flagship Pioneering'
-github: ''
-external: 'https://www.flagshippioneering.com/'
+date: ''
+title: 'Portfólio V1'
+github: 'https://github.com/MatheusMartinho/portfolio?tab=readme-ov-file'
+external: 'https://matheusmartinho.github.io/portfolio/'
 tech:
-  - Craft CMS
-  - Chart.js
+  - JavaScript
+  - SCSS
+  - HTML
+  - Vanilla Tilt
 company: 'Upstatement'
-showInProjects: false
+showInProjects: true
 ---
 
-A marketing site for an ambitious life sciences venture capital company.
+Primeiro portfólio web pessoal construído com JavaScript vanilla. Design responsivo com animações interativas, seções sobre projetos e habilidades, usando SCSS para estilização modular.

@@ -1,14 +1,15 @@
 ---
-date: '2017-03-01'
-title: 'Crowd DJ'
-github: 'https://github.com/crowddj/crowddj-react'
-external: ''
+date: ''
+title: 'Cine MaNu'
+github: 'https://github.com/MatheusMartinho/CineMa-nu'
+external: 'https://github.com/MatheusMartinho/CineMa-nu'
 tech:
-  - React
-  - Firebase
-  - Spotify API
-company: HackBeanpot 2017
-showInProjects: false
+  - TypeScript
+  - JavaScript
+  - CSS
+  - React Native
+company:
+showInProjects: true
 ---
 
-Web app that allows people to crowdsource a party's music queue. Allows people to request songs, upvote songs, rate songs, etc. so the DJ can see how the crowd is feeling and queue songs accordingly. Won Best UI/UX Design at Hackbeanpot 2017.
+App divertido para sortear filmes entre duas pessoas e evitar discussões na hora de escolher o que assistir. Desenvolvido em React Native com TypeScript para resolver um problema real do dia a dia.

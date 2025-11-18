@@ -1,14 +1,15 @@
 ---
-date: '2020-01-10'
-title: 'Time to Have More Fun'
-github: 'https://github.com/bchiang7/time-to-have-more-fun'
-external: 'https://time-to-have-more-fun.now.sh/'
+date: ''
+title: 'Find Profile GitHub'
+github: 'https://github.com/MatheusMartinho/FindProfileGithub'
+external: 'https://matheusmartinho.github.io/FindProfileGithub/'
 tech:
-  - Next.js
-  - Tailwind CSS
-  - Firebase
+  - JavaScript
+  - HTML
+  - CSS
+  - GitHub API
 company: ''
 showInProjects: true
 ---
 
-A single page web app for helping me choose where to travel, built with Next.js, Firebase, and Tailwind CSS
+Aplicação web para buscar e visualizar perfis do GitHub através da API oficial. Exibe informações do usuário, repositórios e estatísticas com interface simples e responsiva.

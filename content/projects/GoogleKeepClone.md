@@ -1,12 +1,14 @@
 ---
-date: '2018-12-29'
-title: 'Google Keep Clone'
-github: 'https://github.com/bchiang7/google-keep-vue-firebase'
-external: 'https://keep-vue.netlify.com/'
+date: ''
+title: 'Análise Setor Elétrico B3'
+github: 'https://github.com/MatheusMartinho/Analise-dados-Python'
+external: 'https://github.com/MatheusMartinho/Analise-dados-Python'
 tech:
-  - Vue
-  - Firebase
+  - Python
+  - Jupyter Notebook
+  - Pandas
+  - Data Analysis
 showInProjects: true
 ---
 
-A simple Google Keep clone built with Vue and Firebase.
+Análise exploratória de dados de empresas do setor elétrico brasileiro listadas na B3. Notebook Python com visualizações, métricas financeiras e insights sobre o mercado de energia usando Pandas.
