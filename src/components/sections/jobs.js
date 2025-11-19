@@ -35,13 +35,13 @@ const StyledTabList = styled.div`
   @media (max-width: 600px) {
     display: flex;
     overflow-x: auto;
-    width: calc(100% + 100px);
+    width: calc(100% + 60px);
     padding-left: 50px;
     margin-left: -50px;
     margin-bottom: 30px;
   }
   @media (max-width: 480px) {
-    width: calc(100% + 50px);
+    width: calc(100% + 30px);
     padding-left: 25px;
     margin-left: -25px;
   }
@@ -86,11 +86,12 @@ const StyledTabButton = styled.button`
   }
   @media (max-width: 600px) {
     ${({ theme }) => theme.mixins.flexCenter};
-    min-width: 120px;
+    min-width: 110px;
     padding: 0 15px;
     border-left: 0;
     border-bottom: 2px solid var(--lightest-navy);
     text-align: center;
+    font-size: var(--fz-xxs);
   }
 
   &:hover,

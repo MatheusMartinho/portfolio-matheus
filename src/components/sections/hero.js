@@ -34,10 +34,23 @@ const StyledHeroSection = styled.section`
     margin-top: 5px;
     color: var(--slate);
     line-height: 0.9;
+
+    @media (max-width: 480px) {
+      font-size: clamp(24px, 6vw, 32px);
+      line-height: 1.1;
+    }
   }
 
   .hero-name {
     display: inline-block;
+    max-width: 100%;
+    word-break: break-word;
+    hyphens: auto;
+
+    @media (max-width: 540px) {
+      font-size: clamp(32px, 10vw, 52px);
+      line-height: 1.1;
+    }
   }
 
   .hero-name__encrypted {

@@ -188,6 +188,12 @@ const GlobalStyle = createGlobalStyle`
     font-size: clamp(26px, 5vw, var(--fz-heading));
     white-space: nowrap;
 
+    @media (max-width: 480px) {
+      flex-wrap: wrap;
+      white-space: normal;
+      line-height: 1.2;
+    }
+
     &:before {
       position: relative;
       bottom: 4px;

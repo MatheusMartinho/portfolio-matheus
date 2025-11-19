@@ -26,15 +26,23 @@ const StyledText = styled.div`
 `;
 
 const StyledIconCloudWrapper = styled.div`
-  margin-top: -70px;
+  margin-top: -60px;
   display: flex;
   justify-content: center;
   align-items: center;
   width: 100%;
   max-width: 320px;
   aspect-ratio: 1/1;
-  margin-left: 210px;
+  margin-left: 185px;
   margin-right: auto;
+
+  @media (max-width: 768px) {
+    margin: 30px auto 0;
+  }
+
+  @media (max-width: 480px) {
+    max-width: 260px;
+  }
 
   canvas {
     width: 100% !important;
