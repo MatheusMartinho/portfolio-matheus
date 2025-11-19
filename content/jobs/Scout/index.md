@@ -7,6 +7,7 @@ range: '2025 – Present'
 url: 'https://github.com/MatheusMartinho'
 ---
 
-- Construindo aplicações em produção com Next.js, React Native, Supabase e pipelines modernos
-- Especialista em fluxos de desenvolvimento acelerado com IA para iterar rápido e entregar valor
-- Criando o CINELOG e outros produtos full-stack para resolver problemas reais de usuários brasileiros
+- Desenvolvendo aplicações em produção: CINELOG (rede social para cinéfilos brasileiros com React Native + Supabase), portfolios interativos (Gatsby), e ferramentas web comerciais
+- Especialista em desenvolvimento acelerado com AI-assisted workflows (Windsurf, Claude Sonnet) mantendo arquitetura sólida e código de qualidade
+- Stack principal: Next.js, TypeScript, React Native, Supabase, Tailwind CSS com deploy em Vercel/Netlify e infraestrutura serverless
+- Projetos freelance incluindo sites institucionais para empresas de infraestrutura de TI e ferramentas internas customizadas

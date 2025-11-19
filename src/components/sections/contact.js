@@ -95,7 +95,7 @@ const Contact = () => {
       />
 
       <a className="email-link" href={`mailto:${email}`}>
-        Diga Olá
+        Vamos Conversar
       </a>
     </StyledContactSection>
   );

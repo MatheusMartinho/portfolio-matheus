@@ -99,8 +99,8 @@ const Hero = () => {
     </>
   );
   const five = (
-    <a className="email-link" href="mailto:matheusmouramartinho@gmail.com">
-      Entre em contato!
+    <a className="email-link" href="mailto:matmouramartinho@gmail.com">
+      Café Virtual?
     </a>
   );
 
