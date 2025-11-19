@@ -1,0 +1,86 @@
+[1mdiff --git a/src/components/sections/about.js b/src/components/sections/about.js[m
+[1mindex 15cc02d..7455c2b 100644[m
+[1m--- a/src/components/sections/about.js[m
+[1m+++ b/src/components/sections/about.js[m
+[36m@@ -27,9 +27,12 @@[m [mconst StyledText = styled.div`[m
+ // ✨ CARROSSEL INFINITO REAL - SEM QUEBRAS[m
+ const SkillsCarousel = styled.div`[m
+   margin-top: 30px;[m
+[31m-  overflow: hidden;[m
+[32m+[m[32m  overflow: visible;[m
+   position: relative;[m
+   width: 100%;[m
+[32m+[m[32m  height: 100px;[m
+[32m+[m[32m  display: flex;[m
+[32m+[m[32m  align-items: center;[m
+ [m
+   &:before,[m
+   &:after {[m
+[36m@@ -71,45 +74,24 @@[m [mconst SkillsCarousel = styled.div`[m
+     align-items: center;[m
+     justify-content: center;[m
+     gap: 12px;[m
+[31m-    padding: 20px;[m
+[31m-    background-color: rgba(100, 255, 218, 0.05);[m
+[31m-    border: 1px solid rgba(100, 255, 218, 0.2);[m
+[31m-    border-radius: 8px;[m
+     flex-shrink: 0;[m
+[31m-    width: 120px;[m
+[31m-    height: 120px;[m
+[32m+[m[32m    width: 60px;[m
+[32m+[m[32m    height: 60px;[m
+     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);[m
+ [m
+     svg {[m
+[31m-      width: 48px;[m
+[31m-      height: 48px;[m
+[32m+[m[32m      width: 60px;[m
+[32m+[m[32m      height: 60px;[m
+       fill: var(--slate);[m
+       flex-shrink: 0;[m
+       transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);[m
+     }[m
+ [m
+[31m-    span {[m
+[31m-      font-family: var(--font-mono);[m
+[31m-      font-size: var(--fz-xxs);[m
+[31m-      color: var(--slate);[m
+[31m-      transition: color 0.3s;[m
+[31m-      white-space: nowrap;[m
+[31m-      text-align: center;[m
+[31m-    }[m
+[31m-[m
+     &:hover {[m
+[31m-      background-color: rgba(100, 255, 218, 0.1);[m
+[31m-      border-color: var(--green);[m
+[31m-      box-shadow: 0 10px 30px -15px rgba(100, 255, 218, 0.3);[m
+[31m-[m
+       svg {[m
+         fill: var(--green);[m
+         transform: scale(1.15);[m
+       }[m
+[31m-[m
+[31m-      span {[m
+[31m-        color: var(--green);[m
+[31m-      }[m
+     }[m
+   }[m
+ [m
+[36m@@ -275,7 +257,7 @@[m [mconst About = () => {[m
+       )[m
+     },[m
+     {[m
+[31m-      name: 'REST APIs',[m
+[32m+[m[32m      name: 'REST',[m
+       icon: ([m
+         <svg viewBox="0 0 128 128">[m
+           <path d="M64 0C28.7 0 0 28.7 0 64s28.7 64 64 64 64-28.7 64-64S99.3 0 64 0zm0 120C33.1 120 8 94.9 8 64S33.1 8 64 8s56 25.1 56 56-25.1 56-56 56z"/>[m
+[36m@@ -340,7 +322,7 @@[m [mconst About = () => {[m
+           <div className="wrapper">[m
+             <StaticImage[m
+               className="img"[m
+[31m-              src="../../images/me.jpg"[m
+[32m+[m[32m              src="../../images/matheus.jpeg"[m
+               width={500}[m
+               quality={95}[m
+               formats={['AUTO', 'WEBP', 'AVIF']}[m
