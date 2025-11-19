@@ -35,4 +35,4 @@ A aplicação sobe em `http://localhost:8000`. Use `npm run build` para gerar os
 
 ---
 
-Feito com ❤️ por Matheus Martinho
+Feito com ❤️ por Matheus Martinho & Brittany
