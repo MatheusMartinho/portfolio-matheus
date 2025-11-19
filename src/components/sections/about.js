@@ -199,9 +199,9 @@ const About = () => {
 
             <p>
               Ao longo da minha carreira, construí{' '}
-              <a href="/">sistemas de orçamento com assinatura digital</a>,{' '}
-              <a href="/">plataformas de análise financeira</a>, e trabalhei remotamente das{' '}
-              <a href="/">Rochosas canadenses</a>. Hoje combino desenvolvimento tradicional com IA
+              <a href="https://orca-facil-psi.vercel.app/">sistemas de orçamento com assinatura digital</a>,{''}
+              <a href="https://studio--musclemate-ulkfm.us-central1.hosted.app">Análise de Treinos e Otimização de Performance  </a>, e trabalhei remotamente das{' '}
+              <a href="/">Rocky Mountains</a>. Hoje combino desenvolvimento tradicional com IA
               para criar produtos escaláveis usando Next.js, TypeScript e React.
             </p>
 

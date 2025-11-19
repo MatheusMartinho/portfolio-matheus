@@ -44,12 +44,22 @@ const StyledHeroSection = styled.section`
   .hero-name {
     display: inline-block;
     max-width: 100%;
-    word-break: break-word;
+    word-break: normal;
+    overflow-wrap: break-word;
     hyphens: auto;
 
     @media (max-width: 540px) {
       font-size: clamp(32px, 10vw, 52px);
       line-height: 1.1;
+    }
+  }
+
+  .hero-name__surname {
+    display: inline;
+
+    @media (max-width: 540px) {
+      display: block;
+      margin-top: 4px;
     }
   }
 
@@ -89,12 +99,22 @@ const Hero = () => {
   const two = (
     <h2 className="big-heading hero-name">
       <EncryptedText
-        text="Matheus Moura Martinho."
+        text="Matheus Moura"
         encryptedClassName="hero-name__encrypted"
         revealedClassName="hero-name__revealed"
         revealDelayMs={50}
         disabled={prefersReducedMotion}
       />
+      <span className="hero-name__surname">
+        {' '}
+        <EncryptedText
+          text="Martinho."
+          encryptedClassName="hero-name__encrypted"
+          revealedClassName="hero-name__revealed"
+          revealDelayMs={50}
+          disabled={prefersReducedMotion}
+        />
+      </span>
     </h2>
   );
   const three = <h3 className="big-heading">e eu construo experiências digitais.</h3>;
