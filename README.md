@@ -1,29 +1,38 @@
-# Portfolio - Matheus Martinho
+# Portfólio · Matheus Martinho
 
-Meu portfolio pessoal construído com Gatsby e React.
+Aplicação Gatsby que apresenta meus projetos, experiências e formas de contato.
 
-## 🚀 Tecnologias
+## ✨ Sobre o projeto
 
-- Gatsby
-- React
+Este repositório contém a versão mais recente do meu portfólio pessoal. Ele foi customizado a partir de um template Gatsby, mas toda a identidade visual, conteúdo e componentes foram adaptados para contar a minha história profissional:
+
+- Sessão "Hero" animada com meu nome e foco atual.
+- Seções dinâmicas para experiências, projetos em destaque e posts, todas alimentadas por arquivos Markdown.
+- Design responsivo com Styled Components e animações controladas por hooks.
+
+## 🛠️ Tecnologias principais
+
+- Gatsby 4
+- React 17
 - Styled Components
-- Netlify
+- GraphQL / Remark
+- Netlify (deploy)
 
-## 📦 Instalação
+## 🚀 Como rodar
+
 ```bash
 npm install
 npm start
 ```
 
-## 🎨 Créditos
+A aplicação sobe em `http://localhost:8000`. Use `npm run build` para gerar os arquivos estáticos de produção.
 
-Design inspirado no portfolio de [Brittany Chiang](https://brittanychiang.com).
-
-## 📫 Contato
+## 📬 Contato
 
 - GitHub: [@MatheusMartinho](https://github.com/MatheusMartinho)
-- LinkedIn: [seu-linkedin](https://linkedin.com/in/seu-perfil)
+- LinkedIn: [Matheus Moura Martinho](https://br.linkedin.com/in/matheus-moura-martinho-8630091b3)
+- E-mail: [matmouramartinho@gmail.com](mailto:matmouramartinho@gmail.com)
 
 ---
 
-Desenvolvido por Matheus Martinho
+Feito com ❤️ por Matheus Martinho
