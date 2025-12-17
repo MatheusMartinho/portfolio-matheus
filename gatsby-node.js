@@ -64,6 +64,14 @@ exports.createPages = async ({ actions, graphql, reporter }) => {
       },
     });
   });
+
+  // Create resume page
+  const resumeTemplate = path.resolve(`src/templates/resume.js`);
+  createPage({
+    path: '/resume',
+    component: resumeTemplate,
+    context: {},
+  });
 };
 
 // https://www.gatsbyjs.org/docs/node-apis/#onCreateWebpackConfig
