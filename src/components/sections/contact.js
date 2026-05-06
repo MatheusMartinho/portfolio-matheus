@@ -4,6 +4,7 @@ import { StaticImage } from 'gatsby-plugin-image';
 import { srConfig, email } from '@config';
 import sr from '@utils/sr';
 import { usePrefersReducedMotion } from '@hooks';
+import { useLang } from '@i18n/LanguageContext';
 
 const StyledContactSection = styled.section`
   max-width: 960px;
@@ -66,6 +67,7 @@ const StyledContactSection = styled.section`
 const Contact = () => {
   const revealContainer = useRef(null);
   const prefersReducedMotion = usePrefersReducedMotion();
+  const { t } = useLang();
 
   useEffect(() => {
     if (prefersReducedMotion) {
@@ -77,9 +79,9 @@ const Contact = () => {
 
   return (
     <StyledContactSection id="contact" ref={revealContainer}>
-      <h2 className="numbered-heading overline">E agora?</h2>
+      <h2 className="numbered-heading overline">{t.contact.overline}</h2>
 
-      <h2 className="title">Entre em Contato</h2>
+      <h2 className="title">{t.contact.title}</h2>
 
       <StaticImage
         className="contact-card"
@@ -90,7 +92,7 @@ const Contact = () => {
       />
 
       <a className="email-link" href={`mailto:${email}`}>
-        Vamos Conversar
+        {t.contact.cta}
       </a>
     </StyledContactSection>
   );

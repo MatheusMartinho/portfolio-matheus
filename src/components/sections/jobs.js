@@ -6,6 +6,7 @@ import { srConfig } from '@config';
 import { KEY_CODES } from '@utils';
 import sr from '@utils/sr';
 import { usePrefersReducedMotion } from '@hooks';
+import { useLang } from '@i18n/LanguageContext';
 
 const StyledJobsSection = styled.section`
   max-width: 700px;
@@ -174,10 +175,13 @@ const Jobs = () => {
           node {
             frontmatter {
               title
+              title_en
               company
+              company_en
               location
               range
               url
+              bullets_en
             }
             html
           }
@@ -193,6 +197,7 @@ const Jobs = () => {
   const tabs = useRef([]);
   const revealContainer = useRef(null);
   const prefersReducedMotion = usePrefersReducedMotion();
+  const { t, lang } = useLang();
 
   useEffect(() => {
     if (prefersReducedMotion) {
@@ -243,13 +248,14 @@ const Jobs = () => {
 
   return (
     <StyledJobsSection id="jobs" ref={revealContainer}>
-      <h2 className="numbered-heading">Minha Jornada</h2>
+      <h2 className="numbered-heading">{t.jobs.title}</h2>
 
       <div className="inner">
         <StyledTabList role="tablist" aria-label="Job tabs" onKeyDown={e => onKeyDown(e)}>
           {jobsData &&
             jobsData.map(({ node }, i) => {
-              const { company } = node.frontmatter;
+              const { company, company_en } = node.frontmatter;
+              const displayCompany = lang === 'en' && company_en ? company_en : company;
               return (
                 <StyledTabButton
                   key={i}
@@ -261,7 +267,7 @@ const Jobs = () => {
                   tabIndex={activeTabId === i ? '0' : '-1'}
                   aria-selected={activeTabId === i ? true : false}
                   aria-controls={`panel-${i}`}>
-                  <span>{company}</span>
+                  <span>{displayCompany}</span>
                 </StyledTabButton>
               );
             })}
@@ -272,7 +278,10 @@ const Jobs = () => {
           {jobsData &&
             jobsData.map(({ node }, i) => {
               const { frontmatter, html } = node;
-              const { title, url, company, range } = frontmatter;
+              const { title, title_en, url, company, company_en, range, bullets_en } = frontmatter;
+              const displayTitle = lang === 'en' && title_en ? title_en : title;
+              const displayCompany = lang === 'en' && company_en ? company_en : company;
+              const showEnBullets = lang === 'en' && bullets_en && bullets_en.length > 0;
 
               return (
                 <CSSTransition key={i} in={activeTabId === i} timeout={250} classNames="fade">
@@ -284,18 +293,26 @@ const Jobs = () => {
                     aria-hidden={activeTabId !== i}
                     hidden={activeTabId !== i}>
                     <h3>
-                      <span>{title}</span>
+                      <span>{displayTitle}</span>
                       <span className="company">
                         &nbsp;@&nbsp;
                         <a href={url} className="inline-link">
-                          {company}
+                          {displayCompany}
                         </a>
                       </span>
                     </h3>
 
                     <p className="range">{range}</p>
 
-                    <div dangerouslySetInnerHTML={{ __html: html }} />
+                    {showEnBullets ? (
+                      <ul>
+                        {bullets_en.map((b, j) => (
+                          <li key={j}>{b}</li>
+                        ))}
+                      </ul>
+                    ) : (
+                      <div dangerouslySetInnerHTML={{ __html: html }} />
+                    )}
                   </StyledTabPanel>
                 </CSSTransition>
               );

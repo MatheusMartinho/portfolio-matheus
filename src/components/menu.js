@@ -3,6 +3,7 @@ import { Helmet } from 'react-helmet';
 import { Link } from 'gatsby';
 import styled from 'styled-components';
 import { navLinks } from '@config';
+import { useLang } from '@i18n/LanguageContext';
 import { KEY_CODES } from '@utils';
 import { useOnClickOutside } from '@hooks';
 
@@ -157,6 +158,7 @@ const StyledSidebar = styled.aside`
 
 const Menu = () => {
   const [menuOpen, setMenuOpen] = useState(false);
+  const { lang, setLanguage, t } = useLang();
 
   const toggleMenu = () => setMenuOpen(!menuOpen);
 
@@ -256,10 +258,10 @@ const Menu = () => {
           <nav ref={navRef}>
             {navLinks && (
               <ol>
-                {navLinks.map(({ url, name }, i) => (
+                {navLinks.map(({ url, key }, i) => (
                   <li key={i}>
                     <Link to={url} onClick={() => setMenuOpen(false)}>
-                      {name}
+                      {t.nav[key]}
                     </Link>
                   </li>
                 ))}
@@ -267,8 +269,25 @@ const Menu = () => {
             )}
 
             <a href="/resume" className="resume-link" target="_blank" rel="noopener noreferrer">
-              Resume
+              {t.nav.resume}
             </a>
+
+            <button
+              type="button"
+              onClick={() => setLanguage(lang === 'pt' ? 'en' : 'pt')}
+              style={{
+                marginTop: 24,
+                padding: '8px 14px',
+                background: 'transparent',
+                border: '1px solid var(--lightest-navy)',
+                borderRadius: 'var(--border-radius)',
+                color: 'var(--green)',
+                fontFamily: 'var(--font-mono)',
+                fontSize: 'var(--fz-sm)',
+                cursor: 'pointer',
+              }}>
+              {lang === 'pt' ? '🇺🇸 EN' : '🇧🇷 PT'}
+            </button>
           </nav>
         </StyledSidebar>
       </div>

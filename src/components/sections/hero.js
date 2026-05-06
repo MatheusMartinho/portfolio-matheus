@@ -4,6 +4,7 @@ import { StaticImage } from 'gatsby-plugin-image';
 import styled from 'styled-components';
 import { navDelay, loaderDelay } from '@utils';
 import { usePrefersReducedMotion } from '@hooks';
+import { useLang } from '@i18n/LanguageContext';
 import EncryptedText from '@components/ui/encrypted-text';
 
 const StyledHeroSection = styled.section`
@@ -179,6 +180,7 @@ const StyledPortrait = styled.div`
 const Hero = () => {
   const [isMounted, setIsMounted] = useState(false);
   const prefersReducedMotion = usePrefersReducedMotion();
+  const { t } = useLang();
 
   useEffect(() => {
     if (prefersReducedMotion) {
@@ -189,7 +191,7 @@ const Hero = () => {
     return () => clearTimeout(timeout);
   }, []);
 
-  const one = <h1>Oi, meu nome é</h1>;
+  const one = <h1>{t.hero.greeting}</h1>;
   const two = (
     <h2 className="big-heading hero-name">
       <EncryptedText
@@ -211,14 +213,11 @@ const Hero = () => {
       </span>
     </h2>
   );
-  const three = <h3 className="big-heading">e eu construo experiências digitais.</h3>;
+  const three = <h3 className="big-heading">{t.hero.tagline}</h3>;
   const four = (
     <>
       <p>
-        Sou um desenvolvedor especializado em construir experiências digitais que resolvem problemas
-        reais. Atualmente, estou focado em desenvolver produtos escaláveis usando Next.js,
-        TypeScript e IA como parceira de desenvolvimento. Estou trabalhando principalmente no{' '}
-        <a href="#projects">The Pitch</a> e no{' '}
+        {t.hero.paragraphPart1} <a href="#projects">The Pitch</a> {t.hero.paragraphPart2}{' '}
         <a href="https://github.com/MatheusMartinho/cinelog" target="_blank" rel="noreferrer">
           CINELOG
         </a>
@@ -228,7 +227,7 @@ const Hero = () => {
   );
   const five = (
     <a className="email-link" href="mailto:matmouramartinho@gmail.com">
-      Café Virtual?
+      {t.hero.cta}
     </a>
   );
 

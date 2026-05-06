@@ -9,6 +9,7 @@ tech:
   - HTML
 
 showInProjects: true
+description_en: 'Simple todo list built with vanilla JavaScript to practice DOM manipulation fundamentals, events and localStorage. A study project focused on logic and interactivity.'
 ---
 
 Lista de tarefas simples construída com JavaScript vanilla para praticar fundamentos de DOM manipulation, eventos e localStorage. Projeto de estudo focado em lógica e interatividade.

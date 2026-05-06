@@ -5,6 +5,7 @@ import styled, { keyframes } from 'styled-components';
 import { srConfig } from '@config';
 import sr from '@utils/sr';
 import { usePrefersReducedMotion } from '@hooks';
+import { useLang } from '@i18n/LanguageContext';
 
 const StyledAboutSection = styled.section`
   max-width: 1100px;
@@ -244,6 +245,7 @@ const ROW_TWO = [
 const About = () => {
   const revealContainer = useRef(null);
   const prefersReducedMotion = usePrefersReducedMotion();
+  const { t } = useLang();
 
   useEffect(() => {
     if (prefersReducedMotion) {
@@ -264,44 +266,37 @@ const About = () => {
 
   return (
     <StyledAboutSection id="about" ref={revealContainer}>
-      <h2 className="numbered-heading">Sobre mim</h2>
+      <h2 className="numbered-heading">{t.about.title}</h2>
 
       <div className="inner">
         <StyledText>
-          <p>
-            Olá, sou o Matheus. Faço produtos digitais do zero ao deploy: arquitetura, código,
-            infra e UX.
-          </p>
+          <p>{t.about.p1}</p>
 
           <p>
-            Comecei em ciência da computação na faculdade, mas foi num bootcamp em Vancouver que
-            aprendi a programar de verdade. Desde então, lancei o{' '}
+            {t.about.p2Start}{' '}
             <a href="https://orca-facil-psi.vercel.app/" target="_blank" rel="noreferrer">
               OrçaFácil
             </a>{' '}
-            (SaaS de orçamento com assinatura digital e pagamentos via PIX), o{' '}
+            {t.about.p2Mid}{' '}
             <a
               href="https://studio--musclemate-ulkfm.us-central1.hosted.app"
               target="_blank"
               rel="noreferrer">
               MuscleMate
             </a>{' '}
-            (análise e otimização de treinos), e passei uma temporada codando remoto das Rocky
-            Mountains.
+            {t.about.p2End}
           </p>
 
           <p>
-            Hoje trabalho em dois projetos: o <a href="#projects">The Pitch</a>, app de check-in
-            social com verificação por GPS para torcedor brasileiro no estádio, e o{' '}
+            {t.about.p3Start} <a href="#projects">The Pitch</a>
+            {t.about.p3Mid}{' '}
             <a
               href="https://github.com/MatheusMartinho/cinelog"
               target="_blank"
               rel="noreferrer">
               CINELOG
             </a>
-            , alternativa ao Letterboxd pensada para cinéfilos brasileiros. Ambos em React Native,
-            Expo e Supabase. No fluxo de trabalho, uso o Claude para acelerar refactor, debug e
-            revisão de código sem abrir mão da qualidade.
+            {t.about.p3End}
           </p>
 
           <StyledStackBlock>

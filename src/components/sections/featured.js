@@ -7,6 +7,7 @@ import { srConfig } from '@config';
 import { Icon } from '@components/icons';
 import Iphone from '@components/ui/iphone';
 import { usePrefersReducedMotion } from '@hooks';
+import { useLang } from '@i18n/LanguageContext';
 
 const StyledProjectsGrid = styled.ul`
   ${({ theme }) => theme.mixins.resetList};
@@ -406,6 +407,7 @@ const Featured = () => {
               ios
               android
               androidEmailRequired
+              description_en
             }
             html
           }
@@ -418,6 +420,7 @@ const Featured = () => {
   const revealTitle = useRef(null);
   const revealProjects = useRef([]);
   const prefersReducedMotion = usePrefersReducedMotion();
+  const { t, lang } = useLang();
 
   useEffect(() => {
     if (prefersReducedMotion) {
@@ -431,7 +434,7 @@ const Featured = () => {
   return (
     <section id="projects">
       <h2 className="numbered-heading" ref={revealTitle}>
-        Alguns Projetos Que Desenvolvi
+        {t.featured.title}
       </h2>
 
       <StyledProjectsGrid>
@@ -449,6 +452,7 @@ const Featured = () => {
               ios,
               android,
               androidEmailRequired,
+              description_en,
             } = frontmatter;
             const image = getImage(cover);
             const screenImages = (screens || []).map(s => getImage(s)).filter(Boolean);
@@ -458,16 +462,22 @@ const Featured = () => {
               <StyledProject key={i} ref={el => (revealProjects.current[i] = el)}>
                 <div className="project-content">
                   <div>
-                    <p className="project-overline">Projeto em Destaque</p>
+                    <p className="project-overline">{t.featured.overline}</p>
 
                     <h3 className="project-title">
                       <a href={external}>{title}</a>
                     </h3>
 
-                    <div
-                      className="project-description"
-                      dangerouslySetInnerHTML={{ __html: html }}
-                    />
+                    {lang === 'en' && description_en ? (
+                      <div className="project-description">
+                        <p>{description_en}</p>
+                      </div>
+                    ) : (
+                      <div
+                        className="project-description"
+                        dangerouslySetInnerHTML={{ __html: html }}
+                      />
+                    )}
 
                     {tech.length && (
                       <ul className="project-tech-list">
@@ -488,7 +498,7 @@ const Featured = () => {
                               rel="noreferrer"
                               aria-label="Beta iOS via TestFlight">
                               <Icon name="AppStore" />
-                              <span>TestFlight (iOS)</span>
+                              <span>{t.featured.ios}</span>
                             </a>
                           )}
                           {android && (
@@ -507,15 +517,12 @@ const Featured = () => {
                               rel="noreferrer"
                               aria-label="Beta Android via Google Play">
                               <Icon name="PlayStore" />
-                              <span>Beta Android</span>
+                              <span>{t.featured.android}</span>
                             </a>
                           )}
                         </div>
                         {androidEmailRequired && android && (
-                          <p className="store-note">
-                            * Beta Android exige aprovação manual. Me envie seu Gmail e libero em
-                            até 24h.
-                          </p>
+                          <p className="store-note">{t.featured.androidNote}</p>
                         )}
                       </>
                     )}

@@ -25,22 +25,10 @@ module.exports = {
   ],
 
   navLinks: [
-    {
-      name: 'Sobre',
-      url: '/#about',
-    },
-    {
-      name: 'Experiência',
-      url: '/#jobs',
-    },
-    {
-      name: 'Trabalho',
-      url: '/#projects',
-    },
-    {
-      name: 'Contato',
-      url: '/#contact',
-    },
+    { key: 'about', url: '/#about' },
+    { key: 'experience', url: '/#jobs' },
+    { key: 'work', url: '/#projects' },
+    { key: 'contact', url: '/#contact' },
   ],
 
   colors: {

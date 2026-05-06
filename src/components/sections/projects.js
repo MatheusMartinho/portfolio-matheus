@@ -6,6 +6,7 @@ import { srConfig } from '@config';
 import sr from '@utils/sr';
 import { Icon } from '@components/icons';
 import { usePrefersReducedMotion } from '@hooks';
+import { useLang } from '@i18n/LanguageContext';
 
 const StyledProjectsSection = styled.section`
   display: flex;
@@ -182,6 +183,7 @@ const Projects = () => {
               tech
               github
               external
+              description_en
             }
             html
           }
@@ -195,6 +197,7 @@ const Projects = () => {
   const revealArchiveLink = useRef(null);
   const revealProjects = useRef([]);
   const prefersReducedMotion = usePrefersReducedMotion();
+  const { t, lang } = useLang();
 
   useEffect(() => {
     if (prefersReducedMotion) {
@@ -213,7 +216,7 @@ const Projects = () => {
 
   const projectInner = node => {
     const { frontmatter, html } = node;
-    const { github, external, title, tech } = frontmatter;
+    const { github, external, title, tech, description_en } = frontmatter;
 
     return (
       <div className="project-inner">
@@ -247,7 +250,13 @@ const Projects = () => {
             </a>
           </h3>
 
-          <div className="project-description" dangerouslySetInnerHTML={{ __html: html }} />
+          {lang === 'en' && description_en ? (
+            <div className="project-description">
+              <p>{description_en}</p>
+            </div>
+          ) : (
+            <div className="project-description" dangerouslySetInnerHTML={{ __html: html }} />
+          )}
         </header>
 
         <footer>
@@ -265,7 +274,7 @@ const Projects = () => {
 
   return (
     <StyledProjectsSection>
-      <h2 ref={revealTitle}>Outros Projetos</h2>
+      <h2 ref={revealTitle}>{t.otherProjects.title}</h2>
 
       <Link className="inline-link archive-link" to="/archive" ref={revealArchiveLink}>
         Consultar Arquivos
@@ -303,7 +312,7 @@ const Projects = () => {
       </ul>
 
       <button className="more-button" onClick={() => setShowMore(!showMore)}>
-        Mostrar {showMore ? 'Menos' : 'Mais'}
+        {showMore ? t.otherProjects.showLess : t.otherProjects.showMore}
       </button>
     </StyledProjectsSection>
   );

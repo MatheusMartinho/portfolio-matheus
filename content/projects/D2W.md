@@ -10,6 +10,7 @@ tech:
   - PostCSS
 company: 'D2W'
 showInProjects: true
+description_en: 'Marketing website for a server racks and infrastructure company. Modern frontend built with TypeScript, Vite and Tailwind CSS, focused on performance and responsive design.'
 ---
 
 Website institucional para empresa de racks e infraestrutura de servidores. Frontend moderno construído com TypeScript, Vite e Tailwind CSS com foco em performance e design responsivo.

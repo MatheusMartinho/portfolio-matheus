@@ -7,6 +7,7 @@ import { navLinks } from '@config';
 import { loaderDelay } from '@utils';
 import { useScrollDirection, usePrefersReducedMotion } from '@hooks';
 import { Menu } from '@components';
+import { useLang } from '@i18n/LanguageContext';
 import ProfileLogo from '@images/sticker-logo.png';
 
 const StyledHeader = styled.header`
@@ -158,6 +159,25 @@ const StyledLinks = styled.div`
     margin-left: 15px;
     font-size: var(--fz-xs);
   }
+
+  .lang-switch {
+    margin-left: 12px;
+    padding: 6px 10px;
+    border: 1px solid var(--lightest-navy);
+    border-radius: var(--border-radius);
+    background: transparent;
+    color: var(--light-slate);
+    font-family: var(--font-mono);
+    font-size: var(--fz-xxs);
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    transition: var(--transition);
+
+    &:hover {
+      border-color: var(--green);
+      color: var(--green);
+    }
+  }
 `;
 
 const Nav = ({ isHome }) => {
@@ -165,6 +185,7 @@ const Nav = ({ isHome }) => {
   const scrollDirection = useScrollDirection('down');
   const [scrolledToTop, setScrolledToTop] = useState(true);
   const prefersReducedMotion = usePrefersReducedMotion();
+  const { lang, setLanguage, t } = useLang();
 
   const handleScroll = () => {
     setScrolledToTop(window.pageYOffset < 50);
@@ -208,8 +229,18 @@ const Nav = ({ isHome }) => {
 
   const ResumeLink = (
     <a className="resume-button" href="/resume" target="_blank" rel="noopener noreferrer">
-      Currículo
+      {t.nav.resume}
     </a>
+  );
+
+  const LangSwitch = (
+    <button
+      type="button"
+      className="lang-switch"
+      onClick={() => setLanguage(lang === 'pt' ? 'en' : 'pt')}
+      aria-label="Toggle language">
+      {lang === 'pt' ? '🇺🇸 EN' : '🇧🇷 PT'}
+    </button>
   );
 
   return (
@@ -222,13 +253,14 @@ const Nav = ({ isHome }) => {
             <StyledLinks>
               <ol>
                 {navLinks &&
-                  navLinks.map(({ url, name }, i) => (
+                  navLinks.map(({ url, key }, i) => (
                     <li key={i}>
-                      <Link to={url}>{name}</Link>
+                      <Link to={url}>{t.nav[key]}</Link>
                     </li>
                   ))}
               </ol>
               <div>{ResumeLink}</div>
+              {LangSwitch}
             </StyledLinks>
 
             <Menu />
@@ -248,10 +280,10 @@ const Nav = ({ isHome }) => {
                 <TransitionGroup component={null}>
                   {isMounted &&
                     navLinks &&
-                    navLinks.map(({ url, name }, i) => (
+                    navLinks.map(({ url, key }, i) => (
                       <CSSTransition key={i} classNames={fadeDownClass} timeout={timeout}>
                         <li key={i} style={{ transitionDelay: `${isHome ? i * 100 : 0}ms` }}>
-                          <Link to={url}>{name}</Link>
+                          <Link to={url}>{t.nav[key]}</Link>
                         </li>
                       </CSSTransition>
                     ))}
@@ -263,6 +295,19 @@ const Nav = ({ isHome }) => {
                   <CSSTransition classNames={fadeDownClass} timeout={timeout}>
                     <div style={{ transitionDelay: `${isHome ? navLinks.length * 100 : 0}ms` }}>
                       {ResumeLink}
+                    </div>
+                  </CSSTransition>
+                )}
+              </TransitionGroup>
+
+              <TransitionGroup component={null}>
+                {isMounted && (
+                  <CSSTransition classNames={fadeDownClass} timeout={timeout}>
+                    <div
+                      style={{
+                        transitionDelay: `${isHome ? (navLinks.length + 1) * 100 : 0}ms`,
+                      }}>
+                      {LangSwitch}
                     </div>
                   </CSSTransition>
                 )}

@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import styled, { ThemeProvider } from 'styled-components';
 import { Head, Loader, Nav, Social, Email, Footer } from '@components';
 import { GlobalStyle, theme } from '@styles';
+import { LanguageProvider } from '@i18n/LanguageContext';
 import Spotlight from './spotlight';
 
 const StyledContent = styled.div`
@@ -33,8 +34,16 @@ const Layout = ({ children, location }) => {
       return;
     }
 
-    if (location.hash) {
-      const id = location.hash.substring(1); // location.hash without the '#'
+    const navType = performance.getEntriesByType('navigation')[0]?.type;
+    const isReload = navType === 'reload';
+
+    if (isReload) {
+      if (location.hash) {
+        window.history.replaceState(null, '', location.pathname);
+      }
+      window.scrollTo(0, 0);
+    } else if (location.hash) {
+      const id = location.hash.substring(1);
       setTimeout(() => {
         const el = document.getElementById(id);
         if (el) {
@@ -48,7 +57,7 @@ const Layout = ({ children, location }) => {
   }, [isLoading]);
 
   return (
-    <>
+    <LanguageProvider>
       <Head />
 
       <div id="root">
@@ -76,7 +85,7 @@ const Layout = ({ children, location }) => {
           )}
         </ThemeProvider>
       </div>
-    </>
+    </LanguageProvider>
   );
 };
 
