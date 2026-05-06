@@ -318,49 +318,6 @@ const StyledProject = styled.li`
     @media (max-width: 768px) {
       grid-column: 1 / -1;
     }
-
-    .iphone-screen {
-      position: relative;
-      width: 100%;
-      height: 100%;
-      background-color: var(--green);
-      border-radius: var(--border-radius);
-
-      &:after {
-        content: '';
-        position: absolute;
-        inset: 0;
-        background-color: var(--navy);
-        mix-blend-mode: screen;
-        opacity: 1;
-        transition: var(--transition);
-        pointer-events: none;
-      }
-
-      .screen-image {
-        border-radius: inherit;
-        width: 100%;
-        height: 100%;
-        mix-blend-mode: multiply;
-        filter: grayscale(100%) contrast(1) brightness(90%);
-        transition: var(--transition);
-      }
-    }
-
-    &:hover,
-    &:focus-within {
-      .iphone-screen {
-        background-color: transparent;
-      }
-      .iphone-screen:after {
-        opacity: 0;
-      }
-
-      .iphone-screen .screen-image {
-        mix-blend-mode: normal;
-        filter: none;
-      }
-    }
   }
 `;
 
@@ -376,6 +333,11 @@ const Featured = () => {
             frontmatter {
               title
               cover {
+                childImageSharp {
+                  gatsbyImageData(width: 700, placeholder: BLURRED, formats: [AUTO, WEBP, AVIF])
+                }
+              }
+              screens {
                 childImageSharp {
                   gatsbyImageData(width: 700, placeholder: BLURRED, formats: [AUTO, WEBP, AVIF])
                 }
@@ -416,8 +378,9 @@ const Featured = () => {
         {featuredProjects &&
           featuredProjects.map(({ node }, i) => {
             const { frontmatter, html } = node;
-            const { external, title, tech, github, cover, mockup } = frontmatter;
+            const { external, title, tech, github, cover, screens, mockup } = frontmatter;
             const image = getImage(cover);
+            const screenImages = (screens || []).map(s => getImage(s)).filter(Boolean);
             const shouldUseIphoneMockup = mockup === 'iphone';
 
             return (
@@ -460,7 +423,11 @@ const Featured = () => {
 
                 {shouldUseIphoneMockup ? (
                   <div className="project-image project-image--iphone">
-                    <Iphone image={image} alt={title} />
+                    <Iphone
+                      image={image}
+                      images={screenImages.length > 0 ? screenImages : undefined}
+                      alt={title}
+                    />
                   </div>
                 ) : (
                   <div className="project-image">
