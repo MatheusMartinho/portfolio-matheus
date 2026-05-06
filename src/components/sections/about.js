@@ -1,18 +1,19 @@
-import React, { useEffect, useMemo, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+import PropTypes from 'prop-types';
 import { StaticImage } from 'gatsby-plugin-image';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import { srConfig } from '@config';
 import sr from '@utils/sr';
 import { usePrefersReducedMotion } from '@hooks';
-import IconCloud from '@components/icon-cloud';
 
 const StyledAboutSection = styled.section`
-  max-width: 900px;
+  max-width: 1100px;
 
   .inner {
     display: grid;
     grid-template-columns: 3fr 2fr;
-    grid-gap: 50px;
+    grid-gap: 60px;
+    align-items: center;
 
     @media (max-width: 768px) {
       display: block;
@@ -23,100 +24,222 @@ const StyledAboutSection = styled.section`
 const StyledText = styled.div`
   overflow: hidden;
   min-width: 0;
+
+  p {
+    margin: 0 0 16px;
+  }
 `;
 
-const StyledIconCloudWrapper = styled.div`
-  margin-top: -60px;
+const StyledStackBlock = styled.div`
+  margin-top: 35px;
+`;
+
+const StyledStackHeader = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 18px;
+
+  .stack-label {
+    font-family: var(--font-mono);
+    font-size: var(--fz-xs);
+    color: var(--green);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .stack-line {
+    flex: 1;
+    height: 1px;
+    background: var(--lightest-navy);
+  }
+`;
+
+const scrollLeft = keyframes`
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+`;
+
+const scrollRight = keyframes`
+  from { transform: translateX(-50%); }
+  to   { transform: translateX(0); }
+`;
+
+const StyledMarquee = styled.div`
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  mask-image: linear-gradient(
+    to right,
+    transparent 0,
+    black 8%,
+    black 92%,
+    transparent 100%
+  );
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0,
+    black 8%,
+    black 92%,
+    transparent 100%
+  );
+
+  & + & {
+    margin-top: 12px;
+  }
+`;
+
+const StyledTrack = styled.div`
+  display: flex;
+  gap: 10px;
+  width: max-content;
+  animation: ${({ $direction }) => ($direction === 'right' ? scrollRight : scrollLeft)}
+    ${({ $duration }) => $duration}s linear infinite;
+
+  ${StyledMarquee}:hover & {
+    animation-play-state: paused;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
+`;
+
+const StyledChip = styled.span`
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  border: 1px solid var(--lightest-navy);
+  border-radius: 50%;
+  background: var(--light-navy);
+  color: var(--light-slate);
+  transition: var(--transition);
+  cursor: default;
+  flex-shrink: 0;
+
+  img {
+    width: 28px;
+    height: 28px;
+    object-fit: contain;
+    transition: var(--transition);
+  }
+
+  .fallback {
+    font-family: var(--font-mono);
+    font-size: var(--fz-md);
+    font-weight: 600;
+    color: var(--light-slate);
+  }
+
+  &:hover {
+    border-color: var(--green);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 16px -8px rgba(100, 255, 218, 0.35);
+
+    img {
+      transform: scale(1.1);
+    }
+
+    .fallback {
+      color: var(--green);
+    }
+  }
+`;
+
+const TechIcon = ({ name, slug }) => {
+  const [errored, setErrored] = useState(!slug);
+
+  return (
+    <StyledChip title={name} aria-label={name}>
+      {errored ? (
+        <span className="fallback">{name.charAt(0).toUpperCase()}</span>
+      ) : (
+        <img
+          src={`https://cdn.simpleicons.org/${slug}`}
+          alt={name}
+          loading="lazy"
+          onError={() => setErrored(true)}
+        />
+      )}
+    </StyledChip>
+  );
+};
+
+TechIcon.propTypes = {
+  name: PropTypes.string.isRequired,
+  slug: PropTypes.string,
+};
+
+const StyledCard = styled.div`
+  position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
   width: 100%;
-  max-width: 320px;
-  aspect-ratio: 1/1;
-  margin-left: 185px;
-  margin-right: auto;
-
-  @media (max-width: 768px) {
-    margin: 30px auto 0;
-  }
-
-  @media (max-width: 480px) {
-    max-width: 260px;
-  }
-
-  canvas {
-    width: 100% !important;
-    height: auto !important;
-    max-width: 100%;
-  }
-`;
-
-const StyledPic = styled.div`
-  position: relative;
-  max-width: 300px;
+  max-width: 420px;
+  margin-left: auto;
 
   @media (max-width: 768px) {
     margin: 50px auto 0;
-    width: 70%;
+    max-width: 320px;
   }
 
-  .wrapper {
-    ${({ theme }) => theme.mixins.boxShadow};
-    display: block;
+  .card-frame {
     position: relative;
     width: 100%;
-    border-radius: var(--border-radius);
-    background-color: var(--green);
+    transform: rotate(-2deg);
+    transition: var(--transition);
+    filter: drop-shadow(0 25px 35px rgba(2, 12, 27, 0.7))
+      drop-shadow(0 8px 12px rgba(2, 12, 27, 0.45));
 
-    &:hover,
-    &:focus {
-      outline: 0;
-      transform: translate(-4px, -4px);
-
-      &:after {
-        transform: translate(8px, 8px);
-      }
-
-      .img {
-        filter: none;
-        mix-blend-mode: normal;
-      }
-    }
-
-    .img {
-      position: relative;
-      border-radius: var(--border-radius);
-      mix-blend-mode: multiply;
-      filter: grayscale(100%) contrast(1);
-      transition: var(--transition);
-    }
-
-    &:before,
-    &:after {
-      content: '';
-      display: block;
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      border-radius: var(--border-radius);
-      transition: var(--transition);
-    }
-
-    &:before {
-      top: 0;
-      left: 0;
-      background-color: var(--navy);
-      mix-blend-mode: screen;
-    }
-
-    &:after {
-      border: 2px solid var(--green);
-      top: 14px;
-      left: 14px;
-      z-index: -1;
+    &:hover {
+      transform: rotate(0deg) translateY(-6px);
+      filter: drop-shadow(0 35px 45px rgba(2, 12, 27, 0.85))
+        drop-shadow(0 12px 18px rgba(2, 12, 27, 0.55));
     }
   }
 `;
+
+const ROW_ONE = [
+  { name: 'TypeScript', slug: 'typescript' },
+  { name: 'JavaScript', slug: 'javascript' },
+  { name: 'Python', slug: 'python' },
+  { name: 'Next.js', slug: 'nextdotjs' },
+  { name: 'React', slug: 'react' },
+  { name: 'React Native', slug: 'react' },
+  { name: 'Expo', slug: 'expo' },
+  { name: 'Tailwind CSS', slug: 'tailwindcss' },
+  { name: 'Vite', slug: 'vite' },
+  { name: 'HTML5', slug: 'html5' },
+  { name: 'CSS3', slug: 'css3' },
+  { name: 'Angular', slug: 'angular' },
+  { name: 'Flutter', slug: 'flutter' },
+  { name: 'Dart', slug: 'dart' },
+];
+
+const ROW_TWO = [
+  { name: 'Node.js', slug: 'nodedotjs' },
+  { name: 'Express', slug: 'express' },
+  { name: 'Supabase', slug: 'supabase' },
+  { name: 'PostgreSQL', slug: 'postgresql' },
+  { name: 'Firebase', slug: 'firebase' },
+  { name: 'Stripe', slug: 'stripe' },
+  { name: 'Vercel', slug: 'vercel' },
+  { name: 'Cloudflare', slug: 'cloudflare' },
+  { name: 'Git', slug: 'git' },
+  { name: 'GitHub', slug: 'github' },
+  { name: 'Figma', slug: 'figma' },
+  { name: 'Insomnia', slug: 'insomnia' },
+  { name: 'Claude', slug: 'claude' },
+  { name: 'Cursor', slug: 'cursor' },
+  { name: 'Windsurf', slug: 'codeium' },
+  { name: 'Xcode', slug: 'xcode' },
+  { name: 'Android Studio', slug: 'androidstudio' },
+  { name: 'Jupyter', slug: 'jupyter' },
+];
 
 const About = () => {
   const revealContainer = useRef(null);
@@ -126,61 +249,17 @@ const About = () => {
     if (prefersReducedMotion) {
       return;
     }
-
     sr.reveal(revealContainer.current, srConfig());
   }, []);
 
-  // 🎨 Skills com SVG logos
-  const iconSlugs = useMemo(
-    () => [
-      // Linguagens
-      'typescript',
-      'javascript',
-      'python',
-
-      // Frontend
-      'react',
-      'nextdotjs',
-      'html5',
-      'Vite',
-      'tailwindcss',
-
-      // Mobile
-      'flutter',
-      'dart',
-      'android',
-      'Jupyter',
-
-      // Backend
-      'nodedotjs',
-      'express',
-      'supabase',
-      'postgresql',
-      'stripe',
-
-      // Cloud/Deploy
-      'vercel',
-      'Angular',
-      'firebase',
-      'cloudflare',
-
-      // Database
-      'postgresql',
-      'css',
-
-      // Tools
-      'git',
-      'github',
-      'Claude',
-      'figma',
-      'Insomnia',
-      'Expo',
-
-      // Testing
-      'Xcode',
-      'Windsurf',
-    ],
-    [],
+  const renderRow = (items, direction, duration) => (
+    <StyledMarquee>
+      <StyledTrack $direction={direction} $duration={duration}>
+        {[...items, ...items].map((tech, i) => (
+          <TechIcon key={`${tech.name}-${i}`} name={tech.name} slug={tech.slug} />
+        ))}
+      </StyledTrack>
+    </StyledMarquee>
   );
 
   return (
@@ -189,47 +268,62 @@ const About = () => {
 
       <div className="inner">
         <StyledText>
-          <div>
-            <p>
-              Olá! Sou Matheus, desenvolvedor focado em criar experiências digitais que resolvem
-              problemas reais. Minha jornada começou na faculdade de ciência da computação, mas foi
-              ao fazer um bootcamp em Vancouver que descobri minha verdadeira vocação — aprender
-              construindo.
-            </p>
+          <p>
+            Olá, sou o Matheus. Faço produtos digitais do zero ao deploy: arquitetura, código,
+            infra e UX.
+          </p>
 
-            <p>
-              Ao longo da minha carreira, construí{' '}
-              <a href="https://orca-facil-psi.vercel.app/">sistemas de orçamento com assinatura digital</a>,{''}
-              <a href="https://studio--musclemate-ulkfm.us-central1.hosted.app">Análise de Treinos e Otimização de Performance  </a>, e trabalhei remotamente das{' '}
-              <a href="/">Rocky Mountains</a>. Hoje combino desenvolvimento tradicional com IA
-              para criar produtos escaláveis usando Next.js, TypeScript e React.
-            </p>
+          <p>
+            Comecei em ciência da computação na faculdade, mas foi num bootcamp em Vancouver que
+            aprendi a programar de verdade. Desde então, lancei o{' '}
+            <a href="https://orca-facil-psi.vercel.app/" target="_blank" rel="noreferrer">
+              OrçaFácil
+            </a>{' '}
+            (SaaS de orçamento com assinatura digital e pagamentos via PIX), o{' '}
+            <a
+              href="https://studio--musclemate-ulkfm.us-central1.hosted.app"
+              target="_blank"
+              rel="noreferrer">
+              MuscleMate
+            </a>{' '}
+            (análise e otimização de treinos), e passei uma temporada codando remoto das Rocky
+            Mountains.
+          </p>
 
-            <p>
-              Atualmente desenvolvendo o <a href="/">CINELOG</a>, uma plataforma social para
-              cinéfilos brasileiros — pensada como alternativa ao Letterboxd para nosso mercado,
-              utilizando React Native, Supabase e TMDB.
-            </p>
+          <p>
+            Hoje trabalho em dois projetos: o <a href="#projects">The Pitch</a>, app de check-in
+            social com verificação por GPS para torcedor brasileiro no estádio, e o{' '}
+            <a
+              href="https://github.com/MatheusMartinho/cinelog"
+              target="_blank"
+              rel="noreferrer">
+              CINELOG
+            </a>
+            , alternativa ao Letterboxd pensada para cinéfilos brasileiros. Ambos em React Native,
+            Expo e Supabase. No fluxo de trabalho, uso o Claude para acelerar refactor, debug e
+            revisão de código sem abrir mão da qualidade.
+          </p>
 
-            <p className="tech-title">Tecnologias que utilizo:</p>
-            <StyledIconCloudWrapper>
-              <IconCloud slugs={iconSlugs} size={260} rotationSpeed={0.35} iconScale={0.7} />
-            </StyledIconCloudWrapper>
-          </div>
+          <StyledStackBlock>
+            <StyledStackHeader>
+              <span className="stack-label">~/stack</span>
+              <span className="stack-line" />
+            </StyledStackHeader>
+            {renderRow(ROW_ONE, 'left', 45)}
+            {renderRow(ROW_TWO, 'right', 55)}
+          </StyledStackBlock>
         </StyledText>
 
-        <StyledPic>
-          <div className="wrapper">
+        <StyledCard>
+          <div className="card-frame">
             <StaticImage
-              className="img"
-              src="../../images/matheus.jpeg"
-              width={500}
+              src="../../images/builder-card.png"
+              alt="Matheus Moura Martinho — The Builder credential"
+              placeholder="blurred"
               quality={95}
-              formats={['AUTO', 'WEBP', 'AVIF']}
-              alt="Headshot"
             />
           </div>
-        </StyledPic>
+        </StyledCard>
       </div>
     </StyledAboutSection>
   );

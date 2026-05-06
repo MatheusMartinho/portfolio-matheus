@@ -6,7 +6,7 @@ import sr from '@utils/sr';
 import { usePrefersReducedMotion } from '@hooks';
 
 const StyledContactSection = styled.section`
-  max-width: 600px;
+  max-width: 960px;
   margin: 0 auto 100px;
   text-align: center;
 
@@ -42,12 +42,12 @@ const StyledContactSection = styled.section`
   }
 
   .contact-card {
-    margin: 20px auto 16px;
-    width: min(100%, 420px);
+    margin: 30px auto 16px;
+    width: min(100%, 860px);
     display: block;
     border-radius: 8px;
-    filter: drop-shadow(0 15px 26px rgba(2, 12, 27, 0.26))
-      drop-shadow(0 6px 14px rgba(2, 12, 27, 0.2));
+    filter: drop-shadow(0 25px 35px rgba(2, 12, 27, 0.35))
+      drop-shadow(0 10px 18px rgba(2, 12, 27, 0.25));
     background: transparent;
 
     img {
@@ -81,15 +81,10 @@ const Contact = () => {
 
       <h2 className="title">Entre em Contato</h2>
 
-      <p className="contact-text">
-        Atualmente estou aberto a novas oportunidades, minha inbox está sempre aberta. Seja se você
-        tem uma pergunta ou só quer dar um alô, vou fazer o meu melhor pra te responder!
-      </p>
-
       <StaticImage
         className="contact-card"
-        src="../../images/cartao-png.png"
-        alt="Cartão de contato"
+        src="../../images/martinho-card.png"
+        alt="Cartão de contato Martinho"
         placeholder="blurred"
         formats={['AUTO', 'WEBP', 'AVIF']}
       />

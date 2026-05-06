@@ -7,7 +7,7 @@ import { navLinks } from '@config';
 import { loaderDelay } from '@utils';
 import { useScrollDirection, usePrefersReducedMotion } from '@hooks';
 import { Menu } from '@components';
-import ProfileLogo from '@images/logo-site1024.png';
+import ProfileLogo from '@images/sticker-logo.png';
 
 const StyledHeader = styled.header`
   ${({ theme }) => theme.mixins.flexBetween};
@@ -17,11 +17,12 @@ const StyledHeader = styled.header`
   padding: 0px 50px;
   width: 100%;
   height: var(--nav-height);
-  background-color: var(--navy);
+  background-color: ${props => (props.scrolledToTop ? 'transparent' : 'var(--navy)')};
+  box-shadow: ${props =>
+    props.scrolledToTop ? 'none' : '0 10px 30px -10px var(--navy-shadow)'};
   filter: none !important;
   pointer-events: auto !important;
   user-select: auto !important;
-  backdrop-filter: blur(10px);
   transition: var(--transition);
 
   @media (max-width: 1080px) {
@@ -97,9 +98,15 @@ const StyledNav = styled.nav`
         height: 100%;
         object-fit: contain;
         display: block;
+        filter: drop-shadow(0 8px 16px rgba(132, 204, 22, 0.25));
         @media (prefers-reduced-motion: no-preference) {
           transition: var(--transition);
         }
+      }
+
+      &:hover img,
+      &:focus img {
+        filter: drop-shadow(0 12px 24px rgba(132, 204, 22, 0.45));
       }
 
       @media (prefers-reduced-motion: no-preference) {

@@ -209,6 +209,63 @@ const StyledProject = styled.li`
     }
   }
 
+  .project-store-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 20px;
+
+    @media (max-width: 768px) {
+      justify-content: flex-start !important;
+    }
+  }
+
+  .store-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    border: 1px solid var(--lightest-navy);
+    border-radius: 999px;
+    background: var(--light-navy);
+    color: var(--lightest-slate);
+    font-family: var(--font-mono);
+    font-size: var(--fz-xs);
+    line-height: 1;
+    white-space: nowrap;
+    transition: var(--transition);
+    text-decoration: none !important;
+
+    svg {
+      width: 16px;
+      height: 16px;
+      fill: currentColor;
+    }
+
+    &:hover {
+      border-color: var(--green);
+      color: var(--green);
+      transform: translateY(-2px);
+    }
+  }
+
+  .store-note {
+    margin: 10px 0 0;
+    color: var(--slate);
+    font-family: var(--font-mono);
+    font-size: var(--fz-xxs);
+    line-height: 1.4;
+  }
+
+  &:nth-of-type(odd) {
+    .project-store-badges {
+      justify-content: flex-end;
+    }
+    .store-note {
+      text-align: right;
+    }
+  }
+
   .project-links {
     display: flex;
     align-items: center;
@@ -346,6 +403,9 @@ const Featured = () => {
               tech
               github
               external
+              ios
+              android
+              androidEmailRequired
             }
             html
           }
@@ -378,7 +438,18 @@ const Featured = () => {
         {featuredProjects &&
           featuredProjects.map(({ node }, i) => {
             const { frontmatter, html } = node;
-            const { external, title, tech, github, cover, screens, mockup } = frontmatter;
+            const {
+              external,
+              title,
+              tech,
+              github,
+              cover,
+              screens,
+              mockup,
+              ios,
+              android,
+              androidEmailRequired,
+            } = frontmatter;
             const image = getImage(cover);
             const screenImages = (screens || []).map(s => getImage(s)).filter(Boolean);
             const shouldUseIphoneMockup = mockup === 'iphone';
@@ -404,6 +475,49 @@ const Featured = () => {
                           <li key={i}>{tech}</li>
                         ))}
                       </ul>
+                    )}
+
+                    {(ios || android) && (
+                      <>
+                        <div className="project-store-badges">
+                          {ios && (
+                            <a
+                              className="store-badge"
+                              href={ios}
+                              target="_blank"
+                              rel="noreferrer"
+                              aria-label="Beta iOS via TestFlight">
+                              <Icon name="AppStore" />
+                              <span>TestFlight (iOS)</span>
+                            </a>
+                          )}
+                          {android && (
+                            <a
+                              className="store-badge"
+                              href={
+                                androidEmailRequired
+                                  ? `mailto:matmouramartinho@gmail.com?subject=${encodeURIComponent(
+                                    'Acesso Beta Android — The Pitch',
+                                  )}&body=${encodeURIComponent(
+                                    `Oi Matheus,\n\nGostaria de testar a versão Android do The Pitch.\nMeu Gmail: ___\n\nLink do beta: ${android}\n\nObrigado!`,
+                                  )}`
+                                  : android
+                              }
+                              target={androidEmailRequired ? undefined : '_blank'}
+                              rel="noreferrer"
+                              aria-label="Beta Android via Google Play">
+                              <Icon name="PlayStore" />
+                              <span>Beta Android</span>
+                            </a>
+                          )}
+                        </div>
+                        {androidEmailRequired && android && (
+                          <p className="store-note">
+                            * Beta Android exige aprovação manual. Me envie seu Gmail e libero em
+                            até 24h.
+                          </p>
+                        )}
+                      </>
                     )}
 
                     <div className="project-links">

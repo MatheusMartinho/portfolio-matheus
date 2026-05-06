@@ -2,18 +2,18 @@ import { css } from 'styled-components';
 
 const variables = css`
   :root {
-    --dark-navy: #020c1b;
-    --navy: #0f1626;
-    --light-navy: #112240;
-    --lightest-navy: #233554;
-    --navy-shadow: rgba(2, 12, 27, 0.7);
-    --dark-slate: #495670;
-    --slate: #8892b0;
-    --light-slate: #a8b2d1;
-    --lightest-slate: #ccd6f6;
-    --white: #e6f1ff;
-    --green: #64ffda;
-    --green-tint: rgba(100, 255, 218, 0.1);
+    --dark-navy: #2a151e;
+    --navy: #40222d;
+    --light-navy: #553244;
+    --lightest-navy: #6c4859;
+    --navy-shadow: rgba(20, 8, 12, 0.6);
+    --dark-slate: #4f5e64;
+    --slate: #70848c;
+    --light-slate: #b1a392;
+    --lightest-slate: #d9c8b4;
+    --white: #ede0cc;
+    --green: #c5dc68;
+    --green-tint: rgba(197, 220, 104, 0.12);
     --pink: #f57dff;
     --blue: #57cbff;
 

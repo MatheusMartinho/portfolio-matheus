@@ -8,8 +8,8 @@ const SpotlightOverlay = styled.div`
   z-index: 30;
   background: radial-gradient(
     600px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
-    rgba(29, 78, 216, 0.15),
-    /* ← AZUL IGUAL DELA */ transparent 80%
+    rgba(217, 200, 180, 0.1),
+    transparent 80%
   );
   transition: opacity 0.3s;
   opacity: ${props => (props.$isActive ? 1 : 0)};

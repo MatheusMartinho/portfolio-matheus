@@ -1,92 +1,65 @@
 import React, { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet';
 import PropTypes from 'prop-types';
-import anime from 'animejs';
-import styled from 'styled-components';
-import { IconLoader } from '@components/icons';
+import styled, { keyframes } from 'styled-components';
+import StickerLogo from '@images/sticker-logo.png';
+
+const pulse = keyframes`
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.06); }
+`;
 
 const StyledLoader = styled.div`
   ${({ theme }) => theme.mixins.flexCenter};
   position: fixed;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
+  inset: 0;
   width: 100%;
   height: 100%;
-  background-color: #0f1626;
+  background-color: var(--navy);
   z-index: 99;
+  opacity: ${props => (props.isLeaving ? 0 : 1)};
+  transition: opacity 0.4s ease;
+  pointer-events: ${props => (props.isLeaving ? 'none' : 'auto')};
 
   .logo-wrapper {
-    width: max-content;
-    max-width: 100px;
-    transition: var(--transition);
+    width: 140px;
+    max-width: 140px;
+    transition: opacity 0.5s ease, transform 0.6s ease;
     opacity: ${props => (props.isMounted ? 1 : 0)};
-    svg {
+    transform: ${props => (props.isMounted ? 'scale(1)' : 'scale(0.85)')};
+    filter: drop-shadow(0 8px 22px rgba(132, 204, 22, 0.4));
+
+    img {
       display: block;
       width: 100%;
-      height: 100%;
-      margin: 0 auto;
-      fill: none;
+      height: auto;
+      animation: ${pulse} 1.6s ease-in-out infinite;
       user-select: none;
-      #logo-text {
-        opacity: 0;
-      }
     }
   }
 `;
 
 const Loader = ({ finishLoading }) => {
   const [isMounted, setIsMounted] = useState(false);
-
-  const animate = () => {
-    const loader = anime.timeline({
-      complete: () => finishLoading(),
-    });
-
-    loader
-      .add({
-        targets: '#logo path',
-        delay: 300,
-        duration: 1500,
-        easing: 'easeInOutQuart',
-        strokeDashoffset: [anime.setDashoffset, 0],
-      })
-      .add({
-        targets: '#logo #logo-text',
-        duration: 700,
-        easing: 'easeInOutQuart',
-        opacity: 1,
-      })
-      .add({
-        targets: '#logo',
-        delay: 500,
-        duration: 300,
-        easing: 'easeInOutQuart',
-        opacity: 0,
-        scale: 0.1,
-      })
-      .add({
-        targets: '.loader',
-        duration: 200,
-        easing: 'easeInOutQuart',
-        opacity: 0,
-        zIndex: -1,
-      });
-  };
+  const [isLeaving, setIsLeaving] = useState(false);
 
   useEffect(() => {
-    const timeout = setTimeout(() => setIsMounted(true), 10);
-    animate();
-    return () => clearTimeout(timeout);
+    const t1 = setTimeout(() => setIsMounted(true), 50);
+    const t2 = setTimeout(() => setIsLeaving(true), 1800);
+    const t3 = setTimeout(() => finishLoading(), 2300);
+    return () => {
+      clearTimeout(t1);
+      clearTimeout(t2);
+      clearTimeout(t3);
+    };
   }, []);
 
   return (
-    <StyledLoader className="loader" isMounted={isMounted}>
+    <StyledLoader className="loader" isMounted={isMounted} isLeaving={isLeaving}>
       <Helmet bodyAttributes={{ class: `hidden` }} />
 
       <div className="logo-wrapper">
-        <IconLoader />
+        <img src={StickerLogo} alt="Matheus logo" />
       </div>
     </StyledLoader>
   );

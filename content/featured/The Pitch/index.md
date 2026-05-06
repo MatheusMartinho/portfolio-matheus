@@ -10,6 +10,9 @@ screens:
   - './screen-4.png'
   - './screen-5.png'
   - './screen-6.png'
+ios: 'https://testflight.apple.com/join/Ys4Tcrcp'
+android: 'https://play.google.com/apps/internaltest/4701725869442308612'
+androidEmailRequired: true
 tech:
   - React Native
   - Expo SDK 55
