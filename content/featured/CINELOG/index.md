@@ -1,8 +1,14 @@
 ---
 date: '3'
 title: 'CINELOG'
-cover: './cinelog.PNG'
+cover: './screen-1.png'
 mockup: 'iphone'
+screens:
+  - './screen-1.png'
+  - './screen-2.png'
+  - './screen-3.png'
+  - './screen-4.png'
+  - './screen-5.png'
 github: 'https://github.com/MatheusMartinho/cinelog'
 tech:
   - React Native
