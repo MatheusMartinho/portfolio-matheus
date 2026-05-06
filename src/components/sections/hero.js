@@ -17,6 +17,7 @@ const StyledHeroSection = styled.section`
   .big-heading {
     font-size: clamp(36px, 5.5vw, 64px);
     line-height: 1.05;
+    letter-spacing: -0.02em;
   }
 
   @media (max-width: 1080px) {
@@ -57,7 +58,9 @@ const StyledHeroSection = styled.section`
   h3 {
     margin-top: 8px;
     color: var(--slate);
-    line-height: 1.1;
+    font-weight: 600;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
 
     @media (max-width: 480px) {
       font-size: clamp(24px, 6vw, 32px);
