@@ -399,7 +399,7 @@ const StyledProject = styled.li`
 
     @media (max-width: 768px) {
       grid-column: 1 / -1;
-      opacity: 1;
+      opacity: 0.25;
     }
   }
 `;
