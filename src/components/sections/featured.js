@@ -6,6 +6,7 @@ import sr from '@utils/sr';
 import { srConfig } from '@config';
 import { Icon } from '@components/icons';
 import Iphone from '@components/ui/iphone';
+import Browser from '@components/ui/browser';
 import { usePrefersReducedMotion } from '@hooks';
 import { useLang } from '@i18n/LanguageContext';
 
@@ -377,6 +378,30 @@ const StyledProject = styled.li`
       grid-column: 1 / -1;
     }
   }
+
+  .project-image--browser {
+    ${({ theme }) => theme.mixins.resetList};
+    box-shadow: none !important;
+    background: transparent;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: default;
+    user-select: none;
+    grid-column: 6 / -1;
+    grid-row: 1 / -1;
+
+    img,
+    .gatsby-image-wrapper {
+      filter: none !important;
+      mix-blend-mode: normal !important;
+    }
+
+    @media (max-width: 768px) {
+      grid-column: 1 / -1;
+      opacity: 1;
+    }
+  }
 `;
 
 const Featured = () => {
@@ -548,6 +573,15 @@ const Featured = () => {
                       image={image}
                       images={screenImages.length > 0 ? screenImages : undefined}
                       alt={title}
+                    />
+                  </div>
+                ) : mockup === 'browser' ? (
+                  <div className="project-image project-image--browser">
+                    <Browser
+                      image={image}
+                      images={screenImages.length > 0 ? screenImages : undefined}
+                      alt={title}
+                      url={external}
                     />
                   </div>
                 ) : (

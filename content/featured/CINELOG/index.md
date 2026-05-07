@@ -1,5 +1,5 @@
 ---
-date: '3'
+date: '2'
 title: 'CINELOG'
 cover: './screen-1.png'
 mockup: 'iphone'
