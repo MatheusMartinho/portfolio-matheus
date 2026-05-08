@@ -28,6 +28,7 @@ module.exports = {
     { key: 'about', url: '/#about' },
     { key: 'experience', url: '/#jobs' },
     { key: 'work', url: '/#projects' },
+    { key: 'frames', url: '/#frames' },
     { key: 'contact', url: '/#contact' },
   ],
 
