@@ -314,6 +314,15 @@ const StyledSoundtrack = styled.section`
     letter-spacing: 0.18em;
     text-transform: uppercase;
     white-space: nowrap;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .soundtrack-label-chapter {
+    @media (max-width: 600px) {
+      display: none;
+    }
   }
 
   .soundtrack-rule {
@@ -530,7 +539,8 @@ const PhotoStoryTemplate = ({ location, data, pageContext }) => {
           <StyledSoundtrack>
             <div className="soundtrack-header">
               <span className="soundtrack-label">
-                ♪ {lang === 'en' ? 'Soundtrack' : 'Trilha sonora'} · {displayTitle}
+                ♪ {lang === 'en' ? 'Soundtrack' : 'Trilha sonora'}
+                <span className="soundtrack-label-chapter"> · {displayTitle}</span>
               </span>
               <span className="soundtrack-rule" />
             </div>

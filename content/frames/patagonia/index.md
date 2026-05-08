@@ -9,6 +9,7 @@ period: 'Verão 2023'
 period_en: 'Summer 2023'
 intro_en: 'A backpacking trip down the spine of the Andes. From Chilean lakes to the world''s southernmost city, with detours through Torres del Paine, El Chaltén and the Beagle Channel.'
 cover_imagekit_id: 'Chile-Ushuaia/IMG_4006.jpg'
+spotify_playlist: '70xZnsxwCBNJp5EsTK3Ad8'
 photos:
   - imagekit_id: 'Chile-Ushuaia/IMG_3891.jpg'
     caption: ''

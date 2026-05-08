@@ -7,9 +7,41 @@ import { srConfig } from '@config';
 import { usePrefersReducedMotion } from '@hooks';
 import { useLang } from '@i18n/LanguageContext';
 import IkImage from '@components/ui/ik-image';
+import MinhasFotosTag from '@images/minhas-fotos-tag.png';
 
 const StyledFramesSection = styled.section`
   max-width: 1100px;
+
+  .frames-heading-row {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+  }
+
+  .frames-heading-row .numbered-heading {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  .frames-heading-tag {
+    flex-shrink: 0;
+    width: 110px;
+    height: auto;
+    margin-bottom: 30px;
+    transform: rotate(-2deg);
+    filter: drop-shadow(0 8px 12px rgba(0, 0, 0, 0.45));
+    transition: var(--transition);
+    user-select: none;
+    pointer-events: none;
+
+    @media (max-width: 768px) {
+      width: 80px;
+    }
+
+    @media (max-width: 480px) {
+      display: none;
+    }
+  }
 
   .frames-grid {
     display: grid;
@@ -204,9 +236,10 @@ const Frames = () => {
 
   return (
     <StyledFramesSection id="frames">
-      <h2 className="numbered-heading" ref={revealTitle}>
-        {t.frames.title}
-      </h2>
+      <div className="frames-heading-row" ref={revealTitle}>
+        <h2 className="numbered-heading">{t.frames.title}</h2>
+        <img className="frames-heading-tag" src={MinhasFotosTag} alt="Minhas Fotos" />
+      </div>
 
       <div className="frames-grid">
         {teaserChapters.map((node, i) => {
