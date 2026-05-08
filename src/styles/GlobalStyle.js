@@ -243,8 +243,7 @@ const GlobalStyle = createGlobalStyle`
     vertical-align: middle;
   }
 
-  img[alt=""],
-  img:not([alt]) {
+  img[alt=""] {
     filter: blur(5px);
   }
 
