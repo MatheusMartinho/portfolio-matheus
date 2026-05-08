@@ -11,6 +11,11 @@ import { usePrefersReducedMotion } from '@hooks';
 import { useLang } from '@i18n/LanguageContext';
 import IkImage from '@components/ui/ik-image';
 import ChapterSeal from '@images/chapter-seal.png';
+import ChapterSealPatagonia from '@images/chapter-seal-patagonia.png';
+
+const SEALS_BY_SLUG = {
+  patagonia: ChapterSealPatagonia,
+};
 
 const StyledStoryMain = styled.main`
   max-width: 1400px;
@@ -578,7 +583,11 @@ const PhotoStoryTemplate = ({ location, data, pageContext }) => {
         )}
 
         <StyledClosingSeal>
-          <img className="seal-mark" src={ChapterSeal} alt="Frames seal" />
+          <img
+            className="seal-mark"
+            src={SEALS_BY_SLUG[pageContext.slug] || ChapterSeal}
+            alt="Frames seal"
+          />
           <span className="seal-label">
             {lang === 'en' ? 'End of chapter' : 'Fim do capítulo'}
           </span>

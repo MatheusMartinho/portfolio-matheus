@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import styled, { ThemeProvider } from 'styled-components';
 import { Head, Loader, Nav, Social, Email, Footer } from '@components';
 import { GlobalStyle, theme } from '@styles';
-import { LanguageProvider } from '@i18n/LanguageContext';
 import Spotlight from './spotlight';
 
 const StyledContent = styled.div`
@@ -57,7 +56,7 @@ const Layout = ({ children, location }) => {
   }, [isLoading]);
 
   return (
-    <LanguageProvider>
+    <>
       <Head />
 
       <div id="root">
@@ -85,7 +84,7 @@ const Layout = ({ children, location }) => {
           )}
         </ThemeProvider>
       </div>
-    </LanguageProvider>
+    </>
   );
 };
 
