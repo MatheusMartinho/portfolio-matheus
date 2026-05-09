@@ -6,6 +6,7 @@ company: 'Universidade Presbiteriana Mackenzie'
 location: 'São Paulo, Brazil'
 range: '2018 – 2020'
 url: 'https://www.mackenzie.br/'
+cover: './cover.png'
 bullets_en:
   - 'Built strong foundations in algorithms, data structures, OOP, and theory of computation'
   - 'Developed analytical thinking and algorithmic reasoning, essential for solving complex software problems'

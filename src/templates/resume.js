@@ -143,6 +143,17 @@ const ResumePage = () => {
                         <h2 data-en="Notable Projects">Projetos em Destaque</h2>
                         <div className="project-entry">
                             <div className="project-header">
+                                <h3 data-en="The Pitch | Social Check-in App for Stadiums">The Pitch | App de Check-in Social em Estádios</h3>
+                            </div>
+                            <ul>
+                                <li data-en="Engineered a social check-in app with <strong>GPS verification</strong> for Brazilian football fans, built in <strong>React Native + Expo SDK 55</strong>.">Engenharia de app de check-in social com <strong>verificação por GPS</strong> para torcedores brasileiros em estádios, em <strong>React Native + Expo SDK 55</strong>.</li>
+                                <li data-en="Real-time social feed with predictions, polls and group chat powered by <strong>Supabase Realtime</strong>.">Feed social em tempo real com palpites, enquetes e grupos com chat via <strong>Supabase Realtime</strong>.</li>
+                                <li data-en="Gamification system with <strong>XP</strong>, levels and Bronze→Diamond badges to reward in-person attendance.">Sistema de gamificação com <strong>XP</strong>, níveis e badges Bronze→Diamond para recompensar presença ao vivo.</li>
+                                <li data-en="Production deployment via <strong>EAS</strong> with OTA updates, push notifications and offline-first architecture for low-signal stadium environments.">Deploy em produção via <strong>EAS</strong> com OTA updates, push notifications e arquitetura offline-first para sinal fraco no estádio.</li>
+                            </ul>
+                        </div>
+                        <div className="project-entry">
+                            <div className="project-header">
                                 <h3 data-en="Cinelog | Social Network for Cinephiles">Cinelog | Rede Social para Cinéfilos</h3>
                             </div>
                             <ul>

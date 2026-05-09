@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useStaticQuery, graphql } from 'gatsby';
+import { GatsbyImage, getImage } from 'gatsby-plugin-image';
 import { CSSTransition } from 'react-transition-group';
 import styled from 'styled-components';
 import { srConfig } from '@config';
@@ -162,6 +163,40 @@ const StyledTabPanel = styled.div`
     font-family: var(--font-mono);
     font-size: var(--fz-xs);
   }
+
+`;
+
+const StyledTabColumn = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+
+  @media (max-width: 600px) {
+    gap: 24px;
+  }
+`;
+
+const StyledTabCover = styled.div`
+  width: 100%;
+  max-width: 320px;
+  transition: var(--transition);
+
+  &:hover {
+    transform: translateY(-4px);
+  }
+
+  .gatsby-image-wrapper {
+    display: block;
+    background: transparent !important;
+  }
+
+  img {
+    filter: drop-shadow(0 14px 22px rgba(0, 0, 0, 0.5));
+  }
+
+  @media (max-width: 600px) {
+    max-width: 100%;
+  }
 `;
 
 const Jobs = () => {
@@ -182,6 +217,15 @@ const Jobs = () => {
               range
               url
               bullets_en
+              cover {
+                childImageSharp {
+                  gatsbyImageData(
+                    width: 700
+                    placeholder: BLURRED
+                    formats: [AUTO, WEBP, AVIF]
+                  )
+                }
+              }
             }
             html
           }
@@ -251,28 +295,47 @@ const Jobs = () => {
       <h2 className="numbered-heading">{t.jobs.title}</h2>
 
       <div className="inner">
-        <StyledTabList role="tablist" aria-label="Job tabs" onKeyDown={e => onKeyDown(e)}>
-          {jobsData &&
-            jobsData.map(({ node }, i) => {
-              const { company, company_en } = node.frontmatter;
-              const displayCompany = lang === 'en' && company_en ? company_en : company;
-              return (
-                <StyledTabButton
-                  key={i}
-                  isActive={activeTabId === i}
-                  onClick={() => setActiveTabId(i)}
-                  ref={el => (tabs.current[i] = el)}
-                  id={`tab-${i}`}
-                  role="tab"
-                  tabIndex={activeTabId === i ? '0' : '-1'}
-                  aria-selected={activeTabId === i ? true : false}
-                  aria-controls={`panel-${i}`}>
-                  <span>{displayCompany}</span>
-                </StyledTabButton>
-              );
-            })}
-          <StyledHighlight activeTabId={activeTabId} />
-        </StyledTabList>
+        <StyledTabColumn>
+          <StyledTabList role="tablist" aria-label="Job tabs" onKeyDown={e => onKeyDown(e)}>
+            {jobsData &&
+              jobsData.map(({ node }, i) => {
+                const { company, company_en } = node.frontmatter;
+                const displayCompany = lang === 'en' && company_en ? company_en : company;
+                return (
+                  <StyledTabButton
+                    key={i}
+                    isActive={activeTabId === i}
+                    onClick={() => setActiveTabId(i)}
+                    ref={el => (tabs.current[i] = el)}
+                    id={`tab-${i}`}
+                    role="tab"
+                    tabIndex={activeTabId === i ? '0' : '-1'}
+                    aria-selected={activeTabId === i ? true : false}
+                    aria-controls={`panel-${i}`}>
+                    <span>{displayCompany}</span>
+                  </StyledTabButton>
+                );
+              })}
+            <StyledHighlight activeTabId={activeTabId} />
+          </StyledTabList>
+
+          {(() => {
+            const activeNode = jobsData?.[activeTabId]?.node;
+            const activeCover = activeNode?.frontmatter?.cover
+              ? getImage(activeNode.frontmatter.cover)
+              : null;
+            const activeCompany =
+              lang === 'en' && activeNode?.frontmatter?.company_en
+                ? activeNode.frontmatter.company_en
+                : activeNode?.frontmatter?.company;
+            if (!activeCover) return null;
+            return (
+              <StyledTabCover>
+                <GatsbyImage image={activeCover} alt={activeCompany || ''} />
+              </StyledTabCover>
+            );
+          })()}
+        </StyledTabColumn>
 
         <StyledTabPanels>
           {jobsData &&

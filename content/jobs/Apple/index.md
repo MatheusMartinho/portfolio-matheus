@@ -6,6 +6,7 @@ company: 'Full-Stack Bootcamp'
 location: 'Vancouver, Canada'
 range: '2022 – 2023'
 url: 'https://tamwood.com/'
+cover: './cover.png'
 bullets_en:
   - 'Intensive 12-week bootcamp focused on a modern stack: JavaScript, React, Node.js, PostgreSQL and agile development practices'
   - "International experience living and coding in Vancouver's tech ecosystem, one of North America's top tech hubs"

@@ -6,6 +6,7 @@ company: 'Independent / Remote'
 location: 'São Paulo, Brazil'
 range: '2025 – Present'
 url: 'https://github.com/MatheusMartinho'
+cover: './cover.png'
 bullets_en:
   - 'Shipping production apps: CINELOG (social network for Brazilian film fans, React Native + Supabase), interactive portfolios (Gatsby), and commercial web tools'
   - 'Specialist in AI-assisted accelerated development workflows (Windsurf, Claude Sonnet) without compromising architecture or code quality'

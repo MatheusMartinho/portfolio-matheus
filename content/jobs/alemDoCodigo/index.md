@@ -7,6 +7,7 @@ company_en: 'Beyond Code'
 location: 'Puerto Natales, Chile'
 range: '06-2025'
 url: ''
+cover: './cover.png'
 bullets_en:
   - 'Wildlife Photography — nature photography portfolio captured during travels through Patagonia (Argentina/Chile) and the Canadian Rockies. Seasonal work at a chalet in the Canadian Rockies, combining adventure with documentary photography.'
   - 'European Cinema — devoted to directors like Ingmar Bergman, Michael Haneke, and Andrei Tarkovsky. That passion led to CINELOG, combining two interests: film and development.'
