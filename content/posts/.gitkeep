@@ -1,0 +1,3 @@
+# Mantém content/posts versionado. gatsby-config.js registra esta pasta como
+# fonte do gatsby-source-filesystem; sem este arquivo, o Git não versiona a
+# pasta vazia e o build da Vercel falha ("path does not exist").
