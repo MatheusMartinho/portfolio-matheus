@@ -2,19 +2,22 @@
 date: '2022-01-01'
 title: 'Full-Stack Developer'
 title_en: 'Full-Stack Developer'
-company: 'Independent / Remote'
+company: 'Independente / Remoto'
+company_en: 'Independent / Remote'
 location: 'São Paulo, Brazil'
-range: '2025 – Present'
+range: '2025 →'
 url: 'https://github.com/MatheusMartinho'
 cover: './cover.png'
+visual_caption: 'colado na parede desde 2025'
+visual_caption_en: 'on my wall since 2025'
 bullets_en:
-  - 'Shipping production apps: CINELOG (social network for Brazilian film fans, React Native + Supabase), interactive portfolios (Gatsby), and commercial web tools'
-  - 'Specialist in AI-assisted accelerated development workflows (Windsurf, Claude Sonnet) without compromising architecture or code quality'
-  - 'Main stack: Next.js, TypeScript, React Native, Supabase, Tailwind CSS — deployed on Vercel/Netlify with serverless infra'
-  - 'Freelance projects including marketing sites for IT infrastructure companies and custom internal tools'
+  - 'Building and shipping my own products: The Pitch live on the App Store and Google Play, CINELOG in production, both with real user feedback'
+  - 'Everyday stack: Next.js, TypeScript, React Native, Expo and Supabase, deployed on Vercel and EAS with serverless infra'
+  - 'AI as an actual copilot: Claude and Cursor speed up refactors, debugging and reviews. The architecture and the taste stay mine'
+  - 'In between, freelance work: marketing sites and custom internal tools'
 ---
 
-- Desenvolvendo aplicações em produção: CINELOG (rede social para cinéfilos brasileiros com React Native + Supabase), portfolios interativos (Gatsby), e ferramentas web comerciais
-- Especialista em desenvolvimento acelerado com AI-assisted workflows (Windsurf, Claude Sonnet) mantendo arquitetura sólida e código de qualidade
-- Stack principal: Next.js, TypeScript, React Native, Supabase, Tailwind CSS com deploy em Vercel/Netlify e infraestrutura serverless
-- Projetos freelance incluindo sites institucionais para empresas de infraestrutura de TI e ferramentas internas customizadas
+- Construo e lanço produto próprio: The Pitch no ar na App Store e no Google Play, CINELOG em produção, os dois com feedback de usuário de verdade
+- Stack de todo dia: Next.js, TypeScript, React Native, Expo e Supabase, com deploy na Vercel e no EAS e infra serverless
+- IA como copiloto de verdade: Claude e Cursor aceleram refactor, debug e revisão. A arquitetura e o gosto continuam meus
+- Nos intervalos, freelas: sites institucionais e ferramentas internas sob medida

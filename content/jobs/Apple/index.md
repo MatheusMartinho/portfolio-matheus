@@ -1,20 +1,23 @@
 ---
 date: '2023-08-01'
-title: 'Web Development Student'
+title: 'Estudante de Web Development'
 title_en: 'Web Development Student'
 company: 'Full-Stack Bootcamp'
 location: 'Vancouver, Canada'
 range: '2022 – 2023'
 url: 'https://tamwood.com/'
 cover: './cover.png'
+polaroid_imagekit_id: 'Jasper/DSC_0232.JPG'
+visual_caption: 'jasper, alberta, a vista do "escritório"'
+visual_caption_en: 'jasper, alberta, the "office" view'
 bullets_en:
-  - 'Intensive 12-week bootcamp focused on a modern stack: JavaScript, React, Node.js, PostgreSQL and agile development practices'
-  - "International experience living and coding in Vancouver's tech ecosystem, one of North America's top tech hubs"
-  - 'Transitioned from academic theory to building real applications from scratch, with focus on integrated frontend + backend and deployment'
-  - 'Final projects included full-stack apps with auth, RESTful APIs, relational databases and responsive UIs'
+  - '12 intense weeks in Vancouver learning JavaScript, React, Node and PostgreSQL, with one rule: put something usable live every week'
+  - 'The first time I wrote code other people actually used: full-stack apps with auth, REST APIs and relational databases'
+  - 'Living in one of North America’s biggest tech hubs recalibrated my bar for what a well-built product looks like'
+  - 'Bonus round: a season at a chalet in Jasper, coding at night with the Rocky Mountains outside the window'
 ---
 
-- Bootcamp intensivo de 12 semanas focado em stack moderna: JavaScript, React, Node.js, PostgreSQL e práticas de desenvolvimento ágil
-- Experiência internacional vivendo e codando no ecossistema tech de Vancouver, uma das principais hubs de tecnologia da América do Norte
-- Transicionei da teoria acadêmica para construir aplicações reais do zero, com foco em frontend + backend integrados e deployment
-- Projetos finais incluindo apps full-stack com autenticação, APIs RESTful, bancos relacionais e interfaces responsivas
+- 12 semanas intensas em Vancouver aprendendo JavaScript, React, Node e PostgreSQL, com uma regra: colocar algo usável no ar toda semana
+- A primeira vez que escrevi código que outras pessoas realmente usaram: apps full-stack com auth, API REST e banco relacional
+- Morar num dos maiores hubs de tech da América do Norte recalibrou minha régua do que é um produto bem feito
+- De brinde: uma temporada num chalé em Jasper, codando à noite com as Montanhas Rochosas pela janela

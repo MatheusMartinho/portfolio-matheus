@@ -19,25 +19,28 @@ const StyledSocialList = styled.ul`
     width: 1px;
     height: 90px;
     margin: 0 auto;
-    background-color: var(--light-slate);
+    background: linear-gradient(to bottom, var(--light-slate), transparent);
   }
 
   li {
     &:last-of-type {
-      margin-bottom: 20px;
+      margin-bottom: 18px;
     }
 
     a {
-      padding: 10px;
+      display: block;
+      padding: 9px;
+      color: var(--light-slate);
 
       &:hover,
-      &:focus {
+      &:focus-visible {
+        color: var(--green);
         transform: translateY(-3px);
       }
 
       svg {
-        width: 20px;
-        height: 20px;
+        width: 19px;
+        height: 19px;
       }
     }
   }

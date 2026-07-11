@@ -18,7 +18,11 @@ const StyledHeader = styled.header`
   padding: 0px 50px;
   width: 100%;
   height: var(--nav-height);
-  background-color: ${props => (props.scrolledToTop ? 'transparent' : 'var(--navy)')};
+  background-color: ${props => (props.scrolledToTop ? 'transparent' : 'rgba(64, 34, 45, 0.82)')};
+  -webkit-backdrop-filter: ${props => (props.scrolledToTop ? 'none' : 'blur(12px)')};
+  backdrop-filter: ${props => (props.scrolledToTop ? 'none' : 'blur(12px)')};
+  border-bottom: 1px solid
+    ${props => (props.scrolledToTop ? 'transparent' : 'var(--lightest-navy)')};
   box-shadow: ${props =>
     props.scrolledToTop ? 'none' : '0 10px 30px -10px var(--navy-shadow)'};
   filter: none !important;
@@ -40,7 +44,10 @@ const StyledHeader = styled.header`
     css`
         height: var(--nav-scroll-height);
         transform: translateY(0px);
-        background-color: var(--navy);
+        background-color: rgba(64, 34, 45, 0.82);
+        -webkit-backdrop-filter: blur(12px);
+        backdrop-filter: blur(12px);
+        border-bottom: 1px solid var(--lightest-navy);
         box-shadow: 0 10px 30px -10px var(--navy-shadow);
       `};
 
@@ -49,7 +56,9 @@ const StyledHeader = styled.header`
     !props.scrolledToTop &&
     css`
         height: var(--nav-scroll-height);
-        transform: translateY(calc(var(--nav-scroll-height) * -1));
+        /* hide by the full nav height: the logo overflows the shrunk bar,
+           so sliding only by the scroll-height leaves it peeking out */
+        transform: translateY(calc(var(--nav-height) * -1.2));
         box-shadow: 0 10px 30px -10px var(--navy-shadow);
       `};
   }
@@ -99,7 +108,7 @@ const StyledNav = styled.nav`
         height: 100%;
         object-fit: contain;
         display: block;
-        filter: drop-shadow(0 8px 16px rgba(132, 204, 22, 0.25));
+        filter: drop-shadow(0 8px 16px rgba(202, 244, 56, 0.25));
         @media (prefers-reduced-motion: no-preference) {
           transition: var(--transition);
         }
@@ -107,7 +116,7 @@ const StyledNav = styled.nav`
 
       &:hover img,
       &:focus img {
-        filter: drop-shadow(0 12px 24px rgba(132, 204, 22, 0.45));
+        filter: drop-shadow(0 12px 24px rgba(202, 244, 56, 0.45));
       }
 
       @media (prefers-reduced-motion: no-preference) {
@@ -135,20 +144,48 @@ const StyledLinks = styled.div`
     list-style: none;
 
     li {
-      margin: 0 5px;
+      margin: 0 6px;
       position: relative;
       counter-increment: item 1;
-      font-size: var(--fz-xs);
 
       a {
-        padding: 10px;
+        position: relative;
+        padding: 10px 10px 12px;
+        color: var(--lightest-slate);
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
 
         &:before {
-          content: '0' counter(item) '.';
-          margin-right: 5px;
+          content: '0' counter(item);
+          margin-right: 7px;
           color: var(--green);
-          font-size: var(--fz-xxs);
-          text-align: right;
+          font-size: 10px;
+          font-weight: 400;
+        }
+
+        /* sliding underline */
+        &:after {
+          content: '';
+          position: absolute;
+          left: 10px;
+          right: 10px;
+          bottom: 5px;
+          height: 2px;
+          background: var(--green);
+          transform: scaleX(0);
+          transform-origin: left;
+          transition: transform 0.25s var(--easing);
+        }
+
+        &:hover,
+        &:focus-visible {
+          color: var(--white);
+
+          &:after {
+            transform: scaleX(1);
+          }
         }
       }
     }
@@ -156,26 +193,60 @@ const StyledLinks = styled.div`
 
   .resume-button {
     ${({ theme }) => theme.mixins.smallButton};
-    margin-left: 15px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-left: 18px;
     font-size: var(--fz-xs);
+
+    .arrow {
+      font-size: 1.05em;
+      line-height: 0;
+      transition: var(--transition);
+    }
+
+    &:hover .arrow,
+    &:focus-visible .arrow {
+      transform: translate(2px, -2px);
+    }
   }
 
   .lang-switch {
-    margin-left: 12px;
-    padding: 6px 10px;
-    border: 1px solid var(--lightest-navy);
-    border-radius: var(--border-radius);
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    margin-left: 16px;
+    padding: 6px 4px;
+    border: none;
     background: transparent;
-    color: var(--light-slate);
     font-family: var(--font-mono);
-    font-size: var(--fz-xxs);
-    letter-spacing: 0.05em;
+    font-size: 11px;
+    letter-spacing: 0.1em;
     cursor: pointer;
     transition: var(--transition);
 
-    &:hover {
-      border-color: var(--green);
+    .lang {
+      color: var(--slate);
+      transition: var(--transition);
+    }
+
+    .lang.active {
       color: var(--green);
+      font-weight: 600;
+    }
+
+    .lang-divider {
+      color: var(--lightest-navy);
+    }
+
+    &:hover .lang:not(.active),
+    &:focus-visible .lang:not(.active) {
+      color: var(--lightest-slate);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--green);
+      outline-offset: 3px;
     }
   }
 `;
@@ -230,6 +301,9 @@ const Nav = ({ isHome }) => {
   const ResumeLink = (
     <a className="resume-button" href="/resume" target="_blank" rel="noopener noreferrer">
       {t.nav.resume}
+      <span className="arrow" aria-hidden="true">
+        ↗
+      </span>
     </a>
   );
 
@@ -239,7 +313,11 @@ const Nav = ({ isHome }) => {
       className="lang-switch"
       onClick={() => setLanguage(lang === 'pt' ? 'en' : 'pt')}
       aria-label="Toggle language">
-      {lang === 'pt' ? '🇺🇸 EN' : '🇧🇷 PT'}
+      <span className={`lang${lang === 'pt' ? ' active' : ''}`}>PT</span>
+      <span className="lang-divider" aria-hidden="true">
+        /
+      </span>
+      <span className={`lang${lang === 'en' ? ' active' : ''}`}>EN</span>
     </button>
   );
 

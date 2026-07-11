@@ -154,6 +154,34 @@ const StyledSidebar = styled.aside`
     margin: 10% auto 0;
     width: max-content;
   }
+
+  .lang-switch {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 28px;
+    padding: 8px 6px;
+    border: none;
+    background: transparent;
+    font-family: var(--font-mono);
+    font-size: var(--fz-sm);
+    letter-spacing: 0.1em;
+    cursor: pointer;
+
+    .lang {
+      color: var(--slate);
+      transition: var(--transition);
+    }
+
+    .lang.active {
+      color: var(--green);
+      font-weight: 600;
+    }
+
+    .lang-divider {
+      color: var(--lightest-navy);
+    }
+  }
 `;
 
 const Menu = () => {
@@ -274,19 +302,14 @@ const Menu = () => {
 
             <button
               type="button"
+              className="lang-switch"
               onClick={() => setLanguage(lang === 'pt' ? 'en' : 'pt')}
-              style={{
-                marginTop: 24,
-                padding: '8px 14px',
-                background: 'transparent',
-                border: '1px solid var(--lightest-navy)',
-                borderRadius: 'var(--border-radius)',
-                color: 'var(--green)',
-                fontFamily: 'var(--font-mono)',
-                fontSize: 'var(--fz-sm)',
-                cursor: 'pointer',
-              }}>
-              {lang === 'pt' ? '🇺🇸 EN' : '🇧🇷 PT'}
+              aria-label="Toggle language">
+              <span className={`lang${lang === 'pt' ? ' active' : ''}`}>PT</span>
+              <span className="lang-divider" aria-hidden="true">
+                /
+              </span>
+              <span className={`lang${lang === 'en' ? ' active' : ''}`}>EN</span>
             </button>
           </nav>
         </StyledSidebar>

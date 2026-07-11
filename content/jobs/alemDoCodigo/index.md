@@ -5,15 +5,17 @@ title_en: 'Beyond Code'
 company: 'Além do Código'
 company_en: 'Beyond Code'
 location: 'Puerto Natales, Chile'
-range: '06-2025'
+range: '2023 → ∞'
 url: ''
 cover: './cover.png'
+visual_caption: 'cinema, xadrez, astronomia & uma câmera'
+visual_caption_en: 'film, chess, astronomy & a camera'
 bullets_en:
-  - 'Wildlife Photography — nature photography portfolio captured during travels through Patagonia (Argentina/Chile) and the Canadian Rockies. Seasonal work at a chalet in the Canadian Rockies, combining adventure with documentary photography.'
-  - 'European Cinema — devoted to directors like Ingmar Bergman, Michael Haneke, and Andrei Tarkovsky. That passion led to CINELOG, combining two interests: film and development.'
-  - 'Chess & Astronomy — casual chess player and astronomy enthusiast, always looking for patterns and complex systems — both on the board and in code.'
+  - 'Wildlife photography across Patagonia and the Rockies. My best frames are right below, in the Frames section'
+  - 'European cinema: Bergman, Haneke, Tarkovsky. That obsession became a product: it’s where CINELOG was born'
+  - 'Chess and astronomy in the off-hours. I’m addicted to patterns and complex systems: on the board, in the sky, in the code'
 ---
 
-- Fotografia de Vida Selvagem - Portfólio de fotografias de natureza capturadas durante viagens pela Patagônia (Argentina/Chile) e Montanhas Rochosas canadenses. Trabalho sazonal em chalé nas Canadian Rockies combinando aventura com fotografia documental.
-- Cinema Europeu - Cinéfilo apaixonado por diretores como Ingmar Bergman, Michael Haneke e Andrei Tarkovsky. Essa paixão levou à criação do CINELOG, combinando dois interesses: cinema e desenvolvimento.
-- Xadrez & Astronomia - Jogador casual de xadrez e entusiasta de astronomia, sempre buscando padrões e sistemas complexos — tanto no tabuleiro quanto no código.
+- Fotografia de vida selvagem pela Patagônia e pelas Rockies. Meus melhores frames estão logo aqui embaixo, na seção Frames
+- Cinema europeu: Bergman, Haneke, Tarkovsky. Essa obsessão virou produto: foi dela que nasceu o CINELOG
+- Xadrez e astronomia nas horas vagas. Sou viciado em padrões e sistemas complexos: no tabuleiro, no céu e no código

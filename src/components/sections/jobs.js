@@ -8,149 +8,165 @@ import { KEY_CODES } from '@utils';
 import sr from '@utils/sr';
 import { usePrefersReducedMotion } from '@hooks';
 import { useLang } from '@i18n/LanguageContext';
+import IkImage from '@components/ui/ik-image';
 
 const StyledJobsSection = styled.section`
-  max-width: 700px;
+  max-width: 940px;
+
+  .journey-note {
+    margin: -20px 0 34px;
+    color: var(--slate);
+    font-family: var(--font-mono);
+    font-size: var(--fz-xs);
+  }
 
   .inner {
     display: flex;
+    gap: 40px;
 
-    @media (max-width: 600px) {
+    @media (max-width: 700px) {
       display: block;
     }
 
     // Prevent container from jumping
     @media (min-width: 700px) {
-      min-height: 340px;
+      min-height: 420px;
     }
   }
 `;
 
-const StyledTabList = styled.div`
+const StyledEraList = styled.div`
   position: relative;
   z-index: 3;
-  width: max-content;
-  padding: 0;
-  margin: 0;
-  list-style: none;
+  display: flex;
+  flex-direction: column;
+  width: 300px;
+  flex-shrink: 0;
+  border-top: 1px solid var(--lightest-navy);
 
-  @media (max-width: 600px) {
-    display: flex;
-    overflow-x: auto;
-    width: calc(100% + 40px);
-    padding-left: 40px;
-    margin-left: -40px;
-    margin-bottom: 30px;
-    scroll-snap-type: x proximity;
-  }
-  @media (max-width: 480px) {
-    width: calc(100% + 20px);
-    padding-left: 20px;
-    margin-left: -20px;
-  }
-
-  li {
-    &:first-of-type {
-      @media (max-width: 600px) {
-        margin-left: 50px;
-      }
-      @media (max-width: 480px) {
-        margin-left: 25px;
-      }
-    }
-    &:last-of-type {
-      @media (max-width: 600px) {
-        padding-right: 50px;
-      }
-      @media (max-width: 480px) {
-        padding-right: 25px;
-      }
-    }
+  @media (max-width: 700px) {
+    width: 100%;
+    margin-bottom: 34px;
   }
 `;
 
-const StyledTabButton = styled.button`
-  ${({ theme }) => theme.mixins.link};
-  display: flex;
+const StyledEraRow = styled.button`
+  display: grid;
+  grid-template-columns: 44px 1fr auto;
   align-items: center;
+  gap: 12px;
   width: 100%;
-  height: var(--tab-height);
-  padding: 0 20px 2px;
-  border-left: 2px solid var(--lightest-navy);
-  background-color: transparent;
-  color: ${({ isActive }) => (isActive ? 'var(--green)' : 'var(--slate)')};
+  padding: 17px 4px 16px 0;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--lightest-navy);
+  color: ${({ isActive }) => (isActive ? 'var(--lightest-slate)' : 'var(--slate)')};
   font-family: var(--font-mono);
-  font-size: var(--fz-xs);
   text-align: left;
-  white-space: nowrap;
-
-  @media (max-width: 768px) {
-    padding: 0 15px 2px;
-  }
-  @media (max-width: 600px) {
-    ${({ theme }) => theme.mixins.flexCenter};
-    min-width: 150px;
-    padding: 0 18px;
-    border-left: 0;
-    border-bottom: 2px solid var(--lightest-navy);
-    text-align: center;
-    font-size: var(--fz-xxs);
-    line-height: 1.3;
-    white-space: normal;
-    scroll-snap-align: start;
-    background-color: ${({ isActive }) => (isActive ? 'var(--light-navy)' : 'transparent')};
-    border-bottom-color: ${({ isActive }) => (isActive ? 'var(--green)' : 'var(--lightest-navy)')};
-  }
+  cursor: pointer;
+  transition: var(--transition);
 
   &:hover,
-  &:focus {
-    background-color: var(--light-navy);
+  &:focus-visible {
+    color: var(--lightest-slate);
+    background: rgba(202, 244, 56, 0.04);
   }
-`;
 
-const StyledHighlight = styled.div`
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: 10;
-  width: 2px;
-  height: var(--tab-height);
-  border-radius: var(--border-radius);
-  background: var(--green);
-  transform: translateY(calc(${({ activeTabId }) => activeTabId} * var(--tab-height)));
-  transition: transform 0.25s cubic-bezier(0.645, 0.045, 0.355, 1);
-  transition-delay: 0.1s;
+  &:focus-visible {
+    outline: 2px solid var(--green);
+    outline-offset: -2px;
+  }
 
-  @media (max-width: 600px) {
-    display: none;
+  .era-index {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 24px;
+    font-size: var(--fz-xxs);
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    color: ${({ isActive }) => (isActive ? 'var(--ink)' : 'var(--slate)')};
+    background: ${({ isActive }) => (isActive ? 'var(--green)' : 'transparent')};
+    border: 1px solid ${({ isActive }) => (isActive ? 'var(--green)' : 'var(--lightest-navy)')};
+    transition: var(--transition);
+  }
+
+  .era-place {
+    font-size: var(--fz-sm);
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .era-years {
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    color: ${({ isActive }) => (isActive ? 'var(--green)' : 'var(--slate)')};
+    white-space: nowrap;
   }
 `;
 
 const StyledTabPanels = styled.div`
   position: relative;
   width: 100%;
-  margin-left: 20px;
-  margin-top: 20px;
-
-  @media (max-width: 600px) {
-    margin-left: 0;
-  }
+  margin-top: 4px;
 `;
 
 const StyledTabPanel = styled.div`
   width: 100%;
   height: auto;
-  padding: 10px 5px;
+  padding: 10px 0 0;
+
+  .page-grid {
+    display: grid;
+    grid-template-columns: 1fr 230px;
+    gap: 36px;
+    align-items: start;
+
+    &.solo {
+      grid-template-columns: 1fr;
+    }
+
+    @media (max-width: 900px) {
+      grid-template-columns: 1fr;
+    }
+  }
 
   ul {
-    ${({ theme }) => theme.mixins.fancyList};
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    font-size: var(--fz-md);
+
+    li {
+      position: relative;
+      padding-left: 26px;
+      margin-bottom: 12px;
+
+      &:before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0.55em;
+        width: 8px;
+        height: 8px;
+        background: var(--green);
+      }
+    }
   }
 
   h3 {
-    margin-bottom: 2px;
+    margin-bottom: 4px;
     font-size: var(--fz-xxl);
-    font-weight: 500;
-    line-height: 1.3;
+    font-weight: 600;
+    line-height: 1.25;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    color: var(--lightest-slate);
 
     .company {
       color: var(--green);
@@ -158,46 +174,98 @@ const StyledTabPanel = styled.div`
   }
 
   .range {
-    margin-bottom: 25px;
-    color: var(--light-slate);
+    margin-bottom: 26px;
+    color: var(--slate);
     font-family: var(--font-mono);
     font-size: var(--fz-xs);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
   }
 
+  .era-media {
+    position: relative;
+    width: 100%;
+
+    .media-frame {
+      position: relative;
+      border: 1px solid var(--lightest-navy);
+      overflow: hidden;
+
+      img {
+        display: block;
+        width: 100%;
+        filter: grayscale(100%) contrast(1.05);
+        transition: filter 0.35s var(--easing), transform 0.35s var(--easing);
+      }
+
+      .gatsby-image-wrapper {
+        display: block;
+        background: transparent !important;
+      }
+
+      &:after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: var(--green);
+        mix-blend-mode: multiply;
+        opacity: 0.25;
+        transition: var(--transition);
+        pointer-events: none;
+      }
+    }
+
+    &:hover .media-frame {
+      img {
+        filter: grayscale(0%) contrast(1);
+        transform: scale(1.02);
+      }
+
+      &:after {
+        opacity: 0;
+      }
+    }
+
+    .media-caption {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 10px;
+      color: var(--slate);
+      font-family: var(--font-mono);
+      font-size: 9px;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+
+      &:before {
+        content: '';
+        flex-shrink: 0;
+        width: 7px;
+        height: 7px;
+        background: var(--green);
+      }
+    }
+  }
+
+  .era-media--artifact .media-frame {
+    border: none;
+
+    &:after {
+      display: none;
+    }
+
+    img {
+      filter: grayscale(100%) contrast(1.05) drop-shadow(0 14px 22px rgba(0, 0, 0, 0.5));
+    }
+  }
+
+  .era-media--artifact:hover .media-frame img {
+    filter: grayscale(0%) drop-shadow(0 14px 22px rgba(0, 0, 0, 0.5));
+  }
 `;
 
-const StyledTabColumn = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 40px;
-
-  @media (max-width: 600px) {
-    gap: 24px;
-  }
-`;
-
-const StyledTabCover = styled.div`
-  width: 100%;
-  max-width: 320px;
-  transition: var(--transition);
-
-  &:hover {
-    transform: translateY(-4px);
-  }
-
-  .gatsby-image-wrapper {
-    display: block;
-    background: transparent !important;
-  }
-
-  img {
-    filter: drop-shadow(0 14px 22px rgba(0, 0, 0, 0.5));
-  }
-
-  @media (max-width: 600px) {
-    max-width: 100%;
-  }
-`;
+const cityFromLocation = location => (location || '').split(',')[0].trim().toUpperCase();
 
 const Jobs = () => {
   const data = useStaticQuery(graphql`
@@ -217,6 +285,9 @@ const Jobs = () => {
               range
               url
               bullets_en
+              visual_caption
+              visual_caption_en
+              polaroid_imagekit_id
               cover {
                 childImageSharp {
                   gatsbyImageData(
@@ -269,16 +340,18 @@ const Jobs = () => {
   // Only re-run the effect if tabFocus changes
   useEffect(() => focusTab(), [tabFocus]);
 
-  // Focus on tabs when using up & down arrow keys
+  // Focus on tabs when using up/down (or left/right) arrow keys
   const onKeyDown = e => {
     switch (e.key) {
-      case KEY_CODES.ARROW_UP: {
+      case KEY_CODES.ARROW_UP:
+      case KEY_CODES.ARROW_LEFT: {
         e.preventDefault();
         setTabFocus(tabFocus - 1);
         break;
       }
 
-      case KEY_CODES.ARROW_DOWN: {
+      case KEY_CODES.ARROW_DOWN:
+      case KEY_CODES.ARROW_RIGHT: {
         e.preventDefault();
         setTabFocus(tabFocus + 1);
         break;
@@ -293,58 +366,57 @@ const Jobs = () => {
   return (
     <StyledJobsSection id="jobs" ref={revealContainer}>
       <h2 className="numbered-heading">{t.jobs.title}</h2>
+      <p className="journey-note">{t.jobs.note}</p>
 
       <div className="inner">
-        <StyledTabColumn>
-          <StyledTabList role="tablist" aria-label="Job tabs" onKeyDown={e => onKeyDown(e)}>
-            {jobsData &&
-              jobsData.map(({ node }, i) => {
-                const { company, company_en } = node.frontmatter;
-                const displayCompany = lang === 'en' && company_en ? company_en : company;
-                return (
-                  <StyledTabButton
-                    key={i}
-                    isActive={activeTabId === i}
-                    onClick={() => setActiveTabId(i)}
-                    ref={el => (tabs.current[i] = el)}
-                    id={`tab-${i}`}
-                    role="tab"
-                    tabIndex={activeTabId === i ? '0' : '-1'}
-                    aria-selected={activeTabId === i ? true : false}
-                    aria-controls={`panel-${i}`}>
-                    <span>{displayCompany}</span>
-                  </StyledTabButton>
-                );
-              })}
-            <StyledHighlight activeTabId={activeTabId} />
-          </StyledTabList>
-
-          {(() => {
-            const activeNode = jobsData?.[activeTabId]?.node;
-            const activeCover = activeNode?.frontmatter?.cover
-              ? getImage(activeNode.frontmatter.cover)
-              : null;
-            const activeCompany =
-              lang === 'en' && activeNode?.frontmatter?.company_en
-                ? activeNode.frontmatter.company_en
-                : activeNode?.frontmatter?.company;
-            if (!activeCover) return null;
-            return (
-              <StyledTabCover>
-                <GatsbyImage image={activeCover} alt={activeCompany || ''} />
-              </StyledTabCover>
-            );
-          })()}
-        </StyledTabColumn>
+        <StyledEraList role="tablist" aria-label="Job tabs" onKeyDown={e => onKeyDown(e)}>
+          {jobsData &&
+            jobsData.map(({ node }, i) => {
+              const { location, range } = node.frontmatter;
+              return (
+                <StyledEraRow
+                  key={i}
+                  isActive={activeTabId === i}
+                  onClick={() => setActiveTabId(i)}
+                  ref={el => (tabs.current[i] = el)}
+                  id={`tab-${i}`}
+                  role="tab"
+                  tabIndex={activeTabId === i ? '0' : '-1'}
+                  aria-selected={activeTabId === i ? true : false}
+                  aria-controls={`panel-${i}`}>
+                  <span className="era-index">{String(i + 1).padStart(2, '0')}</span>
+                  <span className="era-place">{cityFromLocation(location)}</span>
+                  <span className="era-years">{range}</span>
+                </StyledEraRow>
+              );
+            })}
+        </StyledEraList>
 
         <StyledTabPanels>
           {jobsData &&
             jobsData.map(({ node }, i) => {
               const { frontmatter, html } = node;
-              const { title, title_en, url, company, company_en, range, bullets_en } = frontmatter;
+              const {
+                title,
+                title_en,
+                url,
+                company,
+                company_en,
+                location,
+                range,
+                bullets_en,
+                visual_caption,
+                visual_caption_en,
+                polaroid_imagekit_id,
+                cover,
+              } = frontmatter;
               const displayTitle = lang === 'en' && title_en ? title_en : title;
               const displayCompany = lang === 'en' && company_en ? company_en : company;
               const showEnBullets = lang === 'en' && bullets_en && bullets_en.length > 0;
+              const caption =
+                lang === 'en' && visual_caption_en ? visual_caption_en : visual_caption;
+              const artifactImage = cover ? getImage(cover) : null;
+              const hasMedia = Boolean(polaroid_imagekit_id || artifactImage);
 
               return (
                 <CSSTransition key={i} in={activeTabId === i} timeout={250} classNames="fade">
@@ -355,27 +427,62 @@ const Jobs = () => {
                     aria-labelledby={`tab-${i}`}
                     aria-hidden={activeTabId !== i}
                     hidden={activeTabId !== i}>
-                    <h3>
-                      <span>{displayTitle}</span>
-                      <span className="company">
-                        &nbsp;@&nbsp;
-                        <a href={url} className="inline-link">
-                          {displayCompany}
-                        </a>
-                      </span>
-                    </h3>
+                    <div className={`page-grid${hasMedia ? '' : ' solo'}`}>
+                      <div className="page-text">
+                        <h3>
+                          <span>{displayTitle}</span>
+                          {displayCompany && displayCompany !== displayTitle && (
+                            <span className="company">
+                              &nbsp;@&nbsp;
+                              {url ? (
+                                <a href={url} className="inline-link">
+                                  {displayCompany}
+                                </a>
+                              ) : (
+                                displayCompany
+                              )}
+                            </span>
+                          )}
+                        </h3>
 
-                    <p className="range">{range}</p>
+                        <p className="range">
+                          {range} · {location}
+                        </p>
 
-                    {showEnBullets ? (
-                      <ul>
-                        {bullets_en.map((b, j) => (
-                          <li key={j}>{b}</li>
-                        ))}
-                      </ul>
-                    ) : (
-                      <div dangerouslySetInnerHTML={{ __html: html }} />
-                    )}
+                        {showEnBullets ? (
+                          <ul>
+                            {bullets_en.map((b, j) => (
+                              <li key={j}>{b}</li>
+                            ))}
+                          </ul>
+                        ) : (
+                          <div dangerouslySetInnerHTML={{ __html: html }} />
+                        )}
+                      </div>
+
+                      {hasMedia && (
+                        <div
+                          className={`era-media${
+                            polaroid_imagekit_id ? '' : ' era-media--artifact'
+                          }`}>
+                          <div className="media-frame">
+                            {polaroid_imagekit_id ? (
+                              <IkImage
+                                id={polaroid_imagekit_id}
+                                alt={displayCompany || displayTitle}
+                                width={480}
+                                aspectRatio="4:5"
+                                widths={[300, 480, 700]}
+                                sizes="230px"
+                              />
+                            ) : (
+                              <GatsbyImage image={artifactImage} alt={displayCompany || ''} />
+                            )}
+                          </div>
+                          {caption && <span className="media-caption">{caption}</span>}
+                        </div>
+                      )}
+                    </div>
                   </StyledTabPanel>
                 </CSSTransition>
               );

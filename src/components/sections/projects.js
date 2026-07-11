@@ -29,7 +29,7 @@ const StyledProjectsSection = styled.section`
     ${({ theme }) => theme.mixins.resetList};
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    grid-gap: 15px;
+    grid-gap: 28px 20px;
     position: relative;
     margin-top: 50px;
 
@@ -47,81 +47,55 @@ const StyledProjectsSection = styled.section`
 const StyledProject = styled.li`
   position: relative;
   cursor: default;
-  transition: var(--transition);
-
-  @media (prefers-reduced-motion: no-preference) {
-    &:hover,
-    &:focus-within {
-      .project-inner {
-        transform: translateY(-7px);
-      }
-    }
-  }
 
   a {
     position: relative;
     z-index: 1;
   }
 
-  .project-inner {
-    ${({ theme }) => theme.mixins.boxShadow};
-    ${({ theme }) => theme.mixins.flexBetween};
+  .folder {
+    display: flex;
     flex-direction: column;
-    align-items: flex-start;
-    position: relative;
     height: 100%;
-    padding: 2rem 1.75rem;
-    border-radius: var(--border-radius);
-    background-color: var(--light-navy);
-    transition: var(--transition);
-    overflow: auto;
   }
 
-  .project-top {
-    ${({ theme }) => theme.mixins.flexBetween};
-    margin-bottom: 35px;
+  /* the sheet peeking out of the folder pocket */
+  .paper {
+    position: relative;
+    z-index: 1;
+    flex-grow: 1;
+    margin: 0 10px -30px;
+    padding: 22px 20px 52px;
+    background: var(--green);
+    color: var(--ink);
+    border-radius: 4px 4px 0 0;
+    box-shadow: 0 -2px 16px -6px rgba(20, 8, 12, 0.35);
+    transition: transform 0.3s var(--easing);
+    will-change: transform;
+  }
 
-    .folder {
-      color: var(--green);
-      svg {
-        width: 40px;
-        height: 40px;
-      }
-    }
-
-    .project-links {
-      display: flex;
-      align-items: center;
-      margin-right: -10px;
-      color: var(--light-slate);
-
-      a {
-        ${({ theme }) => theme.mixins.flexCenter};
-        padding: 5px 7px;
-
-        &.external {
-          svg {
-            width: 22px;
-            height: 22px;
-            margin-top: -4px;
-          }
-        }
-
-        svg {
-          width: 20px;
-          height: 20px;
-        }
-      }
+  @media (prefers-reduced-motion: no-preference) {
+    &:hover .paper,
+    &:focus-within .paper {
+      transform: translateY(-12px) rotate(-1.2deg);
     }
   }
 
   .project-title {
     margin: 0 0 10px;
-    color: var(--lightest-slate);
-    font-size: var(--fz-xxl);
+    color: var(--ink);
+    font-size: var(--fz-xl);
+    line-height: 1.25;
 
     a {
       position: static;
+      color: inherit;
+
+      &:hover,
+      &:focus-visible {
+        text-decoration: underline;
+        text-underline-offset: 3px;
+      }
 
       &:before {
         content: '';
@@ -137,30 +111,120 @@ const StyledProject = styled.li`
   }
 
   .project-description {
-    color: var(--light-slate);
-    font-size: 17px;
+    color: rgba(23, 10, 16, 0.82);
+    font-size: 15px;
+    line-height: 1.45;
+
+    p {
+      margin: 0;
+    }
 
     a {
-      ${({ theme }) => theme.mixins.inlineLink};
+      color: var(--ink);
+      font-weight: 600;
+      text-decoration: underline;
+      text-underline-offset: 3px;
     }
+  }
+
+  /* the folder pocket holding the sheet */
+  .pocket {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 18px 18px 14px;
+    background: var(--dark-navy);
+    color: var(--lightest-slate);
+    border: 1px solid var(--lightest-navy);
+    border-radius: 6px;
+    box-shadow: 0 14px 28px -12px rgba(20, 8, 12, 0.75);
+    transition: var(--transition);
+
+    /* folder tab */
+    &:before {
+      content: '';
+      position: absolute;
+      top: -14px;
+      left: 14px;
+      width: 96px;
+      height: 14px;
+      background: var(--dark-navy);
+      border: 1px solid var(--lightest-navy);
+      border-bottom: none;
+      border-radius: 6px 6px 0 0;
+    }
+  }
+
+  &:hover .pocket,
+  &:focus-within .pocket {
+    box-shadow: 0 20px 34px -14px rgba(20, 8, 12, 0.85);
+  }
+
+  .pocket-tab {
+    position: absolute;
+    top: -12px;
+    left: 24px;
+    z-index: 3;
+    color: var(--green);
+    font-family: var(--font-mono);
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+  }
+
+  .pocket-row {
+    ${({ theme }) => theme.mixins.flexBetween};
+    align-items: flex-end;
+    gap: 12px;
   }
 
   .project-tech-list {
     display: flex;
-    align-items: flex-end;
-    flex-grow: 1;
     flex-wrap: wrap;
+    gap: 4px 14px;
     padding: 0;
-    margin: 20px 0 0 0;
+    margin: 0;
     list-style: none;
 
     li {
+      color: var(--light-slate);
       font-family: var(--font-mono);
       font-size: var(--fz-xxs);
-      line-height: 1.75;
+      line-height: 1.6;
+      white-space: nowrap;
+    }
+  }
 
-      &:not(:last-of-type) {
-        margin-right: 15px;
+  .project-links {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+    margin-right: -7px;
+    color: var(--lightest-slate);
+
+    a {
+      ${({ theme }) => theme.mixins.flexCenter};
+      padding: 5px 7px;
+
+      &:hover,
+      &:focus-visible {
+        color: var(--green);
+      }
+
+      &.external {
+        svg {
+          width: 21px;
+          height: 21px;
+          margin-top: -4px;
+        }
+      }
+
+      svg {
+        width: 19px;
+        height: 19px;
       }
     }
   }
@@ -214,17 +278,38 @@ const Projects = () => {
   const firstSix = projects.slice(0, GRID_LIMIT);
   const projectsToShow = showMore ? projects : firstSix;
 
-  const projectInner = node => {
+  const projectInner = (node, i) => {
     const { frontmatter, html } = node;
     const { github, external, title, tech, description_en } = frontmatter;
 
     return (
-      <div className="project-inner">
-        <header>
-          <div className="project-top">
-            <div className="folder">
-              <Icon name="Folder" />
+      <div className="folder">
+        <div className="paper">
+          <h3 className="project-title">
+            <a href={external} target="_blank" rel="noreferrer">
+              {title}
+            </a>
+          </h3>
+
+          {lang === 'en' && description_en ? (
+            <div className="project-description">
+              <p>{description_en}</p>
             </div>
+          ) : (
+            <div className="project-description" dangerouslySetInnerHTML={{ __html: html }} />
+          )}
+        </div>
+
+        <div className="pocket">
+          <span className="pocket-tab">{`CASE_${String(i + 1).padStart(2, '0')}`}</span>
+          <div className="pocket-row">
+            {tech && (
+              <ul className="project-tech-list">
+                {tech.map((techItem, j) => (
+                  <li key={j}>{techItem}</li>
+                ))}
+              </ul>
+            )}
             <div className="project-links">
               {github && (
                 <a href={github} aria-label="GitHub Link" target="_blank" rel="noreferrer">
@@ -243,31 +328,7 @@ const Projects = () => {
               )}
             </div>
           </div>
-
-          <h3 className="project-title">
-            <a href={external} target="_blank" rel="noreferrer">
-              {title}
-            </a>
-          </h3>
-
-          {lang === 'en' && description_en ? (
-            <div className="project-description">
-              <p>{description_en}</p>
-            </div>
-          ) : (
-            <div className="project-description" dangerouslySetInnerHTML={{ __html: html }} />
-          )}
-        </header>
-
-        <footer>
-          {tech && (
-            <ul className="project-tech-list">
-              {tech.map((tech, i) => (
-                <li key={i}>{tech}</li>
-              ))}
-            </ul>
-          )}
-        </footer>
+        </div>
       </div>
     );
   };
@@ -277,7 +338,7 @@ const Projects = () => {
       <h2 ref={revealTitle}>{t.otherProjects.title}</h2>
 
       <Link className="inline-link archive-link" to="/archive" ref={revealArchiveLink}>
-        Consultar Arquivos
+        {t.otherProjects.archive}
       </Link>
 
       <ul className="projects-grid">
@@ -285,7 +346,7 @@ const Projects = () => {
           <>
             {projectsToShow &&
               projectsToShow.map(({ node }, i) => (
-                <StyledProject key={i}>{projectInner(node)}</StyledProject>
+                <StyledProject key={i}>{projectInner(node, i)}</StyledProject>
               ))}
           </>
         ) : (
@@ -303,7 +364,7 @@ const Projects = () => {
                     style={{
                       transitionDelay: `${i >= GRID_LIMIT ? (i - GRID_LIMIT) * 100 : 0}ms`,
                     }}>
-                    {projectInner(node)}
+                    {projectInner(node, i)}
                   </StyledProject>
                 </CSSTransition>
               ))}

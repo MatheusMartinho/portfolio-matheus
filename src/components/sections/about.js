@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import { StaticImage } from 'gatsby-plugin-image';
-import styled, { keyframes } from 'styled-components';
+import styled from 'styled-components';
 import { srConfig } from '@config';
 import sr from '@utils/sr';
 import { usePrefersReducedMotion } from '@hooks';
@@ -57,121 +57,106 @@ const StyledStackHeader = styled.div`
   }
 `;
 
-const scrollLeft = keyframes`
-  from { transform: translateX(0); }
-  to   { transform: translateX(-50%); }
+const StyledStackGroupLabel = styled.span`
+  display: inline-block;
+  margin: 4px 0 14px;
+  padding: 4px 10px;
+  border: 1px solid rgba(197, 220, 104, 0.35);
+  border-radius: 4px;
+  color: var(--green);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
 `;
 
-const scrollRight = keyframes`
-  from { transform: translateX(-50%); }
-  to   { transform: translateX(0); }
-`;
-
-const StyledMarquee = styled.div`
-  position: relative;
-  width: 100%;
-  overflow: hidden;
-  mask-image: linear-gradient(
-    to right,
-    transparent 0,
-    black 8%,
-    black 92%,
-    transparent 100%
-  );
-  -webkit-mask-image: linear-gradient(
-    to right,
-    transparent 0,
-    black 8%,
-    black 92%,
-    transparent 100%
-  );
-
-  & + & {
-    margin-top: 12px;
-  }
-`;
-
-const StyledTrack = styled.div`
+const StyledStickerSheet = styled.div`
   display: flex;
-  gap: 10px;
-  width: max-content;
-  animation: ${({ $direction }) => ($direction === 'right' ? scrollRight : scrollLeft)}
-    ${({ $duration }) => $duration}s linear infinite;
+  flex-wrap: wrap;
+  gap: 12px 14px;
+  margin-bottom: 24px;
 
-  ${StyledMarquee}:hover & {
-    animation-play-state: paused;
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    animation: none;
+  &:last-child {
+    margin-bottom: 0;
   }
 `;
 
-const StyledChip = styled.span`
+const StyledSticker = styled.span`
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  width: 56px;
-  height: 56px;
-  border: 1px solid var(--lightest-navy);
-  border-radius: 50%;
-  background: var(--light-navy);
-  color: var(--light-slate);
-  transition: var(--transition);
+  gap: 8px;
+  padding: ${({ $small }) => ($small ? '7px 13px 7px 10px' : '10px 16px 10px 12px')};
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.09) 0%,
+    rgba(255, 255, 255, 0.04) 50%,
+    rgba(255, 255, 255, 0.02) 100%
+  );
+  -webkit-backdrop-filter: blur(14px) saturate(150%);
+  backdrop-filter: blur(14px) saturate(150%);
+  color: var(--lightest-slate);
+  border: 1px solid rgba(255, 255, 255, 0.13);
+  border-radius: 10px;
+  font-family: var(--font-mono);
+  font-size: ${({ $small }) => ($small ? 'var(--fz-xxs)' : 'var(--fz-xs)')};
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
   cursor: default;
-  flex-shrink: 0;
+  box-shadow: 0 10px 24px -14px rgba(10, 4, 8, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.14);
+  transition: var(--transition);
 
-  img {
-    width: 28px;
-    height: 28px;
+  img,
+  img[alt=''] {
+    width: ${({ $small }) => ($small ? '14px' : '18px')};
+    height: ${({ $small }) => ($small ? '14px' : '18px')};
     object-fit: contain;
     transition: var(--transition);
-  }
-
-  .fallback {
-    font-family: var(--font-mono);
-    font-size: var(--fz-md);
-    font-weight: 600;
-    color: var(--light-slate);
+    filter: none; /* GlobalStyle blurs img[alt=""], but these are decorative by design */
   }
 
   &:hover {
-    border-color: var(--green);
     transform: translateY(-3px);
-    box-shadow: 0 8px 16px -8px rgba(100, 255, 218, 0.35);
+    color: var(--green);
+    border-color: rgba(197, 220, 104, 0.5);
+    box-shadow: 0 14px 30px -14px rgba(10, 4, 8, 0.7),
+      0 8px 22px -10px rgba(197, 220, 104, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2);
 
     img {
-      transform: scale(1.1);
+      transform: scale(1.08);
     }
+  }
 
-    .fallback {
-      color: var(--green);
+  @media (prefers-reduced-motion: reduce) {
+    &:hover {
+      transform: none;
     }
   }
 `;
 
-const TechIcon = ({ name, slug }) => {
+const Sticker = ({ name, slug, small }) => {
   const [errored, setErrored] = useState(!slug);
 
   return (
-    <StyledChip title={name} aria-label={name}>
-      {errored ? (
-        <span className="fallback">{name.charAt(0).toUpperCase()}</span>
-      ) : (
+    <StyledSticker title={name} $small={small}>
+      {!errored && (
         <img
-          src={`https://cdn.simpleicons.org/${slug}`}
-          alt={name}
+          src={`https://cdn.simpleicons.org/${slug}/ede0cc`}
+          alt=""
+          aria-hidden="true"
           loading="lazy"
           onError={() => setErrored(true)}
         />
       )}
-    </StyledChip>
+      <span>{name}</span>
+    </StyledSticker>
   );
 };
 
-TechIcon.propTypes = {
+Sticker.propTypes = {
   name: PropTypes.string.isRequired,
   slug: PropTypes.string,
+  small: PropTypes.bool,
 };
 
 const StyledCard = styled.div`
@@ -188,57 +173,54 @@ const StyledCard = styled.div`
     max-width: 320px;
   }
 
+  .card-swing {
+    width: 100%;
+    transform-origin: 50% -40px;
+
+    @media (prefers-reduced-motion: no-preference) {
+      animation: badgeSwing 7s ease-in-out infinite;
+    }
+  }
+
+  @keyframes badgeSwing {
+    0%,
+    100% {
+      transform: rotate(-2.4deg);
+    }
+    50% {
+      transform: rotate(1.6deg);
+    }
+  }
+
   .card-frame {
     position: relative;
     width: 100%;
-    transform: rotate(-2deg);
-    transition: var(--transition);
     filter: drop-shadow(0 25px 35px rgba(2, 12, 27, 0.7))
       drop-shadow(0 8px 12px rgba(2, 12, 27, 0.45));
-
-    &:hover {
-      transform: rotate(0deg) translateY(-6px);
-      filter: drop-shadow(0 35px 45px rgba(2, 12, 27, 0.85))
-        drop-shadow(0 12px 18px rgba(2, 12, 27, 0.55));
-    }
   }
 `;
 
-const ROW_ONE = [
+const STACK_DAILY = [
   { name: 'TypeScript', slug: 'typescript' },
-  { name: 'JavaScript', slug: 'javascript' },
-  { name: 'Python', slug: 'python' },
+  { name: 'React / Native', slug: 'react' },
   { name: 'Next.js', slug: 'nextdotjs' },
-  { name: 'React', slug: 'react' },
-  { name: 'React Native', slug: 'react' },
   { name: 'Expo', slug: 'expo' },
+  { name: 'Supabase', slug: 'supabase' },
+  { name: 'Node.js', slug: 'nodedotjs' },
   { name: 'Tailwind CSS', slug: 'tailwindcss' },
-  { name: 'Vite', slug: 'vite' },
-  { name: 'HTML5', slug: 'html5' },
-  { name: 'CSS3', slug: 'css3' },
-  { name: 'Angular', slug: 'angular' },
-  { name: 'Flutter', slug: 'flutter' },
-  { name: 'Dart', slug: 'dart' },
+  { name: 'Claude', slug: 'claude' },
 ];
 
-const ROW_TWO = [
-  { name: 'Node.js', slug: 'nodedotjs' },
-  { name: 'Express', slug: 'express' },
-  { name: 'Supabase', slug: 'supabase' },
+const STACK_ALSO = [
+  { name: 'Python', slug: 'python' },
   { name: 'PostgreSQL', slug: 'postgresql' },
   { name: 'Firebase', slug: 'firebase' },
   { name: 'Stripe', slug: 'stripe' },
   { name: 'Vercel', slug: 'vercel' },
-  { name: 'Cloudflare', slug: 'cloudflare' },
   { name: 'Git', slug: 'git' },
-  { name: 'GitHub', slug: 'github' },
   { name: 'Figma', slug: 'figma' },
-  { name: 'Insomnia', slug: 'insomnia' },
-  { name: 'Claude', slug: 'claude' },
+  { name: 'Flutter', slug: 'flutter' },
   { name: 'Cursor', slug: 'cursor' },
-  { name: 'Windsurf', slug: 'codeium' },
-  { name: 'Xcode', slug: 'xcode' },
-  { name: 'Android Studio', slug: 'androidstudio' },
   { name: 'Jupyter', slug: 'jupyter' },
 ];
 
@@ -253,16 +235,6 @@ const About = () => {
     }
     sr.reveal(revealContainer.current, srConfig());
   }, []);
-
-  const renderRow = (items, direction, duration) => (
-    <StyledMarquee>
-      <StyledTrack $direction={direction} $duration={duration}>
-        {[...items, ...items].map((tech, i) => (
-          <TechIcon key={`${tech.name}-${i}`} name={tech.name} slug={tech.slug} />
-        ))}
-      </StyledTrack>
-    </StyledMarquee>
-  );
 
   return (
     <StyledAboutSection id="about" ref={revealContainer}>
@@ -304,19 +276,33 @@ const About = () => {
               <span className="stack-label">~/stack</span>
               <span className="stack-line" />
             </StyledStackHeader>
-            {renderRow(ROW_ONE, 'left', 45)}
-            {renderRow(ROW_TWO, 'right', 55)}
+
+            <StyledStackGroupLabel>{t.about.stackDaily}</StyledStackGroupLabel>
+            <StyledStickerSheet>
+              {STACK_DAILY.map(tech => (
+                <Sticker key={tech.name} name={tech.name} slug={tech.slug} />
+              ))}
+            </StyledStickerSheet>
+
+            <StyledStackGroupLabel>{t.about.stackAlso}</StyledStackGroupLabel>
+            <StyledStickerSheet>
+              {STACK_ALSO.map(tech => (
+                <Sticker key={tech.name} name={tech.name} slug={tech.slug} small />
+              ))}
+            </StyledStickerSheet>
           </StyledStackBlock>
         </StyledText>
 
         <StyledCard>
-          <div className="card-frame">
-            <StaticImage
-              src="../../images/builder-card.png"
-              alt="Matheus Moura Martinho — The Builder credential"
-              placeholder="blurred"
-              quality={95}
-            />
+          <div className="card-swing">
+            <div className="card-frame">
+              <StaticImage
+                src="../../images/builder-card.png"
+                alt="Matheus Moura Martinho — The Builder credential"
+                placeholder="blurred"
+                quality={95}
+              />
+            </div>
           </div>
         </StyledCard>
       </div>

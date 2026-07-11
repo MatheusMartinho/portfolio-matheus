@@ -154,33 +154,74 @@ const StyledProject = styled.li`
     }
   }
 
+  /* solid statement card, black-on-green */
   .project-description {
-    ${({ theme }) => theme.mixins.boxShadow};
     position: relative;
     z-index: 2;
-    padding: 25px;
-    border-radius: var(--border-radius);
-    background-color: var(--light-navy);
-    color: var(--light-slate);
-    font-size: var(--fz-lg);
+    padding: 0;
+    background: var(--green);
+    border-radius: 6px;
+    color: var(--ink);
+    font-size: var(--fz-md);
+    text-align: left;
+    box-shadow: 8px 8px 0 0 rgba(10, 4, 8, 0.55);
+    transition: var(--transition);
 
-    @media (max-width: 768px) {
-      padding: 20px 0;
-      background-color: transparent;
-      box-shadow: none;
-
-      &:hover {
-        box-shadow: none;
-      }
+    &:hover {
+      transform: translate(-2px, -2px);
+      box-shadow: 12px 12px 0 0 rgba(10, 4, 8, 0.6);
     }
 
     a {
-      ${({ theme }) => theme.mixins.inlineLink};
+      display: inline-block;
+      color: var(--ink);
+      font-weight: 600;
+      text-decoration: underline;
+      text-underline-offset: 3px;
     }
 
     strong {
-      color: var(--white);
-      font-weight: normal;
+      color: var(--ink);
+      font-weight: 600;
+    }
+  }
+
+  .case-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    padding: 11px 18px;
+    border-bottom: 1.5px solid rgba(23, 10, 16, 0.3);
+    color: var(--ink);
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    white-space: nowrap;
+  }
+
+  .case-star {
+    letter-spacing: 0;
+  }
+
+  .case-body {
+    padding: 17px 18px 19px;
+    line-height: 1.45;
+
+    p {
+      margin: 0;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .case-head {
+      padding: 9px 14px;
+      letter-spacing: 0.14em;
+    }
+
+    .case-body {
+      padding: 14px 14px 16px;
     }
   }
 
@@ -402,7 +443,49 @@ const StyledProject = styled.li`
       opacity: 0.25;
     }
   }
+
+  /* ambient glow behind the mockups, tinted per project */
+  .project-image--iphone,
+  .project-image--browser {
+    &:before {
+      content: '';
+      position: absolute;
+      inset: 4% 8%;
+      z-index: 0;
+      border-radius: 50%;
+      background: radial-gradient(
+        closest-side,
+        var(--glow-color, rgba(197, 220, 104, 0.16)),
+        transparent 72%
+      );
+      filter: blur(34px);
+      pointer-events: none;
+    }
+
+    > * {
+      position: relative;
+      z-index: 1;
+    }
+  }
+
+  .glow-stadium {
+    --glow-color: rgba(197, 220, 104, 0.17);
+  }
+
+  .glow-cinema {
+    --glow-color: rgba(232, 96, 96, 0.15);
+  }
+
+  .glow-tag {
+    --glow-color: rgba(232, 180, 106, 0.15);
+  }
 `;
+
+const TICKET_VARIANTS = {
+  'The Pitch': 'stadium',
+  CINELOG: 'cinema',
+  ECCO: 'tag',
+};
 
 const Featured = () => {
   const data = useStaticQuery(graphql`
@@ -431,7 +514,6 @@ const Featured = () => {
               external
               ios
               android
-              androidEmailRequired
               description_en
             }
             html
@@ -476,12 +558,13 @@ const Featured = () => {
               mockup,
               ios,
               android,
-              androidEmailRequired,
               description_en,
             } = frontmatter;
             const image = getImage(cover);
             const screenImages = (screens || []).map(s => getImage(s)).filter(Boolean);
             const shouldUseIphoneMockup = mockup === 'iphone';
+            const variant = TICKET_VARIANTS[title] || 'stadium';
+            const caseNumber = `${t.featured.caseLabel} ${String(i + 1).padStart(2, '0')}`;
 
             return (
               <StyledProject key={i} ref={el => (revealProjects.current[i] = el)}>
@@ -493,16 +576,21 @@ const Featured = () => {
                       <a href={external}>{title}</a>
                     </h3>
 
-                    {lang === 'en' && description_en ? (
-                      <div className="project-description">
-                        <p>{description_en}</p>
+                    <div className="project-description">
+                      <div className="case-head">
+                        <span>{caseNumber}</span>
+                        <span className="case-star" aria-hidden="true">
+                          ★
+                        </span>
                       </div>
-                    ) : (
-                      <div
-                        className="project-description"
-                        dangerouslySetInnerHTML={{ __html: html }}
-                      />
-                    )}
+                      {lang === 'en' && description_en ? (
+                        <div className="case-body">
+                          <p>{description_en}</p>
+                        </div>
+                      ) : (
+                        <div className="case-body" dangerouslySetInnerHTML={{ __html: html }} />
+                      )}
+                    </div>
 
                     {tech.length && (
                       <ul className="project-tech-list">
@@ -513,43 +601,30 @@ const Featured = () => {
                     )}
 
                     {(ios || android) && (
-                      <>
-                        <div className="project-store-badges">
-                          {ios && (
-                            <a
-                              className="store-badge"
-                              href={ios}
-                              target="_blank"
-                              rel="noreferrer"
-                              aria-label="Beta iOS via TestFlight">
-                              <Icon name="AppStore" />
-                              <span>{t.featured.ios}</span>
-                            </a>
-                          )}
-                          {android && (
-                            <a
-                              className="store-badge"
-                              href={
-                                androidEmailRequired
-                                  ? `mailto:matmouramartinho@gmail.com?subject=${encodeURIComponent(
-                                    'Acesso Beta Android — The Pitch',
-                                  )}&body=${encodeURIComponent(
-                                    `Oi Matheus,\n\nGostaria de testar a versão Android do The Pitch.\nMeu Gmail: ___\n\nLink do beta: ${android}\n\nObrigado!`,
-                                  )}`
-                                  : android
-                              }
-                              target={androidEmailRequired ? undefined : '_blank'}
-                              rel="noreferrer"
-                              aria-label="Beta Android via Google Play">
-                              <Icon name="PlayStore" />
-                              <span>{t.featured.android}</span>
-                            </a>
-                          )}
-                        </div>
-                        {androidEmailRequired && android && (
-                          <p className="store-note">{t.featured.androidNote}</p>
+                      <div className="project-store-badges">
+                        {ios && (
+                          <a
+                            className="store-badge"
+                            href={ios}
+                            target="_blank"
+                            rel="noreferrer"
+                            aria-label="Baixar na App Store">
+                            <Icon name="AppStore" />
+                            <span>{t.featured.ios}</span>
+                          </a>
                         )}
-                      </>
+                        {android && (
+                          <a
+                            className="store-badge"
+                            href={android}
+                            target="_blank"
+                            rel="noreferrer"
+                            aria-label="Baixar no Google Play">
+                            <Icon name="PlayStore" />
+                            <span>{t.featured.android}</span>
+                          </a>
+                        )}
+                      </div>
                     )}
 
                     <div className="project-links">
@@ -568,7 +643,7 @@ const Featured = () => {
                 </div>
 
                 {shouldUseIphoneMockup ? (
-                  <div className="project-image project-image--iphone">
+                  <div className={`project-image project-image--iphone glow-${variant}`}>
                     <Iphone
                       image={image}
                       images={screenImages.length > 0 ? screenImages : undefined}
@@ -576,7 +651,7 @@ const Featured = () => {
                     />
                   </div>
                 ) : mockup === 'browser' ? (
-                  <div className="project-image project-image--browser">
+                  <div className={`project-image project-image--browser glow-${variant}`}>
                     <Browser
                       image={image}
                       images={screenImages.length > 0 ? screenImages : undefined}

@@ -1,12 +1,15 @@
 import { css } from 'styled-components';
 
 const button = css`
-  color: var(--green);
-  background-color: transparent;
+  color: var(--ink);
+  background-color: var(--green);
   border: 1px solid var(--green);
   border-radius: var(--border-radius);
   font-size: var(--fz-xs);
   font-family: var(--font-mono);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
   line-height: 1;
   text-decoration: none;
   padding: 1.25rem 1.75rem;
@@ -15,8 +18,8 @@ const button = css`
   &:hover,
   &:focus-visible {
     outline: none;
-    box-shadow: 4px 4px 0 0 var(--green);
-    transform: translate(-5px, -5px);
+    box-shadow: 5px 5px 0 0 rgba(10, 4, 8, 0.85);
+    transform: translate(-4px, -4px);
   }
   &:after {
     display: none !important;
@@ -87,13 +90,16 @@ const mixins = {
   button,
 
   smallButton: css`
-    color: var(--green);
-    background-color: transparent;
+    color: var(--ink);
+    background-color: var(--green);
     border: 1px solid var(--green);
     border-radius: var(--border-radius);
     padding: 0.75rem 1rem;
     font-size: var(--fz-xs);
     font-family: var(--font-mono);
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
     line-height: 1;
     text-decoration: none;
     transition: var(--transition);
@@ -101,8 +107,8 @@ const mixins = {
     &:hover,
     &:focus-visible {
       outline: none;
-      box-shadow: 3px 3px 0 0 var(--green);
-      transform: translate(-4px, -4px);
+      box-shadow: 4px 4px 0 0 rgba(10, 4, 8, 0.85);
+      transform: translate(-3px, -3px);
     }
     &:after {
       display: none !important;
@@ -110,13 +116,16 @@ const mixins = {
   `,
 
   bigButton: css`
-    color: var(--green);
-    background-color: transparent;
+    color: var(--ink);
+    background-color: var(--green);
     border: 1px solid var(--green);
     border-radius: var(--border-radius);
     padding: 1.25rem 1.75rem;
     font-size: var(--fz-sm);
     font-family: var(--font-mono);
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
     line-height: 1;
     text-decoration: none;
     transition: var(--transition);
@@ -124,8 +133,8 @@ const mixins = {
     &:hover,
     &:focus-visible {
       outline: none;
-      box-shadow: 4px 4px 0 0 var(--green);
-      transform: translate(-5px, -5px);
+      box-shadow: 5px 5px 0 0 rgba(10, 4, 8, 0.85);
+      transform: translate(-4px, -4px);
     }
     &:after {
       display: none !important;

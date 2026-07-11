@@ -9,41 +9,64 @@ const translations = {
       resume: 'Currículo',
     },
     hero: {
-      greeting: 'Oi, meu nome é',
-      tagline: 'e eu construo experiências digitais.',
+      greeting: 'Oi! Eu sou o',
+      tagline: 'e eu tiro ideias do papel.',
       paragraphPart1:
-        'Sou um desenvolvedor especializado em construir experiências digitais que resolvem problemas reais. Atualmente, estou focado em desenvolver produtos escaláveis usando Next.js, TypeScript e IA como parceira de desenvolvimento. Estou trabalhando principalmente no',
-      paragraphPart2: 'e no',
-      cta: 'Café Virtual?',
+        'Desenvolvedor full-stack de São Paulo, apaixonado por transformar ideia em produto de verdade, do primeiro rabisco ao deploy. Hoje, quase todo o meu tempo vai para o',
+      paragraphPart2: ', meu app de check-in pra quem vive futebol de estádio, e para o',
+      paragraphPart3: ', minha carta de amor ao cinema.',
+      cta: 'Bora um café virtual?',
+      ctaNote: '15 min, sem pauta. Eu levo o café',
+      stats: [
+        { value: '02', label: 'apps em produção' },
+        { value: '16+', label: 'projetos no arquivo' },
+        { value: '03', label: 'países codando' },
+      ],
+      strip: [
+        'full-stack',
+        'react native',
+        'next.js',
+        'typescript',
+        'supabase',
+        'product-first',
+        'são paulo ↔ mundo',
+      ],
     },
     about: {
       title: 'Sobre mim',
       p1:
-        'Olá, sou o Matheus. Faço produtos digitais do zero ao deploy: arquitetura, código, infra e UX.',
+        'Sou o Matheus: paulistano, torcedor, cinéfilo e desenvolvedor. Gosto de cuidar do produto inteiro, da arquitetura ao UX, do primeiro commit ao lançamento.',
       p2Start:
-        'Comecei em ciência da computação na faculdade, mas foi num bootcamp em Vancouver que aprendi a programar de verdade. Desde então, lancei o',
-      p2Mid: '(SaaS de orçamento com assinatura digital e pagamentos via PIX), o',
+        'A faculdade de Ciência da Computação me deu a base, mas foi num bootcamp em Vancouver que eu virei programador de verdade. De lá pra cá, lancei o',
+      p2Mid: '(orçamentos com assinatura digital e PIX), o',
       p2End:
-        '(análise e otimização de treinos), e passei uma temporada codando remoto das Rocky Mountains.',
-      p3Start: 'Hoje trabalho em dois projetos: o',
-      p3Mid: ', app de check-in social com verificação por GPS para torcedor brasileiro no estádio, e o',
+        '(treino guiado por dados), e ainda morei uma temporada num chalé nas Montanhas Rochosas, trabalhando remoto com a neve na janela.',
+      p3Start: 'Hoje meu coração tá dividido entre dois projetos: o',
+      p3Mid: ', que transforma cada ida ao estádio em memória colecionável, e o',
       p3End:
-        ', alternativa ao Letterboxd pensada para cinéfilos brasileiros. Ambos em React Native, Expo e Supabase. No fluxo de trabalho, uso o Claude para acelerar refactor, debug e revisão de código sem abrir mão da qualidade.',
+        ', o cantinho do cinéfilo brasileiro. Os dois em React Native, Expo e Supabase, com o Claude de copiloto no refactor, no debug e na revisão. Velocidade sim, qualidade sempre.',
+      stackDaily: 'uso todo dia',
+      stackAlso: 'também falo',
     },
     jobs: {
       title: 'Minha Jornada',
+      note: '// de São Paulo pro mundo, e de volta',
+    },
+    side: {
+      status: 'aberto a projetos',
     },
     featured: {
       title: 'Alguns Projetos Que Desenvolvi',
       overline: 'Projeto em Destaque',
-      ios: 'TestFlight (iOS)',
-      android: 'Beta Android',
-      androidNote: '* Beta Android exige aprovação manual. Me envie seu Gmail e libero em até 24h.',
+      ios: 'App Store',
+      android: 'Google Play',
+      caseLabel: 'CASE Nº',
     },
     otherProjects: {
       title: 'Outros Projetos',
-      showMore: 'Mostrar Mais',
-      showLess: 'Mostrar Menos',
+      archive: 'consultar arquivo completo',
+      showMore: 'Abrir mais pastas',
+      showLess: 'Fechar pastas',
     },
     frames: {
       title: 'Frames',
@@ -61,8 +84,11 @@ const translations = {
     },
     contact: {
       overline: 'E agora?',
-      title: 'Entre em Contato',
-      cta: 'Vamos Conversar',
+      title: 'Bora tomar esse café?',
+      body:
+        'Vaga, freela, ideia de produto ou só trocar ideia sobre futebol e cinema? Pode chamar. Eu respondo mais rápido que o VAR.',
+      cta: 'Chamar no email',
+      flipHint: 'psiu: o cartão tem verso',
     },
   },
   en: {
@@ -75,41 +101,64 @@ const translations = {
       resume: 'Resume',
     },
     hero: {
-      greeting: 'Hi, my name is',
-      tagline: 'and I build digital experiences.',
+      greeting: 'Hi! I\'m',
+      tagline: 'and I take ideas off the page.',
       paragraphPart1:
-        "I'm a developer focused on building digital experiences that solve real problems. Currently, I'm focused on shipping scalable products using Next.js, TypeScript and AI as a development partner. Right now I'm working mainly on",
-      paragraphPart2: 'and',
-      cta: 'Virtual Coffee?',
+        'Full-stack developer from São Paulo, obsessed with turning ideas into real products, from first sketch to deploy. These days, most of my time goes into',
+      paragraphPart2: ', my check-in app for people who live for match day, and',
+      paragraphPart3: ', my love letter to cinema.',
+      cta: 'Virtual coffee?',
+      ctaNote: '15 min, no agenda. Coffee\'s on me',
+      stats: [
+        { value: '02', label: 'apps in production' },
+        { value: '16+', label: 'projects in the archive' },
+        { value: '03', label: 'countries coded from' },
+      ],
+      strip: [
+        'full-stack',
+        'react native',
+        'next.js',
+        'typescript',
+        'supabase',
+        'product-first',
+        'são paulo ↔ the world',
+      ],
     },
     about: {
       title: 'About me',
       p1:
-        "Hi, I'm Matheus. I ship digital products end-to-end: architecture, code, infrastructure and UX.",
+        'I\'m Matheus: born in São Paulo, football fan, film nerd, developer. I like owning the whole product, from architecture to UX, from first commit to launch.',
       p2Start:
-        "I started with a Computer Science degree in college, but it was at a bootcamp in Vancouver that I really learned how to code. Since then, I've launched",
-      p2Mid: '(a SaaS for budgets with digital signing and PIX payments),',
+        'A Computer Science degree gave me the foundations, but a bootcamp in Vancouver is where I actually became a programmer. Since then I shipped',
+      p2Mid: '(quotes with digital signing and PIX payments),',
       p2End:
-        '(workout analysis and performance optimization), and spent a season coding remotely from the Rocky Mountains.',
-      p3Start: "Right now I'm working on two products:",
-      p3Mid: ', a social check-in app with GPS verification for Brazilian fans at the stadium, and',
+        '(data-driven training), and spent a season coding from a chalet in the Rocky Mountains.',
+      p3Start: 'Right now my heart is split between two projects:',
+      p3Mid: ', which turns every trip to the stadium into a collectible memory, and',
       p3End:
-        ", a Letterboxd alternative built for Brazilian film lovers. Both on React Native, Expo and Supabase. Day-to-day, I use Claude to speed up refactoring, debugging and code review without compromising on quality.",
+        ', a home for Brazilian film lovers. Both built with React Native, Expo and Supabase, with Claude as my copilot for refactoring, debugging and review. Fast, yes. Sloppy, never.',
+      stackDaily: 'daily drivers',
+      stackAlso: 'also fluent in',
     },
     jobs: {
       title: 'My Journey',
+      note: '// from São Paulo to the world, and back',
+    },
+    side: {
+      status: 'open to work',
     },
     featured: {
       title: 'Some Things I’ve Built',
       overline: 'Featured Project',
-      ios: 'TestFlight (iOS)',
-      android: 'Android Beta',
-      androidNote: '* Android beta requires manual approval. Send me your Gmail and I unlock it within 24h.',
+      ios: 'App Store',
+      android: 'Google Play',
+      caseLabel: 'CASE No.',
     },
     otherProjects: {
       title: 'Other Projects',
-      showMore: 'Show More',
-      showLess: 'Show Less',
+      archive: 'browse the full archive',
+      showMore: 'Open more folders',
+      showLess: 'Close folders',
     },
     frames: {
       title: 'Frames',
@@ -126,9 +175,12 @@ const translations = {
       notFoundBody: 'This chapter is still being developed. Check back soon.',
     },
     contact: {
-      overline: 'What’s Next?',
-      title: 'Get in Touch',
-      cta: "Let’s Talk",
+      overline: 'What’s next?',
+      title: 'So… that coffee?',
+      body:
+        'A role, a freelance gig, a product idea, or just football and film talk? Reach out. I reply faster than VAR.',
+      cta: 'Email me',
+      flipHint: 'psst: the card has a back side',
     },
   },
 };

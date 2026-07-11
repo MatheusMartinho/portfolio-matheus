@@ -1,20 +1,17 @@
 ---
 date: '2024-12-31'
-title: 'Computer Science Student'
+title: 'Estudante de Ciência da Computação'
 title_en: 'Computer Science Student'
 company: 'Universidade Presbiteriana Mackenzie'
 location: 'São Paulo, Brazil'
 range: '2018 – 2020'
 url: 'https://www.mackenzie.br/'
-cover: './cover.png'
 bullets_en:
-  - 'Built strong foundations in algorithms, data structures, OOP, and theory of computation'
-  - 'Developed analytical thinking and algorithmic reasoning, essential for solving complex software problems'
-  - 'Academic projects including Brazilian stock market data analysis (Python, Pandas) and desktop applications'
-  - 'Transitioned to an intensive bootcamp in Vancouver to focus on modern web development'
+  - 'Two years deep in algorithms, data structures, OOP and theory of computation, the foundations I still lean on every single day'
+  - 'My favorite projects were the ones that became real tools, like a Python data analysis of Brazil’s B3 power sector'
+  - 'At some point it clicked: I wanted to build products, not follow the academic path. So I packed my bags and went after real-world code'
 ---
 
-- Construí base sólida em fundamentos: algoritmos, estruturas de dados, programação orientada a objetos e teoria da computação
-- Desenvolvi raciocínio analítico e pensamento algorítmico essencial para resolver problemas complexos de software
-- Projetos acadêmicos incluindo análise de dados do mercado financeiro brasileiro (Python, Pandas) e aplicações desktop
-- Transicionei para bootcamp intensivo em Vancouver para focar em desenvolvimento web moderno
+- Dois anos fundo em algoritmos, estruturas de dados, OOP e teoria da computação, a base que eu uso até hoje, todos os dias
+- Meus projetos favoritos eram os que viravam ferramenta de verdade, tipo a análise de dados do setor elétrico da B3 em Python
+- Em algum momento caiu a ficha: eu queria construir produto, não seguir a vida acadêmica. Então arrumei as malas e fui atrás de código de verdade
