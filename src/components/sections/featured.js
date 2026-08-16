@@ -479,11 +479,16 @@ const StyledProject = styled.li`
   .glow-tag {
     --glow-color: rgba(232, 180, 106, 0.15);
   }
+
+  .glow-lift {
+    --glow-color: rgba(202, 244, 56, 0.18);
+  }
 `;
 
 const TICKET_VARIANTS = {
   'The Pitch': 'stadium',
   CINELOG: 'cinema',
+  'The Lift': 'lift',
   ECCO: 'tag',
 };
 
@@ -514,6 +519,8 @@ const Featured = () => {
               external
               ios
               android
+              note
+              note_en
               description_en
             }
             html
@@ -558,6 +565,8 @@ const Featured = () => {
               mockup,
               ios,
               android,
+              note,
+              note_en,
               description_en,
             } = frontmatter;
             const image = getImage(cover);
@@ -625,6 +634,10 @@ const Featured = () => {
                           </a>
                         )}
                       </div>
+                    )}
+
+                    {note && (
+                      <p className="store-note">{lang === 'en' && note_en ? note_en : note}</p>
                     )}
 
                     <div className="project-links">

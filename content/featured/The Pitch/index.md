@@ -10,6 +10,11 @@ screens:
   - './screen-4.png'
   - './screen-5.png'
   - './screen-6.png'
+  - './screen-7.png'
+  - './screen-8.png'
+  - './screen-9.png'
+  - './screen-10.png'
+github: 'https://github.com/MatheusMartinho/StadiumHub'
 ios: 'https://apps.apple.com/br/app/the-pitch/id6759470434'
 android: 'https://play.google.com/store/apps/details?id=com.matheusdev.thepitch'
 tech:

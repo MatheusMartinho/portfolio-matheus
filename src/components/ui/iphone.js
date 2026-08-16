@@ -61,15 +61,22 @@ const StyledFrame = styled.div`
 const StyledScreen = styled.div`
   position: relative;
   width: 100%;
-  aspect-ratio: 1284 / 2778;
+  aspect-ratio: 1206 / 2622;
   border-radius: 40px;
   overflow: hidden;
   background: #000;
   touch-action: pan-y;
   cursor: grab;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
 
   &:active {
     cursor: grabbing;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--green);
+    outline-offset: 4px;
   }
 
   &:before {
@@ -91,8 +98,6 @@ const SlidesTrack = styled.div`
   display: flex;
   width: 100%;
   height: 100%;
-  transform: translateX(${({ $offset }) => $offset});
-  transition: ${({ $animate }) => ($animate ? 'transform 0.35s cubic-bezier(0.22, 1, 0.36, 1)' : 'none')};
   will-change: transform;
 `;
 
@@ -106,12 +111,14 @@ const Slide = styled.div`
     width: 100% !important;
     height: 100% !important;
     display: block;
+    pointer-events: none;
   }
 
   .gatsby-image-wrapper img {
     width: 100% !important;
     height: 100% !important;
     object-fit: cover !important;
+    -webkit-user-drag: none;
   }
 `;
 
@@ -137,80 +144,260 @@ const Dot = styled.button`
   }
 `;
 
-const SWIPE_THRESHOLD = 50;
+/* iOS-style spring-out curve */
+const EASE = 'cubic-bezier(0.32, 0.72, 0, 1)';
+/* flick faster than this (px/ms) always turns the page */
+const FLICK_VELOCITY = 0.35;
+/* otherwise the drag needs to cross this fraction of the screen */
+const DISTANCE_THRESHOLD = 0.35;
+
+/* iOS rubber-band: resistance grows the further past the edge you pull */
+const rubber = (overflow, width) => {
+  const c = 0.55;
+  return (1 - 1 / ((overflow * c) / width + 1)) * width;
+};
 
 const Iphone = ({ image, images, alt, className }) => {
   const slides = images && images.length > 0 ? images : image ? [image] : [];
+  const count = slides.length;
   const [index, setIndex] = useState(0);
-  const [dragging, setDragging] = useState(false);
-  const [dragDelta, setDragDelta] = useState(0);
-  const startXRef = useRef(0);
-  const widthRef = useRef(0);
+
   const screenRef = useRef(null);
+  const trackRef = useRef(null);
+  const indexRef = useRef(0);
+  const gestureRef = useRef(null);
+  const wheelRef = useRef({ acc: 0, locked: false, timer: null });
+  const hintRef = useRef({ played: false, timers: [] });
 
-  const clamp = useCallback(
-    next => Math.max(0, Math.min(slides.length - 1, next)),
-    [slides.length],
-  );
+  const getWidth = useCallback(() => screenRef.current?.offsetWidth || 1, []);
 
-  const beginDrag = useCallback(
-    clientX => {
-      if (slides.length <= 1) return;
-      startXRef.current = clientX;
-      widthRef.current = screenRef.current?.offsetWidth || 1;
-      setDragging(true);
-      setDragDelta(0);
+  const positionFor = useCallback(i => -i * getWidth(), [getWidth]);
+
+  const applyTransform = useCallback((px, transition) => {
+    const track = trackRef.current;
+    if (!track) {
+      return;
+    }
+    track.style.transition = transition || 'none';
+    track.style.transform = `translate3d(${px}px, 0, 0)`;
+  }, []);
+
+  /* live position mid-animation, so a grab can interrupt a settle */
+  const readCurrentTx = useCallback(() => {
+    const track = trackRef.current;
+    if (!track) {
+      return positionFor(indexRef.current);
+    }
+    const t = window.getComputedStyle(track).transform;
+    if (t && t !== 'none') {
+      const m2 = t.match(/matrix\(([^)]+)\)/);
+      if (m2) {
+        return parseFloat(m2[1].split(',')[4]);
+      }
+      const m3 = t.match(/matrix3d\(([^)]+)\)/);
+      if (m3) {
+        return parseFloat(m3[1].split(',')[12]);
+      }
+    }
+    return positionFor(indexRef.current);
+  }, [positionFor]);
+
+  const cancelHint = useCallback(() => {
+    const hint = hintRef.current;
+    hint.played = true;
+    hint.timers.forEach(clearTimeout);
+    hint.timers = [];
+  }, []);
+
+  const settleTo = useCallback(
+    (next, velocity = 0) => {
+      const width = getWidth();
+      const clamped = Math.max(0, Math.min(count - 1, next));
+      const target = -clamped * width;
+      const distance = Math.abs(target - readCurrentTx());
+      const speed = Math.abs(velocity);
+      /* faster flick = snappier settle, just like UIScrollView */
+      let duration = speed > 0.1 ? distance / speed : 320;
+      duration = Math.max(200, Math.min(440, duration));
+      applyTransform(target, `transform ${Math.round(duration)}ms ${EASE}`);
+      indexRef.current = clamped;
+      setIndex(clamped);
     },
-    [slides.length],
+    [count, getWidth, readCurrentTx, applyTransform],
   );
 
+  const onPointerDown = e => {
+    if (count <= 1) {
+      return;
+    }
+    if (e.pointerType === 'mouse' && e.button !== 0) {
+      return;
+    }
+    if (e.pointerType === 'mouse') {
+      e.preventDefault();
+    }
+    cancelHint();
+    const tx = readCurrentTx();
+    applyTransform(tx, 'none');
+    gestureRef.current = {
+      pointerId: e.pointerId,
+      startTx: tx,
+      startX: e.clientX,
+      lastX: e.clientX,
+      lastT: e.timeStamp,
+      velocity: 0,
+    };
+    e.currentTarget.setPointerCapture?.(e.pointerId);
+  };
+
+  const onPointerMove = e => {
+    const g = gestureRef.current;
+    if (!g || e.pointerId !== g.pointerId) {
+      return;
+    }
+    const dt = e.timeStamp - g.lastT;
+    if (dt > 0) {
+      const instant = (e.clientX - g.lastX) / dt;
+      g.velocity = 0.8 * instant + 0.2 * g.velocity;
+    }
+    g.lastX = e.clientX;
+    g.lastT = e.timeStamp;
+
+    const width = getWidth();
+    const min = -(count - 1) * width;
+    const max = 0;
+    let pos = g.startTx + (e.clientX - g.startX);
+    if (pos > max) {
+      pos = max + rubber(pos - max, width);
+    } else if (pos < min) {
+      pos = min - rubber(min - pos, width);
+    }
+    applyTransform(pos, 'none');
+  };
+
+  const endGesture = e => {
+    const g = gestureRef.current;
+    if (!g || e.pointerId !== g.pointerId) {
+      return;
+    }
+    gestureRef.current = null;
+
+    const width = getWidth();
+    const delta = g.lastX - g.startX;
+    const v = g.velocity;
+    let next = indexRef.current;
+    if (v <= -FLICK_VELOCITY || delta <= -width * DISTANCE_THRESHOLD) {
+      next += 1;
+    } else if (v >= FLICK_VELOCITY || delta >= width * DISTANCE_THRESHOLD) {
+      next -= 1;
+    }
+    settleTo(next, v);
+  };
+
+  const onKeyDown = e => {
+    if (e.key === 'ArrowRight') {
+      e.preventDefault();
+      cancelHint();
+      settleTo(indexRef.current + 1);
+    } else if (e.key === 'ArrowLeft') {
+      e.preventDefault();
+      cancelHint();
+      settleTo(indexRef.current - 1);
+    }
+  };
+
+  /* two-finger trackpad swipe over the phone = paging, like the real device */
   useEffect(() => {
-    if (!dragging) return undefined;
-
-    const handleMove = clientX => {
-      setDragDelta(clientX - startXRef.current);
+    const el = screenRef.current;
+    if (!el || count <= 1) {
+      return undefined;
+    }
+    const onWheel = e => {
+      if (Math.abs(e.deltaX) <= Math.abs(e.deltaY)) {
+        return; /* vertical scroll passes through untouched */
+      }
+      e.preventDefault(); /* keeps macOS back-swipe from hijacking */
+      const w = wheelRef.current;
+      clearTimeout(w.timer);
+      w.timer = setTimeout(() => {
+        w.acc = 0;
+        w.locked = false;
+      }, 180);
+      if (w.locked) {
+        return;
+      }
+      w.acc += e.deltaX;
+      if (Math.abs(w.acc) > 70) {
+        w.locked = true;
+        cancelHint();
+        settleTo(indexRef.current + (w.acc > 0 ? 1 : -1), 0.6);
+        w.acc = 0;
+      }
     };
-    const handleEnd = () => {
-      setDragDelta(currentDelta => {
-        if (Math.abs(currentDelta) > SWIPE_THRESHOLD) {
-          setIndex(prev => clamp(prev + (currentDelta < 0 ? 1 : -1)));
-        }
-        return 0;
-      });
-      setDragging(false);
-    };
-
-    const onMouseMove = e => handleMove(e.clientX);
-    const onTouchMove = e => handleMove(e.touches[0].clientX);
-
-    window.addEventListener('mousemove', onMouseMove);
-    window.addEventListener('mouseup', handleEnd);
-    window.addEventListener('touchmove', onTouchMove);
-    window.addEventListener('touchend', handleEnd);
-    window.addEventListener('touchcancel', handleEnd);
-
+    el.addEventListener('wheel', onWheel, { passive: false });
     return () => {
-      window.removeEventListener('mousemove', onMouseMove);
-      window.removeEventListener('mouseup', handleEnd);
-      window.removeEventListener('touchmove', onTouchMove);
-      window.removeEventListener('touchend', handleEnd);
-      window.removeEventListener('touchcancel', handleEnd);
+      el.removeEventListener('wheel', onWheel);
+      clearTimeout(wheelRef.current.timer);
     };
-  }, [dragging, clamp]);
+  }, [count, settleTo, cancelHint]);
 
-  const onMouseDown = e => {
-    if (e.button !== 0) return;
-    e.preventDefault();
-    beginDrag(e.clientX);
-  };
+  /* keep the current slide framed when the layout resizes */
+  useEffect(() => {
+    const onResize = () => applyTransform(positionFor(indexRef.current), 'none');
+    window.addEventListener('resize', onResize);
+    return () => window.removeEventListener('resize', onResize);
+  }, [applyTransform, positionFor]);
 
-  const onTouchStart = e => {
-    beginDrag(e.touches[0].clientX);
-  };
-
-  const baseOffset = -index * 100;
-  const dragOffset = widthRef.current ? (dragDelta / widthRef.current) * 100 : 0;
-  const offset = `calc(${baseOffset}% + ${dragOffset}%)`;
+  /* one-time peek when the phone scrolls into view, hinting it swipes */
+  useEffect(() => {
+    if (count <= 1 || typeof window === 'undefined') {
+      return undefined;
+    }
+    if (
+      !('IntersectionObserver' in window) ||
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    ) {
+      return undefined;
+    }
+    const el = screenRef.current;
+    if (!el) {
+      return undefined;
+    }
+    const hint = hintRef.current;
+    const io = new IntersectionObserver(
+      entries => {
+        entries.forEach(entry => {
+          if (!entry.isIntersecting || hint.played) {
+            return;
+          }
+          hint.played = true;
+          io.disconnect();
+          hint.timers.push(
+            setTimeout(() => {
+              if (gestureRef.current) {
+                return;
+              }
+              applyTransform(positionFor(indexRef.current) - 22, `transform 450ms ${EASE}`);
+              hint.timers.push(
+                setTimeout(() => {
+                  if (gestureRef.current) {
+                    return;
+                  }
+                  applyTransform(positionFor(indexRef.current), `transform 600ms ${EASE}`);
+                }, 470),
+              );
+            }, 900),
+          );
+        });
+      },
+      { threshold: 0.6 },
+    );
+    io.observe(el);
+    return () => {
+      io.disconnect();
+      hint.timers.forEach(clearTimeout);
+    };
+  }, [count, applyTransform, positionFor]);
 
   return (
     <StyledWrapper className={className}>
@@ -218,25 +405,40 @@ const Iphone = ({ image, images, alt, className }) => {
         <StyledScreen
           ref={screenRef}
           className="iphone-screen"
-          onMouseDown={onMouseDown}
-          onTouchStart={onTouchStart}>
-          <SlidesTrack $offset={offset} $animate={!dragging}>
+          role="group"
+          aria-roledescription="carrossel"
+          aria-label={`${alt} — tela ${index + 1} de ${count}`}
+          tabIndex={count > 1 ? 0 : -1}
+          onPointerDown={onPointerDown}
+          onPointerMove={onPointerMove}
+          onPointerUp={endGesture}
+          onPointerCancel={endGesture}
+          onKeyDown={onKeyDown}>
+          <SlidesTrack ref={trackRef}>
             {slides.map((img, i) => (
-              <Slide key={i}>
-                <GatsbyImage image={img} alt={`${alt} screen ${i + 1}`} draggable={false} />
+              <Slide key={i} aria-hidden={i !== index}>
+                <GatsbyImage
+                  image={img}
+                  alt={`${alt} screen ${i + 1}`}
+                  loading="eager"
+                  draggable={false}
+                />
               </Slide>
             ))}
           </SlidesTrack>
         </StyledScreen>
       </StyledFrame>
 
-      {slides.length > 1 && (
+      {count > 1 && (
         <Dots>
           {slides.map((_, i) => (
             <Dot
               key={i}
               $active={i === index}
-              onClick={() => setIndex(i)}
+              onClick={() => {
+                cancelHint();
+                settleTo(i);
+              }}
               aria-label={`Ver tela ${i + 1}`}
             />
           ))}
