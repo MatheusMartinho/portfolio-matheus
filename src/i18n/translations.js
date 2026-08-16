@@ -19,7 +19,7 @@ const translations = {
       cta: 'Bora um café virtual?',
       ctaNote: '15 min, sem pauta. Eu levo o café',
       stats: [
-        { value: '02', label: 'apps em produção' },
+        { value: '01', label: 'app em produção' },
         { value: '16+', label: 'projetos no arquivo' },
         { value: '03', label: 'países codando' },
       ],
@@ -143,7 +143,7 @@ const translations = {
       cta: 'Virtual coffee?',
       ctaNote: '15 min, no agenda. Coffee\'s on me',
       stats: [
-        { value: '02', label: 'apps in production' },
+        { value: '01', label: 'app in production' },
         { value: '16+', label: 'projects in the archive' },
         { value: '03', label: 'countries coded from' },
       ],
