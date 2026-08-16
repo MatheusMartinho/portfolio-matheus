@@ -12,9 +12,11 @@ import { useLang } from '@i18n/LanguageContext';
 import IkImage from '@components/ui/ik-image';
 import ChapterSeal from '@images/chapter-seal.png';
 import ChapterSealPatagonia from '@images/chapter-seal-patagonia.png';
+import ChapterSealCeara from '@images/chapter-seal-ceara.png';
 
 const SEALS_BY_SLUG = {
   patagonia: ChapterSealPatagonia,
+  ceara: ChapterSealCeara,
 };
 
 const StyledStoryMain = styled.main`
