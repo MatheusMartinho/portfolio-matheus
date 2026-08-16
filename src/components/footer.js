@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'gatsby';
 import styled from 'styled-components';
 import { Icon } from '@components/icons';
 import { socialMedia } from '@config';
@@ -86,6 +87,9 @@ const Footer = () => {
         <a href="https://github.com/MatheusMartinho/portfolio-matheus">
           <div>Designed & Built by Matheus Moura Martinho</div>
         </a>
+        <div>
+          <Link to="/stats">/stats ↗</Link>
+        </div>
       </StyledCredit>
     </StyledFooter>
   );
