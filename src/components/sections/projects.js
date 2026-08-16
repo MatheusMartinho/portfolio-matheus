@@ -230,6 +230,11 @@ const StyledProject = styled.li`
   }
 `;
 
+const GITHUB_USER = 'MatheusMartinho';
+const GITHUB_TOPIC = 'portfolio';
+const GITHUB_CACHE_KEY = 'gh-portfolio-repos-v2';
+const GITHUB_CACHE_TTL = 60 * 60 * 1000; // 1h
+
 const Projects = () => {
   const data = useStaticQuery(graphql`
     query {
@@ -253,10 +258,86 @@ const Projects = () => {
           }
         }
       }
+      featured: allMarkdownRemark(filter: { fileAbsolutePath: { regex: "/content/featured/" } }) {
+        edges {
+          node {
+            frontmatter {
+              github
+            }
+          }
+        }
+      }
     }
   `);
 
   const [showMore, setShowMore] = useState(false);
+  const [githubRepos, setGithubRepos] = useState([]);
+
+  /* repos com o topic "portfolio" entram sozinhos, direto da API do GitHub */
+  useEffect(() => {
+    let cancelled = false;
+
+    const hydrate = repos => {
+      if (!cancelled && repos.length) {
+        setGithubRepos(repos);
+      }
+    };
+
+    try {
+      const cached = window.sessionStorage.getItem(GITHUB_CACHE_KEY);
+      if (cached) {
+        const { at, repos } = JSON.parse(cached);
+        if (Date.now() - at < GITHUB_CACHE_TTL) {
+          hydrate(repos);
+          return undefined;
+        }
+      }
+    } catch (e) {
+      /* storage indisponível, segue pro fetch */
+    }
+
+    fetch(
+      `https://api.github.com/search/repositories?q=user:${GITHUB_USER}+topic:${GITHUB_TOPIC}&sort=updated&order=desc&per_page=24`,
+      { headers: { Accept: 'application/vnd.github+json' } },
+    )
+      .then(res => (res.ok ? res.json() : null))
+      .then(json => {
+        if (!json) {
+          return;
+        }
+        const repos = (json.items || []).map(repo => ({
+          title: repo.name,
+          description: repo.description,
+          github: repo.html_url,
+          external: repo.homepage || repo.html_url,
+          stars: repo.stargazers_count,
+          tech: [repo.language, ...(repo.topics || []).filter(topic => topic !== GITHUB_TOPIC)]
+            .filter(Boolean)
+            /* linguagem e topic às vezes repetem (TypeScript/typescript) */
+            .filter(
+              (item, i, arr) =>
+                arr.findIndex(other => other.toLowerCase() === item.toLowerCase()) === i,
+            )
+            .slice(0, 5),
+        }));
+        hydrate(repos);
+        try {
+          window.sessionStorage.setItem(
+            GITHUB_CACHE_KEY,
+            JSON.stringify({ at: Date.now(), repos }),
+          );
+        } catch (e) {
+          /* sem storage, sem cache */
+        }
+      })
+      .catch(() => {
+        /* offline ou rate limit: a seção segue só com os curados */
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
   const revealTitle = useRef(null);
   const revealArchiveLink = useRef(null);
   const revealProjects = useRef([]);
@@ -274,13 +355,46 @@ const Projects = () => {
   }, []);
 
   const GRID_LIMIT = 6;
-  const projects = data.projects.edges.filter(({ node }) => node);
-  const firstSix = projects.slice(0, GRID_LIMIT);
-  const projectsToShow = showMore ? projects : firstSix;
 
-  const projectInner = (node, i) => {
-    const { frontmatter, html } = node;
-    const { github, external, title, tech, description_en } = frontmatter;
+  /* repos que já viram card curado (aqui ou no destaque) não entram de novo */
+  const curatedGithubUrls = new Set(
+    [...data.projects.edges, ...data.featured.edges]
+      .map(({ node }) => (node.frontmatter.github || '').toLowerCase().replace(/\/+$/, ''))
+      .filter(Boolean),
+  );
+
+  const liveCards = githubRepos
+    .filter(repo => !curatedGithubUrls.has(repo.github.toLowerCase()))
+    .map((repo, i) => ({
+      ...repo,
+      key: `gh-${repo.title}`,
+      tab: `GITHUB_${String(i + 1).padStart(2, '0')}`,
+    }));
+
+  const curatedCards = data.projects.edges
+    .filter(({ node }) => node)
+    .map(({ node }, i) => ({
+      node,
+      key: `md-${node.frontmatter.title}`,
+      tab: `CASE_${String(i + 1).padStart(2, '0')}`,
+    }));
+
+  const cards = [...liveCards, ...curatedCards];
+  const projectsToShow = showMore ? cards : cards.slice(0, GRID_LIMIT);
+
+  const projectInner = card => {
+    const { frontmatter, html } = card.node || {};
+    const github = card.node ? frontmatter.github : card.github;
+    const external = card.node ? frontmatter.external : card.external;
+    const title = card.node ? frontmatter.title : card.title;
+    const tech = card.node ? frontmatter.tech : card.tech;
+
+    const descriptionEn = card.node && frontmatter.description_en;
+    const liveDescription =
+      card.description ||
+      (lang === 'en'
+        ? 'No description yet. The code speaks for itself.'
+        : 'Sem descrição ainda. O código fala por si.');
 
     return (
       <div className="folder">
@@ -291,9 +405,13 @@ const Projects = () => {
             </a>
           </h3>
 
-          {lang === 'en' && description_en ? (
+          {!card.node ? (
             <div className="project-description">
-              <p>{description_en}</p>
+              <p>{liveDescription}</p>
+            </div>
+          ) : lang === 'en' && descriptionEn ? (
+            <div className="project-description">
+              <p>{descriptionEn}</p>
             </div>
           ) : (
             <div className="project-description" dangerouslySetInnerHTML={{ __html: html }} />
@@ -301,13 +419,14 @@ const Projects = () => {
         </div>
 
         <div className="pocket">
-          <span className="pocket-tab">{`CASE_${String(i + 1).padStart(2, '0')}`}</span>
+          <span className="pocket-tab">{card.tab}</span>
           <div className="pocket-row">
-            {tech && (
+            {tech && tech.length > 0 && (
               <ul className="project-tech-list">
                 {tech.map((techItem, j) => (
                   <li key={j}>{techItem}</li>
                 ))}
+                {card.stars > 0 && <li>★ {card.stars}</li>}
               </ul>
             )}
             <div className="project-links">
@@ -316,7 +435,7 @@ const Projects = () => {
                   <Icon name="GitHub" />
                 </a>
               )}
-              {external && (
+              {external && external !== github && (
                 <a
                   href={external}
                   aria-label="External Link"
@@ -345,26 +464,26 @@ const Projects = () => {
         {prefersReducedMotion ? (
           <>
             {projectsToShow &&
-              projectsToShow.map(({ node }, i) => (
-                <StyledProject key={i}>{projectInner(node, i)}</StyledProject>
+              projectsToShow.map(card => (
+                <StyledProject key={card.key}>{projectInner(card)}</StyledProject>
               ))}
           </>
         ) : (
           <TransitionGroup component={null}>
             {projectsToShow &&
-              projectsToShow.map(({ node }, i) => (
+              projectsToShow.map((card, i) => (
                 <CSSTransition
-                  key={i}
+                  key={card.key}
                   classNames="fadeup"
                   timeout={i >= GRID_LIMIT ? (i - GRID_LIMIT) * 300 : 300}
                   exit={false}>
                   <StyledProject
-                    key={i}
+                    key={card.key}
                     ref={el => (revealProjects.current[i] = el)}
                     style={{
                       transitionDelay: `${i >= GRID_LIMIT ? (i - GRID_LIMIT) * 100 : 0}ms`,
                     }}>
-                    {projectInner(node, i)}
+                    {projectInner(card)}
                   </StyledProject>
                 </CSSTransition>
               ))}
