@@ -6,6 +6,7 @@ const translations = {
       work: 'Trabalho',
       openSource: 'Open Source',
       frames: 'Frames',
+      library: 'Biblioteca',
       contact: 'Contato',
       resume: 'Currículo',
     },
@@ -35,8 +36,7 @@ const translations = {
     },
     about: {
       title: 'Sobre mim',
-      p1:
-        'Sou o Matheus: paulistano, torcedor, cinéfilo e desenvolvedor. Gosto de cuidar do produto inteiro, da arquitetura ao UX, do primeiro commit ao lançamento.',
+      p1: 'Sou o Matheus: paulistano, torcedor, cinéfilo e desenvolvedor. Gosto de cuidar do produto inteiro, da arquitetura ao UX, do primeiro commit ao lançamento.',
       p2Start:
         'A faculdade de Ciência da Computação me deu a base, mas foi num bootcamp em Vancouver que eu virei programador de verdade. De lá pra cá, lancei o',
       p2Mid: '(orçamentos com assinatura digital e PIX), o',
@@ -71,8 +71,7 @@ const translations = {
     },
     openSource: {
       title: 'Open Source',
-      intro:
-        '// contribuições para projetos que eu uso e admiro. lista viva, direto do GitHub',
+      intro: '// contribuições para projetos que eu uso e admiro. lista viva, direto do GitHub',
       statsPrs: 'PRs em review',
       statsMerged: 'PRs merged',
       statsProjects: 'projetos',
@@ -114,11 +113,23 @@ const translations = {
       notFoundTitle: 'Capítulo em produção',
       notFoundBody: 'Esse capítulo ainda está sendo revelado. Volte logo.',
     },
+    library: {
+      title: 'Biblioteca',
+      intro:
+        'O que está na minha mesa de cabeceira. Passe o mouse (ou toque) num livro pra ver mais.',
+      status: { reading: 'Lendo agora', want: 'Na fila', read: 'Lido' },
+      progress: '{n}% lido',
+      pages: 'páginas',
+      link: 'Ver no Skoob',
+      cta: 'Estante completa no Skoob',
+      open: 'Ver de perto',
+      close: 'Fechar',
+      dragHint: 'arraste pra girar',
+    },
     contact: {
       overline: 'E agora?',
       title: 'Bora tomar esse café?',
-      body:
-        'Vaga, freela, ideia de produto ou só trocar ideia sobre futebol e cinema? Pode chamar. Eu respondo mais rápido que o VAR.',
+      body: 'Vaga, freela, ideia de produto ou só trocar ideia sobre futebol e cinema? Pode chamar. Eu respondo mais rápido que o VAR.',
       cta: 'Chamar no email',
       flipHint: 'psiu: o cartão tem verso',
     },
@@ -130,18 +141,19 @@ const translations = {
       work: 'Work',
       openSource: 'Open Source',
       frames: 'Frames',
+      library: 'Library',
       contact: 'Contact',
       resume: 'Resume',
     },
     hero: {
-      greeting: 'Hi! I\'m',
+      greeting: "Hi! I'm",
       tagline: 'and I take ideas off the page.',
       paragraphPart1:
         'Full-stack developer from São Paulo, obsessed with turning ideas into real products, from first sketch to deploy. These days, most of my time goes into',
       paragraphPart2: ', my check-in app for people who live for match day, and',
       paragraphPart3: ', my love letter to cinema.',
       cta: 'Virtual coffee?',
-      ctaNote: '15 min, no agenda. Coffee\'s on me',
+      ctaNote: "15 min, no agenda. Coffee's on me",
       stats: [
         { value: '01', label: 'app in production' },
         { value: '16+', label: 'projects in the archive' },
@@ -159,8 +171,7 @@ const translations = {
     },
     about: {
       title: 'About me',
-      p1:
-        'I\'m Matheus: born in São Paulo, football fan, film nerd, developer. I like owning the whole product, from architecture to UX, from first commit to launch.',
+      p1: "I'm Matheus: born in São Paulo, football fan, film nerd, developer. I like owning the whole product, from architecture to UX, from first commit to launch.",
       p2Start:
         'A Computer Science degree gave me the foundations, but a bootcamp in Vancouver is where I actually became a programmer. Since then I shipped',
       p2Mid: '(quotes with digital signing and PIX payments),',
@@ -237,11 +248,22 @@ const translations = {
       notFoundTitle: 'Chapter in production',
       notFoundBody: 'This chapter is still being developed. Check back soon.',
     },
+    library: {
+      title: 'Library',
+      intro: 'What’s on my nightstand. Hover (or tap) a book to see more.',
+      status: { reading: 'Reading now', want: 'Up next', read: 'Read' },
+      progress: '{n}% read',
+      pages: 'pages',
+      link: 'View on Skoob',
+      cta: 'Full shelf on Skoob',
+      open: 'Take a closer look',
+      close: 'Close',
+      dragHint: 'drag to spin',
+    },
     contact: {
       overline: 'What’s next?',
       title: 'So… that coffee?',
-      body:
-        'A role, a freelance gig, a product idea, or just football and film talk? Reach out. I reply faster than VAR.',
+      body: 'A role, a freelance gig, a product idea, or just football and film talk? Reach out. I reply faster than VAR.',
       cta: 'Email me',
       flipHint: 'psst: the card has a back side',
     },

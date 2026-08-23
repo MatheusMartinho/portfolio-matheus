@@ -5,7 +5,7 @@ module.exports = {
     title: 'Matheus Martinho',
     description:
       'Matheus Martinho é um desenvolvedor brasileiro especializado em criar produtos digitais com Next.js, TypeScript e integrações com IA.',
-    siteUrl: 'https://matheusmartinho.com', // Substitua pelo domínio final do seu portfólio
+    siteUrl: 'https://matheusmartinho.dev',
     image: '/og.png',
     twitterUsername: '@matmoura232',
   },

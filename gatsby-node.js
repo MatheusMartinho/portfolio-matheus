@@ -25,6 +25,17 @@ exports.createSchemaCustomization = ({ actions }) => {
       cover_imagekit_id: String
       spotify_playlist: String
       photos: [FramePhoto]
+      author: String
+      year: Int
+      status: String
+      progress: Int
+      pages: Int
+      isbn: String
+      cover_url: String
+      spine: String
+      spine_text: String
+      url: String
+      note_en: String
     }
   `);
 };
