@@ -442,7 +442,7 @@ const Hero = () => {
     <StyledPortrait>
       <div className="portrait-frame" ref={tiltRef}>
         <StaticImage
-          src="../../images/hero-portrait.png"
+          src="../../images/hero-portrait-halftone.jpg"
           alt="Matheus Moura - Portfolio"
           placeholder="blurred"
           quality={95}
