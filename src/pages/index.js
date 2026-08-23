@@ -10,6 +10,7 @@ import {
   Projects,
   OpenSource,
   Frames,
+  Library,
   Contact,
 } from '@components';
 
@@ -27,6 +28,7 @@ const IndexPage = ({ location }) => (
       <Projects />
       <OpenSource />
       <Frames />
+      <Library />
       <Contact />
     </StyledMainContainer>
   </Layout>

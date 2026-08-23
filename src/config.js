@@ -30,6 +30,7 @@ module.exports = {
     { key: 'work', url: '/#projects' },
     { key: 'openSource', url: '/#opensource' },
     { key: 'frames', url: '/#frames' },
+    { key: 'library', url: '/#library' },
     { key: 'contact', url: '/#contact' },
   ],
 
