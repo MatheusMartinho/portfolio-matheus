@@ -21,6 +21,8 @@ const variables = css`
     --font-sans: 'Sora', 'Calibre', 'Inter', 'San Francisco', 'SF Pro Text', -apple-system,
       system-ui, sans-serif;
     --font-mono: 'SF Mono', 'Fira Code', 'Fira Mono', 'Roboto Mono', monospace;
+    --font-serif: 'Newsreader', 'Iowan Old Style', 'Palatino Linotype', 'Book Antiqua', Georgia,
+      serif;
 
     --fz-xxs: 12px;
     --fz-xs: 13px;

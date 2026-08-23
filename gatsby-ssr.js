@@ -18,7 +18,7 @@ export const onRenderBody = ({ setHeadComponents }) => {
     <link
       key="gf-sora"
       rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Newsreader:ital,wght@0,500;1,400&family=Sora:wght@400;500;600;700;800&display=swap"
     />,
     // Vercel Web Analytics (só coleta depois de ativar o toggle no dashboard da Vercel)
     <script key="vercel-insights" defer src="/_vercel/insights/script.js" />,
