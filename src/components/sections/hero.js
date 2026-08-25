@@ -6,6 +6,7 @@ import { navDelay, loaderDelay } from '@utils';
 import { usePrefersReducedMotion, useTilt } from '@hooks';
 import { useLang } from '@i18n/LanguageContext';
 import EncryptedText from '@components/ui/encrypted-text';
+import heroFrame from '@images/hero-frame.png';
 
 const GRAIN_SVG = `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E")`;
 
@@ -317,6 +318,28 @@ const StyledPortrait = styled.div`
     }
   }
 
+  /* Moldura de madeira por cima do retrato. Os números vêm da medição do PNG:
+     a abertura fica a 13,88% do topo e ocupa 71,40% da altura da moldura, então
+     a altura de 137,25% e o topo de -18,05% encaixam essa abertura na foto.
+     Ela cobre ~5% do retrato de cada lado, que é o que uma moldura real faz com
+     as bordas de uma cópia. */
+  .portrait-molding {
+    position: absolute;
+    top: -18.05%;
+    left: 50%;
+    height: 137.25%;
+    width: auto;
+    max-width: none;
+    z-index: 3;
+    pointer-events: none;
+    /* GlobalStyle borra img[alt=""]; este filter substitui aquele */
+    filter: drop-shadow(0 22px 30px rgba(6, 2, 5, 0.55));
+    transform: translateX(-50%) rotate(-1.5deg) perspective(900px)
+      rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg));
+    transition: transform 0.18s ease-out;
+    will-change: transform;
+  }
+
   .portrait-grain {
     position: absolute;
     inset: -50%;
@@ -439,8 +462,8 @@ const Hero = () => {
   const stripItems = [...t.hero.strip, ...t.hero.strip];
 
   const portrait = (
-    <StyledPortrait>
-      <div className="portrait-frame" ref={tiltRef}>
+    <StyledPortrait ref={tiltRef}>
+      <div className="portrait-frame">
         <StaticImage
           src="../../images/hero-portrait-halftone.jpg"
           alt="Matheus Moura - Portfolio"
@@ -450,6 +473,7 @@ const Hero = () => {
         />
         <div className="portrait-grain" aria-hidden="true" />
       </div>
+      <img className="portrait-molding" src={heroFrame} alt="" aria-hidden="true" />
     </StyledPortrait>
   );
 
