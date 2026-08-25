@@ -8,7 +8,6 @@ import { KEY_CODES } from '@utils';
 import sr from '@utils/sr';
 import { usePrefersReducedMotion } from '@hooks';
 import { useLang } from '@i18n/LanguageContext';
-import IkImage from '@components/ui/ik-image';
 import Turntable from '@components/ui/turntable';
 
 const StyledJobsSection = styled.section`
@@ -407,7 +406,6 @@ const Jobs = () => {
               bullets_en
               visual_caption
               visual_caption_en
-              polaroid_imagekit_id
               cover {
                 childImageSharp {
                   gatsbyImageData(
@@ -539,7 +537,6 @@ const Jobs = () => {
                 bullets_en,
                 visual_caption,
                 visual_caption_en,
-                polaroid_imagekit_id,
                 cover,
                 media_variant,
                 media_wide,
@@ -552,7 +549,7 @@ const Jobs = () => {
                 lang === 'en' && visual_caption_en ? visual_caption_en : visual_caption;
               const artifactImage = cover ? getImage(cover) : null;
               const isTurntable = media_component === 'turntable';
-              const hasMedia = Boolean(polaroid_imagekit_id || artifactImage || isTurntable);
+              const hasMedia = Boolean(artifactImage || isTurntable);
 
               return (
                 <CSSTransition key={i} in={activeTabId === i} timeout={250} classNames="fade">
@@ -609,23 +606,12 @@ const Jobs = () => {
                       {hasMedia && !isTurntable && (
                         <div
                           className={`era-media${
-                            polaroid_imagekit_id ? '' : ' era-media--artifact'
+                            media_variant === 'photo' ? '' : ' era-media--artifact'
                           }${media_variant === 'logo' ? ' era-media--logo' : ''}${
                             media_wide ? ' era-media--bleed' : ''
                           }`}>
                           <div className="media-frame">
-                            {polaroid_imagekit_id ? (
-                              <IkImage
-                                id={polaroid_imagekit_id}
-                                alt={displayCompany || displayTitle}
-                                width={480}
-                                aspectRatio="4:5"
-                                widths={[300, 480, 700]}
-                                sizes="230px"
-                              />
-                            ) : (
-                              <GatsbyImage image={artifactImage} alt={displayCompany || ''} />
-                            )}
+                            <GatsbyImage image={artifactImage} alt={displayCompany || ''} />
                           </div>
                           {caption && <span className="media-caption">{caption}</span>}
                         </div>

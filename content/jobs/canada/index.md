@@ -10,9 +10,9 @@ decor_flip: true
 range: '2022 – 2023'
 url: 'https://tamwood.com/'
 cover: './cover.png'
-polaroid_imagekit_id: 'Jasper/DSC_0232.JPG'
-visual_caption: 'jasper, alberta, a vista do "escritório"'
-visual_caption_en: 'jasper, alberta, the "office" view'
+media_variant: 'photo'
+visual_caption: 'as rochosas vinham com vizinhos'
+visual_caption_en: 'the Rockies came with neighbours'
 bullets_en:
   - 'Web development program in Vancouver: HTML, CSS, JavaScript, consuming APIs and a final project. The rule I still keep came from there: something usable had to go live every single week'
   - 'It was there that I wrote the first code another person actually used, instead of code that only had to compile for a grade'

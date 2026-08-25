@@ -192,21 +192,26 @@ const StyledCard = styled.div`
   /* anchored to the top of the copy instead of floating in the middle */
   align-self: start;
   width: 100%;
-  max-width: 400px;
+  /* o crachá LUMON é bem mais estreito que o anterior (0,50 contra 0,79), então
+     a largura cai para a altura na tela continuar equivalente */
+  max-width: 290px;
   margin-left: auto;
+  margin-right: 34px;
 
   @media (max-width: 1080px) {
-    max-width: 360px;
+    max-width: 250px;
+    margin-right: 0;
   }
 
   @media (max-width: 768px) {
     margin: 50px auto 0;
-    max-width: 380px;
+    max-width: 260px;
   }
 
   .card-swing {
     width: 100%;
-    transform-origin: 50% -40px;
+    /* balança a partir do prendedor, no topo do próprio crachá */
+    transform-origin: 50% 3%;
 
     @media (prefers-reduced-motion: no-preference) {
       animation: badgeSwing 7s ease-in-out infinite;
@@ -216,10 +221,10 @@ const StyledCard = styled.div`
   @keyframes badgeSwing {
     0%,
     100% {
-      transform: rotate(-2.4deg);
+      transform: rotate(-1.8deg);
     }
     50% {
-      transform: rotate(1.6deg);
+      transform: rotate(1.8deg);
     }
   }
 
@@ -301,8 +306,8 @@ const About = () => {
           <div className="card-swing">
             <div className="card-frame">
               <StaticImage
-                src="../../images/builder-card.png"
-                alt="Matheus Moura Martinho — crachá The Builder pendurado no cordão"
+                src="../../images/lumon-card.png"
+                alt="Crachá de identificação com a foto de Matheus Moura Martinho, cargo Dev Full-Stack"
                 placeholder="blurred"
                 quality={95}
               />
