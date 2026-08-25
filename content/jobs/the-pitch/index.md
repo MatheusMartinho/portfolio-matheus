@@ -8,8 +8,10 @@ era_label: 'THE PITCH'
 range: '2026 →'
 url: 'https://github.com/MatheusMartinho'
 cover: './cover.png'
-visual_caption: 'colado na parede desde 2026'
-visual_caption_en: 'on my wall since 2026'
+media_variant: 'logo'
+media_wide: true
+visual_caption: 'places of passion, a marca do the pitch'
+visual_caption_en: 'places of passion, the pitch brand'
 bullets_en:
   - 'First commit on February 17, live on the App Store and Google Play on June 2: three and a half months from an empty repo to both stores'
   - '559 people signed up, 2,889 stadium check-ins across 418 matches and 1,813 score predictions. 182 of those signups landed in August alone'

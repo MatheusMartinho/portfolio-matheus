@@ -11,7 +11,9 @@ import { useLang } from '@i18n/LanguageContext';
 import IkImage from '@components/ui/ik-image';
 
 const StyledJobsSection = styled.section`
-  max-width: 1040px;
+  /* mais larga que as outras seções: a lista de eras come 340px antes do
+     painel começar */
+  max-width: 1160px;
 
   .journey-note {
     margin: -20px 0 34px;
@@ -201,6 +203,13 @@ const StyledTabPanel = styled.div`
       grid-template-columns: 1fr;
     }
 
+    /* peças deitadas continuam ao lado do texto, numa coluna bem maior que a
+       padrão de 230px */
+    &.wide-media {
+      grid-template-columns: minmax(320px, 1fr) 400px;
+      gap: 28px;
+    }
+
     @media (max-width: 900px) {
       grid-template-columns: 1fr;
     }
@@ -353,6 +362,14 @@ const StyledTabPanel = styled.div`
     /* o PNG já tem folga transparente em volta; padding extra afastaria demais */
     padding: 0;
   }
+
+  /* a peça avança para a margem da página, que está vazia à direita da seção.
+     Só em telas largas, onde há folga antes da trilha de e-mail. */
+  @media (min-width: 1280px) {
+    .era-media--bleed {
+      width: calc(100% + 56px);
+    }
+  }
 `;
 
 const cityFromLocation = location => (location || '').split(',')[0].trim().toUpperCase();
@@ -377,6 +394,7 @@ const Jobs = () => {
               }
               decor_flip
               media_variant
+              media_wide
               range
               url
               bullets_en
@@ -517,6 +535,7 @@ const Jobs = () => {
                 polaroid_imagekit_id,
                 cover,
                 media_variant,
+                media_wide,
               } = frontmatter;
               const displayTitle = lang === 'en' && title_en ? title_en : title;
               const displayCompany = company;
@@ -535,7 +554,10 @@ const Jobs = () => {
                     aria-labelledby={`tab-${i}`}
                     aria-hidden={activeTabId !== i}
                     hidden={activeTabId !== i}>
-                    <div className={`page-grid${hasMedia ? '' : ' solo'}`}>
+                    <div
+                      className={`page-grid${hasMedia ? '' : ' solo'}${
+                        media_wide ? ' wide-media' : ''
+                      }`}>
                       <div className="page-text">
                         <h3>
                           <span>{displayTitle}</span>
@@ -572,7 +594,9 @@ const Jobs = () => {
                         <div
                           className={`era-media${
                             polaroid_imagekit_id ? '' : ' era-media--artifact'
-                          }${media_variant === 'logo' ? ' era-media--logo' : ''}`}>
+                          }${media_variant === 'logo' ? ' era-media--logo' : ''}${
+                            media_wide ? ' era-media--bleed' : ''
+                          }`}>
                           <div className="media-frame">
                             {polaroid_imagekit_id ? (
                               <IkImage
