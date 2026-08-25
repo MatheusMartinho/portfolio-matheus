@@ -5,7 +5,8 @@ title_en: 'Administrative Assistant (Apprentice)'
 company: 'Greenpeace'
 location: 'São Paulo, Brazil'
 era_label: 'GREENPEACE'
-era_branch: true
+decor: './decor.png'
+decor_flip: true
 cover: './cover.png'
 media_variant: 'logo'
 visual_caption: 'onde tudo começou, aos 16'

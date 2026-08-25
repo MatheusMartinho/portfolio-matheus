@@ -9,7 +9,6 @@ import sr from '@utils/sr';
 import { usePrefersReducedMotion } from '@hooks';
 import { useLang } from '@i18n/LanguageContext';
 import IkImage from '@components/ui/ik-image';
-import greenpeaceBranch from '@images/nature/greenpeace-branch.png';
 
 const StyledJobsSection = styled.section`
   max-width: 1040px;
@@ -111,32 +110,53 @@ const StyledEraRow = styled.button`
     white-space: nowrap;
   }
 
-  /* Galho apoiado na borda inferior da linha do Greenpeace: fica atrás do
-     texto e transborda para a direita, na folga entre a lista e o painel. */
-  .era-branch {
+  /* Ornamento da era: cada entrada pode trazer um decor.png na própria pasta.
+     Ele abraça a linha inteira, atrás do texto, e desaparece nas bordas para
+     não invadir a linha vizinha (que pode ter o ornamento dela). */
+  .era-decor {
     position: absolute;
-    left: 58px;
-    /* a lenha do galho corre no meio do PNG; metade da altura para baixo deixa
-       ela alinhada com a borda inferior da linha, com as folhas caindo sobre a
-       linha de baixo */
-    bottom: -36px;
-    z-index: 0;
-    width: 246px;
+    left: -18px;
+    /* img posicionada ignora o esticar entre left e right, então a largura vem
+       da linha mais uma folga de cada lado */
+    width: calc(100% + 36px);
     height: auto;
+    max-width: none;
+    /* a lenha corre no meio do PNG, então centralizar na vertical alinha ela
+       com o miolo da linha e deixa as folhas subirem por cima do rótulo */
+    bottom: 50%;
+    transform: translateY(50%) ${({ $flip }) => ($flip ? 'scaleX(-1)' : '')};
+    z-index: 0;
     pointer-events: none;
     /* GlobalStyle borra img[alt=""]; este filter substitui aquele */
-    filter: saturate(0.62) brightness(0.78) contrast(1.05)
-      drop-shadow(0 10px 14px rgba(6, 2, 5, 0.55));
-    opacity: ${({ isActive }) => (isActive ? 0.85 : 0.4)};
-    transform: rotate(${({ isActive }) => (isActive ? '-1deg' : '0deg')});
-    transform-origin: left bottom;
-    transition: opacity 0.45s var(--easing), transform 0.45s var(--easing),
-      filter 0.45s var(--easing);
+    /* recuado de propósito: é ornamento, e o texto da linha passa por cima */
+    filter: saturate(0.5) brightness(0.66) contrast(1.02)
+      drop-shadow(0 8px 12px rgba(6, 2, 5, 0.5));
+    opacity: ${({ isActive }) => (isActive ? 0.55 : 0.28)};
+    transition: opacity 0.45s var(--easing), filter 0.45s var(--easing);
+    /* as pontas somem antes de encostar na linha de cima e de baixo */
+    -webkit-mask-image: linear-gradient(
+        to bottom,
+        transparent,
+        #000 32%,
+        #000 68%,
+        transparent
+      ),
+      linear-gradient(to right, transparent, #000 10%, #000 90%, transparent);
+    -webkit-mask-composite: source-in;
+    mask-image: linear-gradient(
+        to bottom,
+        transparent,
+        #000 32%,
+        #000 68%,
+        transparent
+      ),
+      linear-gradient(to right, transparent, #000 10%, #000 90%, transparent);
+    mask-composite: intersect;
   }
 
-  &:hover .era-branch,
-  &:focus-visible .era-branch {
-    opacity: 0.9;
+  &:hover .era-decor,
+  &:focus-visible .era-decor {
+    opacity: 0.68;
   }
 
   .era-index,
@@ -144,10 +164,14 @@ const StyledEraRow = styled.button`
   .era-years {
     position: relative;
     z-index: 1;
+    /* halo escuro só nas linhas ornamentadas: garante contraste do texto
+       independente do PNG que for largado na pasta */
+    text-shadow: ${({ $hasDecor }) =>
+    $hasDecor ? '0 0 10px rgba(45, 22, 32, 0.95), 0 1px 3px rgba(6, 2, 5, 0.9)' : 'none'};
   }
 
   @media (max-width: 700px) {
-    .era-branch {
+    .era-decor {
       display: none;
     }
   }
@@ -347,7 +371,10 @@ const Jobs = () => {
               company
               location
               era_label
-              era_branch
+              decor {
+                publicURL
+              }
+              decor_flip
               media_variant
               range
               url
@@ -441,11 +468,13 @@ const Jobs = () => {
         <StyledEraList role="tablist" aria-label="Job tabs" onKeyDown={e => onKeyDown(e)}>
           {jobsData &&
             jobsData.map(({ node }, i) => {
-              const { location, range, era_label, era_branch } = node.frontmatter;
+              const { location, range, era_label, decor, decor_flip } = node.frontmatter;
               return (
                 <StyledEraRow
                   key={i}
                   isActive={activeTabId === i}
+                  $flip={Boolean(decor_flip)}
+                  $hasDecor={Boolean(decor?.publicURL)}
                   onClick={() => setActiveTabId(i)}
                   ref={el => (tabs.current[i] = el)}
                   id={`tab-${i}`}
@@ -456,8 +485,14 @@ const Jobs = () => {
                   <span className="era-index">{String(i + 1).padStart(2, '0')}</span>
                   <span className="era-place">{era_label || cityFromLocation(location)}</span>
                   <span className="era-years">{range}</span>
-                  {era_branch && (
-                    <img className="era-branch" src={greenpeaceBranch} alt="" aria-hidden="true" />
+                  {decor?.publicURL && (
+                    <img
+                      className="era-decor"
+                      src={decor.publicURL}
+                      alt=""
+                      aria-hidden="true"
+                      loading="lazy"
+                    />
                   )}
                 </StyledEraRow>
               );
