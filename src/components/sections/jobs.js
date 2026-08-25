@@ -9,6 +9,7 @@ import sr from '@utils/sr';
 import { usePrefersReducedMotion } from '@hooks';
 import { useLang } from '@i18n/LanguageContext';
 import IkImage from '@components/ui/ik-image';
+import Turntable from '@components/ui/turntable';
 
 const StyledJobsSection = styled.section`
   /* mais larga que as outras seções: a lista de eras come 340px antes do
@@ -363,6 +364,11 @@ const StyledTabPanel = styled.div`
     padding: 0;
   }
 
+  /* a vitrola é componente, não foto: sem moldura e sem o véu verde */
+  .era-media--deck {
+    border: none;
+  }
+
   /* a peça avança para a margem da página, que está vazia à direita da seção.
      Só em telas largas, onde há folga antes da trilha de e-mail. */
   @media (min-width: 1280px) {
@@ -395,6 +401,7 @@ const Jobs = () => {
               decor_flip
               media_variant
               media_wide
+              media_component
               range
               url
               bullets_en
@@ -536,6 +543,7 @@ const Jobs = () => {
                 cover,
                 media_variant,
                 media_wide,
+                media_component,
               } = frontmatter;
               const displayTitle = lang === 'en' && title_en ? title_en : title;
               const displayCompany = company;
@@ -543,7 +551,8 @@ const Jobs = () => {
               const caption =
                 lang === 'en' && visual_caption_en ? visual_caption_en : visual_caption;
               const artifactImage = cover ? getImage(cover) : null;
-              const hasMedia = Boolean(polaroid_imagekit_id || artifactImage);
+              const isTurntable = media_component === 'turntable';
+              const hasMedia = Boolean(polaroid_imagekit_id || artifactImage || isTurntable);
 
               return (
                 <CSSTransition key={i} in={activeTabId === i} timeout={250} classNames="fade">
@@ -590,7 +599,14 @@ const Jobs = () => {
                         )}
                       </div>
 
-                      {hasMedia && (
+                      {isTurntable && (
+                        <div className="era-media era-media--deck">
+                          <Turntable hint={caption} />
+                          {caption && <span className="media-caption">{caption}</span>}
+                        </div>
+                      )}
+
+                      {hasMedia && !isTurntable && (
                         <div
                           className={`era-media${
                             polaroid_imagekit_id ? '' : ' era-media--artifact'
