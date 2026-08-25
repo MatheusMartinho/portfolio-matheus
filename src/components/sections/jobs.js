@@ -8,10 +8,12 @@ import { KEY_CODES } from '@utils';
 import sr from '@utils/sr';
 import { usePrefersReducedMotion } from '@hooks';
 import { useLang } from '@i18n/LanguageContext';
-import IkImage from '@components/ui/ik-image';
+import Turntable from '@components/ui/turntable';
 
 const StyledJobsSection = styled.section`
-  max-width: 940px;
+  /* mais larga que as outras seções: a lista de eras come 340px antes do
+     painel começar */
+  max-width: 1160px;
 
   .journey-note {
     margin: -20px 0 34px;
@@ -28,9 +30,9 @@ const StyledJobsSection = styled.section`
       display: block;
     }
 
-    // Prevent container from jumping
+    // Reserva só o suficiente para o painel mais curto; os mais altos crescem
     @media (min-width: 700px) {
-      min-height: 420px;
+      min-height: 340px;
     }
   }
 `;
@@ -40,7 +42,7 @@ const StyledEraList = styled.div`
   z-index: 3;
   display: flex;
   flex-direction: column;
-  width: 300px;
+  width: 340px;
   flex-shrink: 0;
   border-top: 1px solid var(--lightest-navy);
 
@@ -51,6 +53,7 @@ const StyledEraList = styled.div`
 `;
 
 const StyledEraRow = styled.button`
+  position: relative;
   display: grid;
   grid-template-columns: 44px 1fr auto;
   align-items: center;
@@ -108,6 +111,73 @@ const StyledEraRow = styled.button`
     color: ${({ isActive }) => (isActive ? 'var(--green)' : 'var(--slate)')};
     white-space: nowrap;
   }
+
+  /* Ornamento da era: cada entrada pode trazer um decor.png na própria pasta.
+     Ele abraça a linha inteira, atrás do texto, e desaparece nas bordas para
+     não invadir a linha vizinha (que pode ter o ornamento dela). */
+  .era-decor {
+    position: absolute;
+    left: -18px;
+    /* img posicionada ignora o esticar entre left e right, então a largura vem
+       da linha mais uma folga de cada lado */
+    width: calc(100% + 36px);
+    height: auto;
+    max-width: none;
+    /* a lenha corre no meio do PNG, então centralizar na vertical alinha ela
+       com o miolo da linha e deixa as folhas subirem por cima do rótulo */
+    bottom: 50%;
+    transform: translateY(50%) ${({ $flip }) => ($flip ? 'scaleX(-1)' : '')};
+    z-index: 0;
+    pointer-events: none;
+    /* GlobalStyle borra img[alt=""]; este filter substitui aquele */
+    /* recuado de propósito, mas sem matar a cor: dessaturar demais fazia o
+       vermelho do maple virar a mesma mancha marrom do fundo vinho */
+    filter: saturate(0.88) brightness(0.8) contrast(1.02)
+      drop-shadow(0 8px 12px rgba(6, 2, 5, 0.5));
+    opacity: ${({ isActive }) => (isActive ? 0.55 : 0.28)};
+    transition: opacity 0.45s var(--easing), filter 0.45s var(--easing);
+    /* as pontas somem antes de encostar na linha de cima e de baixo */
+    -webkit-mask-image: linear-gradient(
+        to bottom,
+        transparent,
+        #000 32%,
+        #000 68%,
+        transparent
+      ),
+      linear-gradient(to right, transparent, #000 10%, #000 90%, transparent);
+    -webkit-mask-composite: source-in;
+    mask-image: linear-gradient(
+        to bottom,
+        transparent,
+        #000 32%,
+        #000 68%,
+        transparent
+      ),
+      linear-gradient(to right, transparent, #000 10%, #000 90%, transparent);
+    mask-composite: intersect;
+  }
+
+  &:hover .era-decor,
+  &:focus-visible .era-decor {
+    opacity: 0.68;
+  }
+
+  .era-index,
+  .era-place,
+  .era-years {
+    position: relative;
+    z-index: 1;
+    /* halo escuro só nas linhas ornamentadas: garante contraste do texto
+       independente do PNG que for largado na pasta */
+    text-shadow: ${({ $hasDecor }) =>
+    $hasDecor ? '0 0 10px rgba(45, 22, 32, 0.95), 0 1px 3px rgba(6, 2, 5, 0.9)' : 'none'};
+  }
+
+  @media (max-width: 700px) {
+    .era-decor {
+      display: none;
+    }
+  }
 `;
 
 const StyledTabPanels = styled.div`
@@ -117,6 +187,7 @@ const StyledTabPanels = styled.div`
 `;
 
 const StyledTabPanel = styled.div`
+  position: relative;
   width: 100%;
   height: auto;
   padding: 10px 0 0;
@@ -127,8 +198,16 @@ const StyledTabPanel = styled.div`
     gap: 36px;
     align-items: start;
 
+    /* entradas sem imagem usam a largura toda em vez de deixar a coluna vazia */
     &.solo {
       grid-template-columns: 1fr;
+    }
+
+    /* peças deitadas continuam ao lado do texto, numa coluna bem maior que a
+       padrão de 230px */
+    &.wide-media {
+      grid-template-columns: minmax(320px, 1fr) 400px;
+      gap: 28px;
     }
 
     @media (max-width: 900px) {
@@ -161,6 +240,8 @@ const StyledTabPanel = styled.div`
 
   h3 {
     margin-bottom: 4px;
+    hyphens: none;
+    overflow-wrap: normal;
     font-size: var(--fz-xxl);
     font-weight: 600;
     line-height: 1.25;
@@ -263,6 +344,37 @@ const StyledTabPanel = styled.div`
   .era-media--artifact:hover .media-frame img {
     filter: grayscale(0%) drop-shadow(0 14px 22px rgba(0, 0, 0, 0.5));
   }
+
+  /* Logo do Greenpeace: os outros artefatos entram em preto e branco, mas aqui
+     o verde da folhagem É a marca, então ele fica só um pouco contido e abre
+     no hover. */
+  .era-media--logo .media-frame img {
+    /* cor natural da folhagem; só o drop-shadow separa do fundo */
+    filter: brightness(1.02) drop-shadow(0 14px 24px rgba(6, 2, 5, 0.55));
+  }
+
+  .era-media--logo:hover .media-frame img {
+    filter: brightness(1.14) drop-shadow(0 16px 28px rgba(6, 2, 5, 0.6));
+    transform: scale(1.03);
+  }
+
+  .era-media--logo .media-frame {
+    /* o PNG já tem folga transparente em volta; padding extra afastaria demais */
+    padding: 0;
+  }
+
+  /* a vitrola é componente, não foto: sem moldura e sem o véu verde */
+  .era-media--deck {
+    border: none;
+  }
+
+  /* a peça avança para a margem da página, que está vazia à direita da seção.
+     Só em telas largas, onde há folga antes da trilha de e-mail. */
+  @media (min-width: 1280px) {
+    .era-media--bleed {
+      width: calc(100% + 56px);
+    }
+  }
 `;
 
 const cityFromLocation = location => (location || '').split(',')[0].trim().toUpperCase();
@@ -272,7 +384,7 @@ const Jobs = () => {
     query {
       jobs: allMarkdownRemark(
         filter: { fileAbsolutePath: { regex: "/content/jobs/" } }
-        sort: { fields: [frontmatter___date], order: DESC }
+        sort: { fields: [frontmatter___date], order: ASC }
       ) {
         edges {
           node {
@@ -280,14 +392,20 @@ const Jobs = () => {
               title
               title_en
               company
-              company_en
               location
+              era_label
+              decor {
+                publicURL
+              }
+              decor_flip
+              media_variant
+              media_wide
+              media_component
               range
               url
               bullets_en
               visual_caption
               visual_caption_en
-              polaroid_imagekit_id
               cover {
                 childImageSharp {
                   gatsbyImageData(
@@ -307,7 +425,9 @@ const Jobs = () => {
 
   const jobsData = data.jobs.edges;
 
-  const [activeTabId, setActiveTabId] = useState(0);
+  // abre na era mais recente: é o conteúdo que mais vende, e não obriga
+  // ninguém a clicar até o fim da lista pra chegar nele
+  const [activeTabId, setActiveTabId] = useState(jobsData.length - 1);
   const [tabFocus, setTabFocus] = useState(null);
   const tabs = useRef([]);
   const revealContainer = useRef(null);
@@ -372,11 +492,13 @@ const Jobs = () => {
         <StyledEraList role="tablist" aria-label="Job tabs" onKeyDown={e => onKeyDown(e)}>
           {jobsData &&
             jobsData.map(({ node }, i) => {
-              const { location, range } = node.frontmatter;
+              const { location, range, era_label, decor, decor_flip } = node.frontmatter;
               return (
                 <StyledEraRow
                   key={i}
                   isActive={activeTabId === i}
+                  $flip={Boolean(decor_flip)}
+                  $hasDecor={Boolean(decor?.publicURL)}
                   onClick={() => setActiveTabId(i)}
                   ref={el => (tabs.current[i] = el)}
                   id={`tab-${i}`}
@@ -385,8 +507,17 @@ const Jobs = () => {
                   aria-selected={activeTabId === i ? true : false}
                   aria-controls={`panel-${i}`}>
                   <span className="era-index">{String(i + 1).padStart(2, '0')}</span>
-                  <span className="era-place">{cityFromLocation(location)}</span>
+                  <span className="era-place">{era_label || cityFromLocation(location)}</span>
                   <span className="era-years">{range}</span>
+                  {decor?.publicURL && (
+                    <img
+                      className="era-decor"
+                      src={decor.publicURL}
+                      alt=""
+                      aria-hidden="true"
+                      loading="lazy"
+                    />
+                  )}
                 </StyledEraRow>
               );
             })}
@@ -401,22 +532,24 @@ const Jobs = () => {
                 title_en,
                 url,
                 company,
-                company_en,
                 location,
                 range,
                 bullets_en,
                 visual_caption,
                 visual_caption_en,
-                polaroid_imagekit_id,
                 cover,
+                media_variant,
+                media_wide,
+                media_component,
               } = frontmatter;
               const displayTitle = lang === 'en' && title_en ? title_en : title;
-              const displayCompany = lang === 'en' && company_en ? company_en : company;
+              const displayCompany = company;
               const showEnBullets = lang === 'en' && bullets_en && bullets_en.length > 0;
               const caption =
                 lang === 'en' && visual_caption_en ? visual_caption_en : visual_caption;
               const artifactImage = cover ? getImage(cover) : null;
-              const hasMedia = Boolean(polaroid_imagekit_id || artifactImage);
+              const isTurntable = media_component === 'turntable';
+              const hasMedia = Boolean(artifactImage || isTurntable);
 
               return (
                 <CSSTransition key={i} in={activeTabId === i} timeout={250} classNames="fade">
@@ -427,7 +560,10 @@ const Jobs = () => {
                     aria-labelledby={`tab-${i}`}
                     aria-hidden={activeTabId !== i}
                     hidden={activeTabId !== i}>
-                    <div className={`page-grid${hasMedia ? '' : ' solo'}`}>
+                    <div
+                      className={`page-grid${hasMedia ? '' : ' solo'}${
+                        media_wide ? ' wide-media' : ''
+                      }`}>
                       <div className="page-text">
                         <h3>
                           <span>{displayTitle}</span>
@@ -460,24 +596,22 @@ const Jobs = () => {
                         )}
                       </div>
 
-                      {hasMedia && (
+                      {isTurntable && (
+                        <div className="era-media era-media--deck">
+                          <Turntable hint={caption} />
+                          {caption && <span className="media-caption">{caption}</span>}
+                        </div>
+                      )}
+
+                      {hasMedia && !isTurntable && (
                         <div
                           className={`era-media${
-                            polaroid_imagekit_id ? '' : ' era-media--artifact'
+                            media_variant === 'photo' ? '' : ' era-media--artifact'
+                          }${media_variant === 'logo' ? ' era-media--logo' : ''}${
+                            media_wide ? ' era-media--bleed' : ''
                           }`}>
                           <div className="media-frame">
-                            {polaroid_imagekit_id ? (
-                              <IkImage
-                                id={polaroid_imagekit_id}
-                                alt={displayCompany || displayTitle}
-                                width={480}
-                                aspectRatio="4:5"
-                                widths={[300, 480, 700]}
-                                sizes="230px"
-                              />
-                            ) : (
-                              <GatsbyImage image={artifactImage} alt={displayCompany || ''} />
-                            )}
+                            <GatsbyImage image={artifactImage} alt={displayCompany || ''} />
                           </div>
                           {caption && <span className="media-caption">{caption}</span>}
                         </div>

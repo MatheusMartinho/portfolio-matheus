@@ -21,7 +21,13 @@ const SEALS_BY_SLUG = {
 
 const StyledStoryMain = styled.main`
   max-width: 1400px;
-  padding: 150px 50px 80px;
+  /* the fixed social / email rails hang ~90px in from each edge; keep the story
+     clear of them while they are on screen (they hide below 768px) */
+  padding: 150px 110px 80px;
+
+  @media (max-width: 1080px) {
+    padding: 150px 90px 80px;
+  }
 
   @media (max-width: 768px) {
     padding: 130px 25px 60px;

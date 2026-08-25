@@ -24,6 +24,12 @@ module.exports = {
     },
   ],
 
+  // um PDF por idioma; o botão do currículo escolhe pelo idioma ativo do site
+  resumeByLang: {
+    pt: '/CV_Matheus_Martinho_PT.pdf',
+    en: '/CV_Matheus_Martinho_EN.pdf',
+  },
+
   navLinks: [
     { key: 'about', url: '/#about' },
     { key: 'experience', url: '/#jobs' },

@@ -3,7 +3,7 @@ import { Link } from 'gatsby';
 import PropTypes from 'prop-types';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import styled, { css } from 'styled-components';
-import { navLinks } from '@config';
+import { navLinks, resumeByLang } from '@config';
 import { loaderDelay } from '@utils';
 import { useScrollDirection, usePrefersReducedMotion } from '@hooks';
 import { Menu } from '@components';
@@ -18,6 +18,7 @@ const StyledHeader = styled.header`
   padding: 0px 50px;
   width: 100%;
   height: var(--nav-height);
+  --logo-size: 100px;
   background-color: ${props => (props.scrolledToTop ? 'transparent' : 'rgba(64, 34, 45, 0.82)')};
   -webkit-backdrop-filter: ${props => (props.scrolledToTop ? 'none' : 'blur(12px)')};
   backdrop-filter: ${props => (props.scrolledToTop ? 'none' : 'blur(12px)')};
@@ -43,6 +44,7 @@ const StyledHeader = styled.header`
     !props.scrolledToTop &&
     css`
         height: var(--nav-scroll-height);
+        --logo-size: 64px;
         transform: translateY(0px);
         background-color: rgba(64, 34, 45, 0.82);
         -webkit-backdrop-filter: blur(12px);
@@ -56,9 +58,8 @@ const StyledHeader = styled.header`
     !props.scrolledToTop &&
     css`
         height: var(--nav-scroll-height);
-        /* hide by the full nav height: the logo overflows the shrunk bar,
-           so sliding only by the scroll-height leaves it peeking out */
-        transform: translateY(calc(var(--nav-height) * -1.2));
+        --logo-size: 64px;
+        transform: translateY(calc(var(--nav-scroll-height) * -1));
         box-shadow: 0 10px 30px -10px var(--navy-shadow);
       `};
   }
@@ -93,10 +94,11 @@ const StyledNav = styled.nav`
 
     a {
       color: var(--green);
-      width: 100px;
-      height: 100px;
+      width: var(--logo-size, 100px);
+      height: var(--logo-size, 100px);
       position: relative;
       z-index: 1;
+      transition: width 0.3s var(--easing), height 0.3s var(--easing);
 
       &:hover,
       &:focus {
@@ -299,7 +301,11 @@ const Nav = ({ isHome }) => {
   );
 
   const ResumeLink = (
-    <a className="resume-button" href="/resume" target="_blank" rel="noopener noreferrer">
+    <a
+      className="resume-button"
+      href={resumeByLang[lang] || resumeByLang.pt}
+      target="_blank"
+      rel="noopener noreferrer">
       {t.nav.resume}
       <span className="arrow" aria-hidden="true">
         ↗
