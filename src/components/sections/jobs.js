@@ -128,8 +128,9 @@ const StyledEraRow = styled.button`
     z-index: 0;
     pointer-events: none;
     /* GlobalStyle borra img[alt=""]; este filter substitui aquele */
-    /* recuado de propósito: é ornamento, e o texto da linha passa por cima */
-    filter: saturate(0.5) brightness(0.66) contrast(1.02)
+    /* recuado de propósito, mas sem matar a cor: dessaturar demais fazia o
+       vermelho do maple virar a mesma mancha marrom do fundo vinho */
+    filter: saturate(0.88) brightness(0.8) contrast(1.02)
       drop-shadow(0 8px 12px rgba(6, 2, 5, 0.5));
     opacity: ${({ isActive }) => (isActive ? 0.55 : 0.28)};
     transition: opacity 0.45s var(--easing), filter 0.45s var(--easing);

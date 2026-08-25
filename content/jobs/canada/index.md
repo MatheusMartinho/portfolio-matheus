@@ -5,6 +5,8 @@ title_en: 'Web Development Program'
 company: 'Tamwood Career College'
 location: 'Vancouver, Canada'
 era_label: 'CANADÁ'
+decor: './decor.png'
+decor_flip: true
 range: '2022 – 2023'
 url: 'https://tamwood.com/'
 cover: './cover.png'
