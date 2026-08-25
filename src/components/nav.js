@@ -3,7 +3,7 @@ import { Link } from 'gatsby';
 import PropTypes from 'prop-types';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import styled, { css } from 'styled-components';
-import { navLinks } from '@config';
+import { navLinks, resumeByLang } from '@config';
 import { loaderDelay } from '@utils';
 import { useScrollDirection, usePrefersReducedMotion } from '@hooks';
 import { Menu } from '@components';
@@ -299,7 +299,11 @@ const Nav = ({ isHome }) => {
   );
 
   const ResumeLink = (
-    <a className="resume-button" href="/resume" target="_blank" rel="noopener noreferrer">
+    <a
+      className="resume-button"
+      href={resumeByLang[lang] || resumeByLang.pt}
+      target="_blank"
+      rel="noopener noreferrer">
       {t.nav.resume}
       <span className="arrow" aria-hidden="true">
         ↗

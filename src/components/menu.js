@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Helmet } from 'react-helmet';
 import { Link } from 'gatsby';
 import styled from 'styled-components';
-import { navLinks } from '@config';
+import { navLinks, resumeByLang } from '@config';
 import { useLang } from '@i18n/LanguageContext';
 import { KEY_CODES } from '@utils';
 import { useOnClickOutside } from '@hooks';
@@ -296,7 +296,11 @@ const Menu = () => {
               </ol>
             )}
 
-            <a href="/resume" className="resume-link" target="_blank" rel="noopener noreferrer">
+            <a
+              href={resumeByLang[lang] || resumeByLang.pt}
+              className="resume-link"
+              target="_blank"
+              rel="noopener noreferrer">
               {t.nav.resume}
             </a>
 
