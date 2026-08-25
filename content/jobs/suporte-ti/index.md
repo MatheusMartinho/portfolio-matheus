@@ -5,6 +5,7 @@ title_en: 'IT Assistant and Technical Support'
 company: 'All Informática · D2W'
 location: 'São Paulo, Brazil'
 era_label: 'SUPORTE DE TI'
+decor: './decor.png'
 range: '2021'
 url: ''
 bullets_en:

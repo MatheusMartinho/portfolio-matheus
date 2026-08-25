@@ -5,6 +5,7 @@ title_en: 'Hostel Front Desk and the Road'
 company: 'Climbhouse · Puerto Varas'
 location: 'Ushuaia, Argentina'
 era_label: 'USHUAIA'
+decor: './decor.png'
 range: '2025'
 url: ''
 bullets_en:
