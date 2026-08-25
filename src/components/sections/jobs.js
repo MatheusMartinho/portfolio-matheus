@@ -9,9 +9,10 @@ import sr from '@utils/sr';
 import { usePrefersReducedMotion } from '@hooks';
 import { useLang } from '@i18n/LanguageContext';
 import IkImage from '@components/ui/ik-image';
+import greenpeaceBranch from '@images/nature/greenpeace-branch.png';
 
 const StyledJobsSection = styled.section`
-  max-width: 940px;
+  max-width: 1040px;
 
   .journey-note {
     margin: -20px 0 34px;
@@ -28,9 +29,9 @@ const StyledJobsSection = styled.section`
       display: block;
     }
 
-    // Prevent container from jumping
+    // Reserva só o suficiente para o painel mais curto; os mais altos crescem
     @media (min-width: 700px) {
-      min-height: 420px;
+      min-height: 340px;
     }
   }
 `;
@@ -40,7 +41,7 @@ const StyledEraList = styled.div`
   z-index: 3;
   display: flex;
   flex-direction: column;
-  width: 300px;
+  width: 340px;
   flex-shrink: 0;
   border-top: 1px solid var(--lightest-navy);
 
@@ -51,6 +52,7 @@ const StyledEraList = styled.div`
 `;
 
 const StyledEraRow = styled.button`
+  position: relative;
   display: grid;
   grid-template-columns: 44px 1fr auto;
   align-items: center;
@@ -108,6 +110,47 @@ const StyledEraRow = styled.button`
     color: ${({ isActive }) => (isActive ? 'var(--green)' : 'var(--slate)')};
     white-space: nowrap;
   }
+
+  /* Galho apoiado na borda inferior da linha do Greenpeace: fica atrás do
+     texto e transborda para a direita, na folga entre a lista e o painel. */
+  .era-branch {
+    position: absolute;
+    left: 58px;
+    /* a lenha do galho corre no meio do PNG; metade da altura para baixo deixa
+       ela alinhada com a borda inferior da linha, com as folhas caindo sobre a
+       linha de baixo */
+    bottom: -36px;
+    z-index: 0;
+    width: 246px;
+    height: auto;
+    pointer-events: none;
+    /* GlobalStyle borra img[alt=""]; este filter substitui aquele */
+    filter: saturate(0.62) brightness(0.78) contrast(1.05)
+      drop-shadow(0 10px 14px rgba(6, 2, 5, 0.55));
+    opacity: ${({ isActive }) => (isActive ? 0.85 : 0.4)};
+    transform: rotate(${({ isActive }) => (isActive ? '-1deg' : '0deg')});
+    transform-origin: left bottom;
+    transition: opacity 0.45s var(--easing), transform 0.45s var(--easing),
+      filter 0.45s var(--easing);
+  }
+
+  &:hover .era-branch,
+  &:focus-visible .era-branch {
+    opacity: 0.9;
+  }
+
+  .era-index,
+  .era-place,
+  .era-years {
+    position: relative;
+    z-index: 1;
+  }
+
+  @media (max-width: 700px) {
+    .era-branch {
+      display: none;
+    }
+  }
 `;
 
 const StyledTabPanels = styled.div`
@@ -117,6 +160,7 @@ const StyledTabPanels = styled.div`
 `;
 
 const StyledTabPanel = styled.div`
+  position: relative;
   width: 100%;
   height: auto;
   padding: 10px 0 0;
@@ -127,6 +171,7 @@ const StyledTabPanel = styled.div`
     gap: 36px;
     align-items: start;
 
+    /* entradas sem imagem usam a largura toda em vez de deixar a coluna vazia */
     &.solo {
       grid-template-columns: 1fr;
     }
@@ -161,6 +206,8 @@ const StyledTabPanel = styled.div`
 
   h3 {
     margin-bottom: 4px;
+    hyphens: none;
+    overflow-wrap: normal;
     font-size: var(--fz-xxl);
     font-weight: 600;
     line-height: 1.25;
@@ -263,6 +310,24 @@ const StyledTabPanel = styled.div`
   .era-media--artifact:hover .media-frame img {
     filter: grayscale(0%) drop-shadow(0 14px 22px rgba(0, 0, 0, 0.5));
   }
+
+  /* Logo do Greenpeace: os outros artefatos entram em preto e branco, mas aqui
+     o verde da folhagem É a marca, então ele fica só um pouco contido e abre
+     no hover. */
+  .era-media--logo .media-frame img {
+    /* cor natural da folhagem; só o drop-shadow separa do fundo */
+    filter: brightness(1.02) drop-shadow(0 14px 24px rgba(6, 2, 5, 0.55));
+  }
+
+  .era-media--logo:hover .media-frame img {
+    filter: brightness(1.14) drop-shadow(0 16px 28px rgba(6, 2, 5, 0.6));
+    transform: scale(1.03);
+  }
+
+  .era-media--logo .media-frame {
+    /* o PNG já tem folga transparente em volta; padding extra afastaria demais */
+    padding: 0;
+  }
 `;
 
 const cityFromLocation = location => (location || '').split(',')[0].trim().toUpperCase();
@@ -272,7 +337,7 @@ const Jobs = () => {
     query {
       jobs: allMarkdownRemark(
         filter: { fileAbsolutePath: { regex: "/content/jobs/" } }
-        sort: { fields: [frontmatter___date], order: DESC }
+        sort: { fields: [frontmatter___date], order: ASC }
       ) {
         edges {
           node {
@@ -280,8 +345,10 @@ const Jobs = () => {
               title
               title_en
               company
-              company_en
               location
+              era_label
+              era_branch
+              media_variant
               range
               url
               bullets_en
@@ -307,7 +374,9 @@ const Jobs = () => {
 
   const jobsData = data.jobs.edges;
 
-  const [activeTabId, setActiveTabId] = useState(0);
+  // abre na era mais recente: é o conteúdo que mais vende, e não obriga
+  // ninguém a clicar até o fim da lista pra chegar nele
+  const [activeTabId, setActiveTabId] = useState(jobsData.length - 1);
   const [tabFocus, setTabFocus] = useState(null);
   const tabs = useRef([]);
   const revealContainer = useRef(null);
@@ -372,7 +441,7 @@ const Jobs = () => {
         <StyledEraList role="tablist" aria-label="Job tabs" onKeyDown={e => onKeyDown(e)}>
           {jobsData &&
             jobsData.map(({ node }, i) => {
-              const { location, range } = node.frontmatter;
+              const { location, range, era_label, era_branch } = node.frontmatter;
               return (
                 <StyledEraRow
                   key={i}
@@ -385,8 +454,11 @@ const Jobs = () => {
                   aria-selected={activeTabId === i ? true : false}
                   aria-controls={`panel-${i}`}>
                   <span className="era-index">{String(i + 1).padStart(2, '0')}</span>
-                  <span className="era-place">{cityFromLocation(location)}</span>
+                  <span className="era-place">{era_label || cityFromLocation(location)}</span>
                   <span className="era-years">{range}</span>
+                  {era_branch && (
+                    <img className="era-branch" src={greenpeaceBranch} alt="" aria-hidden="true" />
+                  )}
                 </StyledEraRow>
               );
             })}
@@ -401,7 +473,6 @@ const Jobs = () => {
                 title_en,
                 url,
                 company,
-                company_en,
                 location,
                 range,
                 bullets_en,
@@ -409,9 +480,10 @@ const Jobs = () => {
                 visual_caption_en,
                 polaroid_imagekit_id,
                 cover,
+                media_variant,
               } = frontmatter;
               const displayTitle = lang === 'en' && title_en ? title_en : title;
-              const displayCompany = lang === 'en' && company_en ? company_en : company;
+              const displayCompany = company;
               const showEnBullets = lang === 'en' && bullets_en && bullets_en.length > 0;
               const caption =
                 lang === 'en' && visual_caption_en ? visual_caption_en : visual_caption;
@@ -464,7 +536,7 @@ const Jobs = () => {
                         <div
                           className={`era-media${
                             polaroid_imagekit_id ? '' : ' era-media--artifact'
-                          }`}>
+                          }${media_variant === 'logo' ? ' era-media--logo' : ''}`}>
                           <div className="media-frame">
                             {polaroid_imagekit_id ? (
                               <IkImage
