@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { StaticImage } from 'gatsby-plugin-image';
 import styled from 'styled-components';
@@ -6,15 +6,36 @@ import { srConfig } from '@config';
 import sr from '@utils/sr';
 import { usePrefersReducedMotion } from '@hooks';
 import { useLang } from '@i18n/LanguageContext';
+import stTypescript from '@images/stack/typescript.png';
+import stReact from '@images/stack/react.png';
+import stNextjs from '@images/stack/nextjs.png';
+import stExpo from '@images/stack/expo.png';
+import stSupabase from '@images/stack/supabase.png';
+import stNodejs from '@images/stack/nodejs.png';
+import stTailwind from '@images/stack/tailwind.png';
+import stClaude from '@images/stack/claude.png';
+import stPython from '@images/stack/python.png';
+import stPostgresql from '@images/stack/postgresql.png';
+import stFirebase from '@images/stack/firebase.png';
+import stStripe from '@images/stack/stripe.png';
+import stVercel from '@images/stack/vercel.png';
+import stGit from '@images/stack/git.png';
+import stFigma from '@images/stack/figma.png';
+import stFlutter from '@images/stack/flutter.png';
+import stCursor from '@images/stack/cursor.png';
+import stJupyter from '@images/stack/jupyter.png';
 
 const StyledAboutSection = styled.section`
   max-width: 1100px;
 
   .inner {
     display: grid;
-    grid-template-columns: 3fr 2fr;
-    grid-gap: 60px;
-    align-items: center;
+    /* card column widened so the badge reads at a comfortable size */
+    grid-template-columns: 3fr 2.1fr;
+    grid-template-rows: auto auto;
+    /* no row gap: the stack block brings its own top margin */
+    grid-gap: 0 50px;
+    align-items: start;
 
     @media (max-width: 768px) {
       display: block;
@@ -23,8 +44,9 @@ const StyledAboutSection = styled.section`
 `;
 
 const StyledText = styled.div`
-  overflow: hidden;
   min-width: 0;
+  grid-column: 1;
+  grid-row: 1;
 
   p {
     margin: 0 0 16px;
@@ -32,7 +54,16 @@ const StyledText = styled.div`
 `;
 
 const StyledStackBlock = styled.div`
-  margin-top: 35px;
+  /* spans the whole grid on its own row, under the copy and the badge, so the
+     eight daily stickers fit on a single line */
+  grid-column: 1 / -1;
+  grid-row: 2;
+  min-width: 0;
+  margin-top: 46px;
+
+  @media (max-width: 768px) {
+    margin-top: 40px;
+  }
 `;
 
 const StyledStackHeader = styled.div`
@@ -73,90 +104,82 @@ const StyledStackGroupLabel = styled.span`
 const StyledStickerSheet = styled.div`
   display: flex;
   flex-wrap: wrap;
-  gap: 12px 14px;
-  margin-bottom: 24px;
+  gap: 16px 18px;
+  margin-bottom: 26px;
 
   &:last-child {
     margin-bottom: 0;
   }
+
+  @media (max-width: 480px) {
+    gap: 16px 12px;
+  }
 `;
 
+// Each sticker sits at a slight angle, as if stuck on by hand, and straightens
+// when you point at it.
+const TILTS = [-5, 3, -2, 6, -4, 2, -6, 4, -3, 5];
+
 const StyledSticker = styled.span`
-  display: inline-flex;
+  display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 8px;
-  padding: ${({ $small }) => ($small ? '7px 13px 7px 10px' : '10px 16px 10px 12px')};
-  background: linear-gradient(
-    135deg,
-    rgba(255, 255, 255, 0.09) 0%,
-    rgba(255, 255, 255, 0.04) 50%,
-    rgba(255, 255, 255, 0.02) 100%
-  );
-  -webkit-backdrop-filter: blur(14px) saturate(150%);
-  backdrop-filter: blur(14px) saturate(150%);
-  color: var(--lightest-slate);
-  border: 1px solid rgba(255, 255, 255, 0.13);
-  border-radius: 10px;
-  font-family: var(--font-mono);
-  font-size: ${({ $small }) => ($small ? 'var(--fz-xxs)' : 'var(--fz-xs)')};
-  font-weight: 500;
-  letter-spacing: 0.02em;
-  white-space: nowrap;
+  gap: 9px;
+  width: ${({ $small }) => ($small ? '78px' : '114px')};
   cursor: default;
-  box-shadow: 0 10px 24px -14px rgba(10, 4, 8, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.14);
-  transition: var(--transition);
 
   img,
   img[alt=''] {
-    width: ${({ $small }) => ($small ? '14px' : '18px')};
-    height: ${({ $small }) => ($small ? '14px' : '18px')};
-    object-fit: contain;
+    width: ${({ $small }) => ($small ? '58px' : '80px')};
+    height: auto;
+    /* GlobalStyle blurs img[alt=""]; this filter replaces it */
+    filter: drop-shadow(0 10px 16px rgba(10, 4, 8, 0.6));
+    transform: rotate(var(--tilt, 0deg));
+    transition: transform 0.28s var(--easing), filter 0.28s var(--easing);
+  }
+
+  .sticker-name {
+    color: var(--light-slate);
+    font-family: var(--font-mono);
+    font-size: ${({ $small }) => ($small ? '10px' : 'var(--fz-xxs)')};
+    line-height: 1.25;
+    letter-spacing: 0.04em;
+    text-align: center;
     transition: var(--transition);
-    filter: none; /* GlobalStyle blurs img[alt=""], but these are decorative by design */
   }
 
   &:hover {
-    transform: translateY(-3px);
-    color: var(--green);
-    border-color: rgba(197, 220, 104, 0.5);
-    box-shadow: 0 14px 30px -14px rgba(10, 4, 8, 0.7),
-      0 8px 22px -10px rgba(197, 220, 104, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2);
-
     img {
-      transform: scale(1.08);
+      transform: rotate(0deg) translateY(-5px) scale(1.06);
+      filter: drop-shadow(0 18px 26px rgba(10, 4, 8, 0.7))
+        drop-shadow(0 0 18px rgba(202, 244, 56, 0.28));
+    }
+
+    .sticker-name {
+      color: var(--green);
     }
   }
 
   @media (prefers-reduced-motion: reduce) {
-    &:hover {
+    img,
+    &:hover img {
       transform: none;
     }
   }
 `;
 
-const Sticker = ({ name, slug, small }) => {
-  const [errored, setErrored] = useState(!slug);
-
-  return (
-    <StyledSticker title={name} $small={small}>
-      {!errored && (
-        <img
-          src={`https://cdn.simpleicons.org/${slug}/ede0cc`}
-          alt=""
-          aria-hidden="true"
-          loading="lazy"
-          onError={() => setErrored(true)}
-        />
-      )}
-      <span>{name}</span>
-    </StyledSticker>
-  );
-};
+const Sticker = ({ name, img, small, index }) => (
+  <StyledSticker $small={small} style={{ '--tilt': `${TILTS[index % TILTS.length]}deg` }}>
+    <img src={img} alt="" aria-hidden="true" loading="lazy" />
+    <span className="sticker-name">{name}</span>
+  </StyledSticker>
+);
 
 Sticker.propTypes = {
   name: PropTypes.string.isRequired,
-  slug: PropTypes.string,
+  img: PropTypes.string.isRequired,
   small: PropTypes.bool,
+  index: PropTypes.number,
 };
 
 const StyledCard = styled.div`
@@ -164,13 +187,21 @@ const StyledCard = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  grid-column: 2;
+  grid-row: 1;
+  /* anchored to the top of the copy instead of floating in the middle */
+  align-self: start;
   width: 100%;
-  max-width: 420px;
+  max-width: 400px;
   margin-left: auto;
+
+  @media (max-width: 1080px) {
+    max-width: 360px;
+  }
 
   @media (max-width: 768px) {
     margin: 50px auto 0;
-    max-width: 320px;
+    max-width: 380px;
   }
 
   .card-swing {
@@ -201,27 +232,27 @@ const StyledCard = styled.div`
 `;
 
 const STACK_DAILY = [
-  { name: 'TypeScript', slug: 'typescript' },
-  { name: 'React / Native', slug: 'react' },
-  { name: 'Next.js', slug: 'nextdotjs' },
-  { name: 'Expo', slug: 'expo' },
-  { name: 'Supabase', slug: 'supabase' },
-  { name: 'Node.js', slug: 'nodedotjs' },
-  { name: 'Tailwind CSS', slug: 'tailwindcss' },
-  { name: 'Claude', slug: 'claude' },
+  { name: 'TypeScript', img: stTypescript },
+  { name: 'React / Native', img: stReact },
+  { name: 'Next.js', img: stNextjs },
+  { name: 'Expo', img: stExpo },
+  { name: 'Supabase', img: stSupabase },
+  { name: 'Node.js', img: stNodejs },
+  { name: 'Tailwind CSS', img: stTailwind },
+  { name: 'Claude', img: stClaude },
 ];
 
 const STACK_ALSO = [
-  { name: 'Python', slug: 'python' },
-  { name: 'PostgreSQL', slug: 'postgresql' },
-  { name: 'Firebase', slug: 'firebase' },
-  { name: 'Stripe', slug: 'stripe' },
-  { name: 'Vercel', slug: 'vercel' },
-  { name: 'Git', slug: 'git' },
-  { name: 'Figma', slug: 'figma' },
-  { name: 'Flutter', slug: 'flutter' },
-  { name: 'Cursor', slug: 'cursor' },
-  { name: 'Jupyter', slug: 'jupyter' },
+  { name: 'Python', img: stPython },
+  { name: 'PostgreSQL', img: stPostgresql },
+  { name: 'Firebase', img: stFirebase },
+  { name: 'Stripe', img: stStripe },
+  { name: 'Vercel', img: stVercel },
+  { name: 'Git', img: stGit },
+  { name: 'Figma', img: stFigma },
+  { name: 'Flutter', img: stFlutter },
+  { name: 'Cursor', img: stCursor },
+  { name: 'Jupyter', img: stJupyter },
 ];
 
 const About = () => {
@@ -246,51 +277,24 @@ const About = () => {
 
           <p>
             {t.about.p2Start}{' '}
-            <a href="https://orca-facil-psi.vercel.app/" target="_blank" rel="noreferrer">
-              OrçaFácil
-            </a>{' '}
+            <a href="https://eccoarte.com" target="_blank" rel="noreferrer">
+              ECCO
+            </a>
             {t.about.p2Mid}{' '}
-            <a
-              href="https://studio--musclemate-ulkfm.us-central1.hosted.app"
-              target="_blank"
-              rel="noreferrer">
-              MuscleMate
-            </a>{' '}
+            <a href="https://github.com/MatheusMartinho/Lift" target="_blank" rel="noreferrer">
+              The Lift
+            </a>
             {t.about.p2End}
           </p>
 
           <p>
             {t.about.p3Start} <a href="#projects">The Pitch</a>
             {t.about.p3Mid}{' '}
-            <a
-              href="https://github.com/MatheusMartinho/cinelog"
-              target="_blank"
-              rel="noreferrer">
+            <a href="https://github.com/MatheusMartinho/cinelog" target="_blank" rel="noreferrer">
               CINELOG
             </a>
             {t.about.p3End}
           </p>
-
-          <StyledStackBlock>
-            <StyledStackHeader>
-              <span className="stack-label">~/stack</span>
-              <span className="stack-line" />
-            </StyledStackHeader>
-
-            <StyledStackGroupLabel>{t.about.stackDaily}</StyledStackGroupLabel>
-            <StyledStickerSheet>
-              {STACK_DAILY.map(tech => (
-                <Sticker key={tech.name} name={tech.name} slug={tech.slug} />
-              ))}
-            </StyledStickerSheet>
-
-            <StyledStackGroupLabel>{t.about.stackAlso}</StyledStackGroupLabel>
-            <StyledStickerSheet>
-              {STACK_ALSO.map(tech => (
-                <Sticker key={tech.name} name={tech.name} slug={tech.slug} small />
-              ))}
-            </StyledStickerSheet>
-          </StyledStackBlock>
         </StyledText>
 
         <StyledCard>
@@ -298,13 +302,34 @@ const About = () => {
             <div className="card-frame">
               <StaticImage
                 src="../../images/builder-card.png"
-                alt="Matheus Moura Martinho — The Builder credential"
+                alt="Matheus Moura Martinho — crachá The Builder pendurado no cordão"
                 placeholder="blurred"
                 quality={95}
               />
             </div>
           </div>
         </StyledCard>
+
+        <StyledStackBlock>
+          <StyledStackHeader>
+            <span className="stack-label">~/stack</span>
+            <span className="stack-line" />
+          </StyledStackHeader>
+
+          <StyledStackGroupLabel>{t.about.stackDaily}</StyledStackGroupLabel>
+          <StyledStickerSheet>
+            {STACK_DAILY.map((tech, i) => (
+              <Sticker key={tech.name} name={tech.name} img={tech.img} index={i} />
+            ))}
+          </StyledStickerSheet>
+
+          <StyledStackGroupLabel>{t.about.stackAlso}</StyledStackGroupLabel>
+          <StyledStickerSheet>
+            {STACK_ALSO.map((tech, i) => (
+              <Sticker key={tech.name} name={tech.name} img={tech.img} index={i + 3} small />
+            ))}
+          </StyledStickerSheet>
+        </StyledStackBlock>
       </div>
     </StyledAboutSection>
   );

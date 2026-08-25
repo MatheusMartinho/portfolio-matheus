@@ -36,16 +36,13 @@ const translations = {
     },
     about: {
       title: 'Sobre mim',
-      p1: 'Sou o Matheus: paulistano, torcedor, cinéfilo e desenvolvedor. Gosto de cuidar do produto inteiro, da arquitetura ao UX, do primeiro commit ao lançamento.',
-      p2Start:
-        'A faculdade de Ciência da Computação me deu a base, mas foi num bootcamp em Vancouver que eu virei programador de verdade. De lá pra cá, lancei o',
-      p2Mid: '(orçamentos com assinatura digital e PIX), o',
-      p2End:
-        '(treino guiado por dados), e ainda morei uma temporada num chalé nas Montanhas Rochosas, trabalhando remoto com a neve na janela.',
-      p3Start: 'Hoje meu coração tá dividido entre dois projetos: o',
-      p3Mid: ', que transforma cada ida ao estádio em memória colecionável, e o',
-      p3End:
-        ', o cantinho do cinéfilo brasileiro. Os dois em React Native, Expo e Supabase, com o Claude de copiloto no refactor, no debug e na revisão. Velocidade sim, qualidade sempre.',
+      p1: 'Sou o Matheus: paulistano, torcedor de arquibancada e cinéfilo. Construo apps porque gosto de ver ideia virar coisa que alguém usa de verdade.',
+      p2Start: 'De Vancouver a um chalé nas Rockies, sempre construindo. No caminho, fiz o',
+      p2Mid: ', loja de uma artista têxtil que hoje despacha pedido em um clique, e o',
+      p2End: ', app de treino feito pra um usuário só: eu.',
+      p3Start: 'Agora vivo entre dois apps: o',
+      p3Mid: ', que transforma ida ao estádio em memória colecionável (já na App Store), e o',
+      p3End: ', o Letterboxd que fala português. Rápido pra lançar, chato com qualidade.',
       stackDaily: 'uso todo dia',
       stackAlso: 'também falo',
     },
@@ -77,6 +74,7 @@ const translations = {
       statsProjects: 'projetos',
       stampOpen: 'EM REVIEW',
       stampMerged: 'MERGED',
+      prs: 'PRs',
       viewAll: 'ver tudo no GitHub',
     },
     stats: {
@@ -171,16 +169,14 @@ const translations = {
     },
     about: {
       title: 'About me',
-      p1: "I'm Matheus: born in São Paulo, football fan, film nerd, developer. I like owning the whole product, from architecture to UX, from first commit to launch.",
-      p2Start:
-        'A Computer Science degree gave me the foundations, but a bootcamp in Vancouver is where I actually became a programmer. Since then I shipped',
-      p2Mid: '(quotes with digital signing and PIX payments),',
-      p2End:
-        '(data-driven training), and spent a season coding from a chalet in the Rocky Mountains.',
-      p3Start: 'Right now my heart is split between two projects:',
-      p3Mid: ', which turns every trip to the stadium into a collectible memory, and',
-      p3End:
-        ', a home for Brazilian film lovers. Both built with React Native, Expo and Supabase, with Claude as my copilot for refactoring, debugging and review. Fast, yes. Sloppy, never.',
+      p1: "I'm Matheus: São Paulo born, terrace football fan, film nerd. I build apps because I like watching an idea turn into something people actually use.",
+      p2Start: 'From Vancouver to a chalet in the Rockies, always building. Along the way I made',
+      p2Mid: ", a textile artist's shop that now ships orders in one click, and",
+      p2End: ', a training app built for exactly one user: me.',
+      p3Start: 'These days I live between two apps:',
+      p3Mid:
+        ', which turns a trip to the stadium into a collectible memory (already on the App Store), and',
+      p3End: ', the Letterboxd that speaks Portuguese. Quick to ship, fussy about quality.',
       stackDaily: 'daily drivers',
       stackAlso: 'also fluent in',
     },
@@ -212,6 +208,7 @@ const translations = {
       statsProjects: 'projects',
       stampOpen: 'IN REVIEW',
       stampMerged: 'MERGED',
+      prs: 'PRs',
       viewAll: 'see everything on GitHub',
     },
     stats: {
