@@ -111,8 +111,14 @@ const StyledStickerSheet = styled.div`
     margin-bottom: 0;
   }
 
+  /* flex-wrap deixava 2 ou 4 por linha dependendo da largura exata do aparelho;
+     um grid de 3 colunas fixas garante a mesma fileira de três em qualquer
+     celular, sem depender de quanto cabe. */
   @media (max-width: 480px) {
-    gap: 16px 12px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    justify-items: center;
+    gap: 20px 4px;
   }
 `;
 
@@ -146,6 +152,17 @@ const StyledSticker = styled.span`
     letter-spacing: 0.04em;
     text-align: center;
     transition: var(--transition);
+  }
+
+  /* na fileira de 3 do celular, o figurinha grande (114px) espremia a coluna
+     em telas estreitas; encolhe para caber sem sobrepor a vizinha. */
+  @media (max-width: 480px) {
+    width: ${({ $small }) => ($small ? '78px' : '96px')};
+
+    img,
+    img[alt=''] {
+      width: ${({ $small }) => ($small ? '58px' : '68px')};
+    }
   }
 
   &:hover {

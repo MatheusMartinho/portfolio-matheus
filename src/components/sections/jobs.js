@@ -212,6 +212,14 @@ const StyledTabPanel = styled.div`
 
     @media (max-width: 900px) {
       grid-template-columns: 1fr;
+
+      /* a regra .wide-media acima tem especificidade maior que .page-grid, então
+         sem repeti-la aqui a peça deitada continuava ao lado do texto no celular
+         em vez de empilhar embaixo como as outras eras. */
+      &.wide-media {
+        grid-template-columns: 1fr;
+        gap: 28px;
+      }
     }
   }
 

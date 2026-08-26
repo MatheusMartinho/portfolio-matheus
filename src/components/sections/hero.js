@@ -278,10 +278,20 @@ const StyledPortrait = styled.div`
   max-width: 360px;
   justify-self: end;
 
+  /* A moldura de madeira é ~41% mais larga e ~37% mais alta que a foto, e sangra
+     para fora da caixa do retrato. No desktop sobra coluna para essa sangria; no
+     celular ela vazava pela esquerda da tela e cobria a strip logo abaixo. Aqui a
+     foto encolhe até a moldura caber na largura da tela, e as margens reservam a
+     sangria — a esquerda alinha a borda da moldura com o texto da seção. */
   @media (max-width: 900px) {
+    --portrait-w: min(260px, 56vw);
+
     justify-self: start;
-    max-width: 280px;
     order: -1;
+    width: var(--portrait-w);
+    max-width: var(--portrait-w);
+    margin: calc(var(--portrait-w) * 0.3) 0 calc(var(--portrait-w) * 0.32)
+      calc(var(--portrait-w) * 0.26);
   }
 
   &:before {
