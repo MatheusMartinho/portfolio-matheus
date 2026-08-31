@@ -31,9 +31,6 @@ const { json, bin, acc } = require('./_glb-decode.js')(SRC);
 
 const SRC_MESH = 0;
 const TEX = 1024;
-// the page block never faces the camera in the stack, so its half of the atlas
-// doesn't need the resolution the jacket's relief does
-const TEX_BASE = 512;
 const V_SPLIT = 0.34; // below: page block islands. above: the unwrapped jacket.
 const U_BACK_SPINE = 0.46;
 const U_SPINE_FRONT = 0.5398;
@@ -116,14 +113,14 @@ GROUPS.slice(0, 3).forEach(g =>
 );
 
 (async () => {
-  const jpg = (buf, q, size = TEX) =>
-    sharp(buf).resize(size, size, { fit: 'fill' }).jpeg({ quality: q, mozjpeg: true }).toBuffer();
+  const jpg = (buf, q) =>
+    sharp(buf).resize(TEX, TEX, { fit: 'fill' }).jpeg({ quality: q, mozjpeg: true }).toBuffer();
   const view = i => {
     const bv = json.bufferViews[json.images[i].bufferView];
     return bin.slice(bv.byteOffset || 0, (bv.byteOffset || 0) + bv.byteLength);
   };
   const images = [
-    await jpg(view(0), 84, TEX_BASE), // base colour — only the page-block islands get sampled
+    await jpg(view(0), 86), // base colour — only the page-block islands get sampled
     await jpg(view(1), 88), // occlusion(R) + roughness(G) + metalness(B)
     await jpg(view(2), 94), // normal — needs the extra bits
   ];
