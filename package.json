@@ -23,6 +23,7 @@
     "serve": "gatsby serve",
     "clean": "gatsby clean",
     "prepare": "husky install",
+    "model:book": "node scripts/build-book-glb.js",
     "lint-staged": "lint-staged"
   },
   "lint-staged": {

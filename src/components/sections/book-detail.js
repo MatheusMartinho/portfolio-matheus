@@ -13,6 +13,7 @@ import {
   pagesTexture,
   thickness,
 } from './book-materials';
+import { BOOK_EXTENT, SLOT, loadBookModel, mapToPanel } from './book-model';
 
 // Full-screen detail view: the selected book standing up in three.js as a real
 // hardcover (two cloth boards + spine wrapped around a recessed page block),
@@ -319,117 +320,180 @@ const BookDetail = ({ book, labels, noteHtml, blurb, site, skoobUrl, reducedMoti
       const INSET = 4; // how far the page block sits inside the boards
 
       const clothColor = new THREE.Color(book.spine);
-      const cloth = (w, h) => clothMaterial(THREE, clothColor, w, h);
-      const endpaper = new THREE.MeshStandardMaterial({ color: 0xe9e1d2, roughness: 1 });
 
+      // The scanned book gives us a real jacket and a real page block; if it
+      // can't be fetched we still want a book, so fall back to the hand-built
+      // boards it replaced.
+      const model = await loadBookModel().catch(() => null);
+      if (disposed) {
+        renderer.dispose();
+        return;
+      }
+
+      const disposables = [];
       const spineTex = new THREE.CanvasTexture(drawSpine(book, H, T, labels.status.reading));
       spineTex.colorSpace = THREE.SRGBColorSpace;
       spineTex.anisotropy = maxAniso;
-      spineTex.center.set(0.5, 0.5);
-      spineTex.rotation = -Math.PI / 2; // text runs top -> bottom on the standing spine
-      const spineHeight = new THREE.CanvasTexture(
-        drawSpine(book, H, T, labels.status.reading, 'height'),
-      );
-      spineHeight.anisotropy = maxAniso;
-      spineHeight.center.set(0.5, 0.5);
-      spineHeight.rotation = -Math.PI / 2;
-      const spineMat = fabricMaterial(THREE, {
-        map: spineTex,
-        bumpMap: spineHeight,
-        bumpScale: 2.2,
-      });
+      const backTex = new THREE.CanvasTexture(drawBack(book, W, H, blurb, site));
+      backTex.colorSpace = THREE.SRGBColorSpace;
+      backTex.anisotropy = maxAniso;
+      disposables.push(spineTex, backTex);
 
-      const coverMat = fabricMaterial(THREE, {
-        color: clothColor.clone().multiplyScalar(0.92),
-        bumpMap: clothTexture(THREE, W, H),
-        bumpScale: 1.2,
-        roughness: 0.62,
-        envMapIntensity: 0.55,
-      });
+      const pivot = new THREE.Group();
+      let coverMat;
+
+      if (model) {
+        // the render's own surface detail, shared by every panel
+        const finish = {
+          normalMap: model.normalMap,
+          aoMap: model.ormMap,
+          roughnessMap: model.ormMap,
+          metalness: 0,
+          roughness: 1,
+          envMapIntensity: 0.55,
+        };
+        mapToPanel(THREE, spineTex, 'spine', 'upright');
+        mapToPanel(THREE, backTex, 'back', 'upright');
+        coverMat = new THREE.MeshStandardMaterial({
+          color: clothColor.clone().multiplyScalar(0.92),
+          ...finish,
+        });
+        const mats = [];
+        mats[SLOT.front] = coverMat;
+        mats[SLOT.spine] = new THREE.MeshStandardMaterial({ map: spineTex, ...finish });
+        mats[SLOT.back] = new THREE.MeshStandardMaterial({ map: backTex, ...finish });
+        mats[SLOT.pages] = new THREE.MeshStandardMaterial({ map: model.baseMap, ...finish });
+        disposables.push(...mats);
+
+        // the model lies flat with its spine on -x; a quarter turn about x
+        // stands it up facing the camera. Scale runs before the rotation, so it
+        // is the model's own axes that map to (width, thickness, height).
+        const mesh = new THREE.Mesh(model.geometry, mats);
+        mesh.rotation.x = Math.PI / 2;
+        mesh.scale.set(W / BOOK_EXTENT.x, T / BOOK_EXTENT.y, H / BOOK_EXTENT.z);
+        pivot.add(mesh);
+      } else {
+        const cloth = (w, h) => clothMaterial(THREE, clothColor, w, h);
+        const endpaper = new THREE.MeshStandardMaterial({ color: 0xe9e1d2, roughness: 1 });
+
+        spineTex.center.set(0.5, 0.5);
+        spineTex.rotation = -Math.PI / 2; // text runs top -> bottom on the standing spine
+        const spineHeight = new THREE.CanvasTexture(
+          drawSpine(book, H, T, labels.status.reading, 'height'),
+        );
+        spineHeight.anisotropy = maxAniso;
+        spineHeight.center.set(0.5, 0.5);
+        spineHeight.rotation = -Math.PI / 2;
+        const spineMat = fabricMaterial(THREE, {
+          map: spineTex,
+          bumpMap: spineHeight,
+          bumpScale: 2.2,
+        });
+
+        coverMat = fabricMaterial(THREE, {
+          color: clothColor.clone().multiplyScalar(0.92),
+          bumpMap: clothTexture(THREE, W, H),
+          bumpScale: 1.2,
+          roughness: 0.62,
+          envMapIntensity: 0.55,
+        });
+
+        const backHeight = new THREE.CanvasTexture(drawBack(book, W, H, blurb, site, 'height'));
+        backHeight.anisotropy = maxAniso;
+        const backMat = fabricMaterial(THREE, {
+          map: backTex,
+          bumpMap: backHeight,
+          bumpScale: 2.2,
+        });
+
+        const pagesT = T - 2 * B;
+        const pagesH = H - 2 * INSET;
+        const pagesW = W - B - INSET;
+        // fore-edge: BoxGeometry maps u to the box's z (the book's thickness)
+        const edgeMat = new THREE.MeshStandardMaterial({
+          map: pagesTexture(THREE, pagesT, 'u'),
+          bumpMap: pagesTexture(THREE, pagesT, 'u'),
+          bumpScale: 1.2,
+          roughness: 1,
+        });
+        const topMat = new THREE.MeshStandardMaterial({
+          map: pagesTexture(THREE, pagesT),
+          bumpMap: pagesTexture(THREE, pagesT),
+          bumpScale: 1.2,
+          roughness: 1,
+        });
+
+        // material order per box: +x, -x, +y, -y, +z, -z
+        const front = new THREE.Mesh(new THREE.BoxGeometry(W, H, B), [
+          cloth(B, H),
+          cloth(B, H),
+          cloth(W, B),
+          cloth(W, B),
+          coverMat,
+          endpaper,
+        ]);
+        front.position.z = T / 2 - B / 2;
+
+        const back = new THREE.Mesh(new THREE.BoxGeometry(W, H, B), [
+          cloth(B, H),
+          cloth(B, H),
+          cloth(W, B),
+          cloth(W, B),
+          endpaper,
+          backMat,
+        ]);
+        back.position.z = -T / 2 + B / 2;
+
+        const spine = new THREE.Mesh(new THREE.BoxGeometry(B, H, pagesT), [
+          endpaper,
+          spineMat,
+          cloth(B, pagesT),
+          cloth(B, pagesT),
+          endpaper,
+          endpaper,
+        ]);
+        spine.position.x = -W / 2 + B / 2;
+
+        const pages = new THREE.Mesh(new THREE.BoxGeometry(pagesW, pagesH, pagesT), [
+          edgeMat,
+          endpaper,
+          topMat,
+          topMat,
+          endpaper,
+          endpaper,
+        ]);
+        pages.position.x = -W / 2 + B + pagesW / 2;
+
+        pivot.add(front, back, spine, pages);
+        disposables.push(
+          spineHeight,
+          backHeight,
+          ...[front, back, spine, pages].flatMap(m => [m.geometry, ...m.material]),
+        );
+      }
+
+      scene.add(pivot);
+
       if (book.coverLarge) {
         loadCoverTexture(THREE, book.coverLarge, maxAniso, 0, tex => {
           if (disposed) {
             return;
           }
-          coverMat.map = tex;
+          if (model) {
+            // clone so the cache's copy keeps its own (identity) transform
+            const art = tex.clone();
+            art.needsUpdate = true;
+            disposables.push(art);
+            coverMat.map = mapToPanel(THREE, art, 'front', 'upright');
+          } else {
+            coverMat.map = tex;
+            coverMat.bumpMap = coverHeightTexture(THREE, tex.image, `${book.coverLarge}|0`);
+            coverMat.bumpScale = 1.8;
+          }
           coverMat.color.set(0xffffff);
-          coverMat.bumpMap = coverHeightTexture(THREE, tex.image, `${book.coverLarge}|0`);
-          coverMat.bumpScale = 1.8;
           coverMat.needsUpdate = true;
         });
       }
-
-      const backTex = new THREE.CanvasTexture(drawBack(book, W, H, blurb, site));
-      backTex.colorSpace = THREE.SRGBColorSpace;
-      backTex.anisotropy = maxAniso;
-      const backHeight = new THREE.CanvasTexture(drawBack(book, W, H, blurb, site, 'height'));
-      backHeight.anisotropy = maxAniso;
-      const backMat = fabricMaterial(THREE, { map: backTex, bumpMap: backHeight, bumpScale: 2.2 });
-
-      const pagesT = T - 2 * B;
-      const pagesH = H - 2 * INSET;
-      const pagesW = W - B - INSET;
-      // fore-edge: BoxGeometry maps u to the box's z (the book's thickness)
-      const edgeMat = new THREE.MeshStandardMaterial({
-        map: pagesTexture(THREE, pagesT, 'u'),
-        bumpMap: pagesTexture(THREE, pagesT, 'u'),
-        bumpScale: 1.2,
-        roughness: 1,
-      });
-      const topMat = new THREE.MeshStandardMaterial({
-        map: pagesTexture(THREE, pagesT),
-        bumpMap: pagesTexture(THREE, pagesT),
-        bumpScale: 1.2,
-        roughness: 1,
-      });
-
-      // material order per box: +x, -x, +y, -y, +z, -z
-      const front = new THREE.Mesh(new THREE.BoxGeometry(W, H, B), [
-        cloth(B, H),
-        cloth(B, H),
-        cloth(W, B),
-        cloth(W, B),
-        coverMat,
-        endpaper,
-      ]);
-      front.position.z = T / 2 - B / 2;
-
-      const back = new THREE.Mesh(new THREE.BoxGeometry(W, H, B), [
-        cloth(B, H),
-        cloth(B, H),
-        cloth(W, B),
-        cloth(W, B),
-        endpaper,
-        backMat,
-      ]);
-      back.position.z = -T / 2 + B / 2;
-
-      const spine = new THREE.Mesh(new THREE.BoxGeometry(B, H, pagesT), [
-        endpaper,
-        spineMat,
-        cloth(B, pagesT),
-        cloth(B, pagesT),
-        endpaper,
-        endpaper,
-      ]);
-      spine.position.x = -W / 2 + B / 2;
-
-      const pages = new THREE.Mesh(new THREE.BoxGeometry(pagesW, pagesH, pagesT), [
-        edgeMat,
-        endpaper,
-        topMat,
-        topMat,
-        endpaper,
-        endpaper,
-      ]);
-      pages.position.x = -W / 2 + B + pagesW / 2;
-
-      const pivot = new THREE.Group();
-      pivot.add(front, back, spine, pages);
-      scene.add(pivot);
-
-      const disposables = [front, back, spine, pages].flatMap(m => [m.geometry, ...m.material]);
-      disposables.push(spineTex, backTex, spineHeight, backHeight);
 
       // ---- interaction ----
       const BASE_YAW = 0.42; // ~24°, spine towards the viewer
