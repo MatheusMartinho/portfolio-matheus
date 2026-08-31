@@ -65,6 +65,20 @@ const StyledCredit = styled.div`
       height: 14px;
     }
   }
+
+  /* CC BY asks for the credit to be visible wherever the work is published */
+  .asset-credit {
+    margin-top: 8px;
+    opacity: 0.65;
+    line-height: 1.6;
+
+    a {
+      padding: 0;
+      text-decoration: underline;
+      text-decoration-thickness: 1px;
+      text-underline-offset: 2px;
+    }
+  }
 `;
 
 const Footer = () => {
@@ -89,6 +103,13 @@ const Footer = () => {
         </a>
         <div>
           <Link to="/stats">/stats ↗</Link>
+        </div>
+        <div className="asset-credit">
+          Livro 3D{' '}
+          <a href="https://sketchfab.com/3d-models/coffee-table-books-8aa681cf122c4ada832a78b7dc891d45">
+            Coffee Table Books
+          </a>{' '}
+          por DeezVertz · <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>
         </div>
       </StyledCredit>
     </StyledFooter>
