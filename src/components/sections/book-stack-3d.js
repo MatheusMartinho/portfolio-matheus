@@ -8,6 +8,7 @@ import {
   loadCoverTexture,
   thickness,
 } from './book-materials';
+import { BOOK_EXTENT, SLOT, loadBookModel, mapToPanel } from './book-model';
 
 export { thickness };
 
@@ -179,7 +180,26 @@ const BookStack3D = ({
       const meshes = [];
       const lifts = books.map(() => 0);
       stateRef.current.lifts = lifts;
-      const pageMat = new THREE.MeshStandardMaterial({ color: 0xefe6d3, roughness: 1 });
+
+      // The scanned book carries the relief, the page block and the jacket's
+      // rounded boards; if it can't be fetched we still want a stack, so fall
+      // back to the flat boxes it replaced.
+      const model = await loadBookModel().catch(() => null);
+      if (disposed) {
+        return;
+      }
+
+      // shared by every panel of every book — the render's own surface detail
+      const finish = model && {
+        normalMap: model.normalMap,
+        aoMap: model.ormMap,
+        roughnessMap: model.ormMap,
+        metalness: 0,
+        roughness: 1,
+      };
+      const pageMat = new THREE.MeshStandardMaterial(
+        model ? { map: model.baseMap, ...finish } : { color: 0xefe6d3, roughness: 1 },
+      );
       disposables.push(pageMat);
 
       // ---- camera: off-axis projection so 1 world unit == 1 css px on the spine plane ----
@@ -240,40 +260,56 @@ const BookStack3D = ({
         const spineTex = new THREE.CanvasTexture(spineCanvas);
         spineTex.colorSpace = THREE.SRGBColorSpace;
         spineTex.anisotropy = maxAniso;
-        const spineHeight = new THREE.CanvasTexture(
-          drawSpine(book, W, row.h, readingLabel, 'height'),
-        );
-        spineHeight.anisotropy = maxAniso;
-        const spineMat = new THREE.MeshStandardMaterial({
-          map: spineTex,
-          bumpMap: spineHeight,
-          bumpScale: 2,
-          roughness: 0.88,
-        });
+        disposables.push(spineTex);
+
+        let spineExtra = finish;
+        if (!model) {
+          // the boxes had no relief of their own, so the type was embossed with
+          // a matching height map
+          const h = new THREE.CanvasTexture(drawSpine(book, W, row.h, readingLabel, 'height'));
+          h.anisotropy = maxAniso;
+          disposables.push(h);
+          spineExtra = { bumpMap: h, bumpScale: 2, roughness: 0.88 };
+        } else {
+          mapToPanel(THREE, spineTex, 'spine');
+        }
+        const spineMat = new THREE.MeshStandardMaterial({ map: spineTex, ...spineExtra });
         const darkMat = new THREE.MeshStandardMaterial({
           color: new THREE.Color(book.spine).multiplyScalar(0.55),
-          roughness: 0.95,
+          ...(finish || { roughness: 0.95 }),
         });
         const coverMat = new THREE.MeshStandardMaterial({
           color: new THREE.Color(book.spine).multiplyScalar(0.92),
-          bumpMap: clothTexture(THREE, W, D),
-          bumpScale: 1.2,
-          roughness: 0.7,
+          ...(finish || {
+            bumpMap: clothTexture(THREE, W, D),
+            bumpScale: 1.2,
+            roughness: 0.7,
+          }),
         });
-        disposables.push(spineTex, spineHeight, spineMat, darkMat, coverMat);
+        disposables.push(spineMat, darkMat, coverMat);
 
         if (book.coverLarge) {
-          loadCoverTexture(THREE, book.coverLarge, maxAniso, Math.PI / 2, tex => {
+          // the jacket panel already carries the quarter-turn, so the model path
+          // wants the art unrotated and re-projected onto its slice of the atlas
+          loadCoverTexture(THREE, book.coverLarge, maxAniso, model ? 0 : Math.PI / 2, tex => {
             if (disposed) {
               return;
             }
-            coverMat.map = tex;
+            if (model) {
+              // clone so the cache's copy keeps its own (identity) transform
+              const art = tex.clone();
+              art.needsUpdate = true;
+              disposables.push(art);
+              coverMat.map = mapToPanel(THREE, art, 'front');
+            } else {
+              coverMat.map = tex;
+              const relief = coverHeightTexture(THREE, tex.image, `${book.coverLarge}|top`);
+              relief.center.set(0.5, 0.5);
+              relief.rotation = Math.PI / 2;
+              coverMat.bumpMap = relief;
+              coverMat.bumpScale = 1.6;
+            }
             coverMat.color.set(0xffffff);
-            const relief = coverHeightTexture(THREE, tex.image, `${book.coverLarge}|top`);
-            relief.center.set(0.5, 0.5);
-            relief.rotation = Math.PI / 2;
-            coverMat.bumpMap = relief;
-            coverMat.bumpScale = 1.6;
             coverMat.needsUpdate = true;
             if (stateRef.current.kick) {
               stateRef.current.kick();
@@ -281,10 +317,26 @@ const BookStack3D = ({
           });
         }
 
-        const geo = new THREE.BoxGeometry(W - 4, row.h, D);
-        disposables.push(geo);
-        // BoxGeometry material order: +x, -x, +y (top), -y, +z (spine), -z
-        const mesh = new THREE.Mesh(geo, [pageMat, pageMat, coverMat, darkMat, spineMat, darkMat]);
+        let mesh;
+        if (model) {
+          const mats = [];
+          mats[SLOT.front] = coverMat;
+          mats[SLOT.spine] = spineMat;
+          mats[SLOT.back] = darkMat;
+          mats[SLOT.pages] = pageMat;
+          // the model lies with its spine on -x and its length on z; a quarter
+          // turn puts the spine against the camera, then scale fills the row's
+          // layout box. Scale is applied before the rotation, so it is the
+          // model's own axes that map to (depth, thickness, width).
+          mesh = new THREE.Mesh(model.geometry, mats);
+          mesh.rotation.y = Math.PI / 2;
+          mesh.scale.set(D / BOOK_EXTENT.x, row.h / BOOK_EXTENT.y, W / BOOK_EXTENT.z);
+        } else {
+          const geo = new THREE.BoxGeometry(W - 4, row.h, D);
+          disposables.push(geo);
+          // BoxGeometry material order: +x, -x, +y (top), -y, +z (spine), -z
+          mesh = new THREE.Mesh(geo, [pageMat, pageMat, coverMat, darkMat, spineMat, darkMat]);
+        }
         mesh.position.set(W / 2, -(row.top + row.h / 2), -D / 2);
         mesh.castShadow = true;
         mesh.receiveShadow = true;
